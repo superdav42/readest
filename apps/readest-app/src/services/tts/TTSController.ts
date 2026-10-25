@@ -33,6 +33,15 @@ import { estimateSentenceSeconds, hydrateProvisionalDurations } from './ttsDurat
 import { DownloadableSentence, SectionEnumerator, TTSDownloader } from './TTSDownloader';
 import { TTSUtils } from './TTSUtils';
 import { TTSClient } from './TTSClient';
+import { getRuntimeConfig } from '@/services/runtimeConfig';
+
+/** Recorded-narration-only mode and the book ships no recording. */
+export class NarrationUnavailableError extends Error {
+  constructor() {
+    super('narration_unavailable');
+    this.name = 'NarrationUnavailableError';
+  }
+}
 import { startAudioKeepAlive, stopAudioKeepAlive } from './WebAudioPlayer';
 import { isSameLang, isValidLang } from '@/utils/lang';
 import { normalizeLyricText } from '@/utils/ttsLyrics';
@@ -514,6 +523,18 @@ export class TTSController extends EventTarget {
   }
 
   async init() {
+    // Self-hosted library mode: only recordings shipped with the book play;
+    // no text is sent to Microsoft, Google, Readest or other speech services.
+    if (getRuntimeConfig()?.recordedNarrationOnly) {
+      if (this.narrationAvailable) {
+        this.#attachNarrationSource(this.view.book);
+        if (await this.ttsMediaOverlayClient.init()) {
+          this.ttsClient = this.ttsMediaOverlayClient;
+          return;
+        }
+      }
+      throw new NarrationUnavailableError();
+    }
     const availableClients = [];
     // Started together: each can take seconds (Edge synthesizes a probe
     // sentence, system TTS waits for its voices), and play waits on them all.

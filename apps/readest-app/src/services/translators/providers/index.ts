@@ -1,4 +1,5 @@
 import { useCustomTranslatorStore } from '@/store/customTranslatorStore';
+import { getRuntimeConfig } from '@/services/runtimeConfig';
 import { TranslationProvider } from '../types';
 import { createCustomTranslator } from '../custom';
 import { deeplProvider } from './deepl';
@@ -36,6 +37,9 @@ export type TranslatorName = string;
 
 /** Built-in translators followed by the user's custom ones. */
 export const getTranslators = (): TranslationProvider[] => {
+  // Self-hosted library mode: books come pre-translated; no text goes to
+  // DeepL, Azure, Google, Yandex or custom AI translators.
+  if (getRuntimeConfig()?.onlineTranslationDisabled) return [];
   const custom = useCustomTranslatorStore
     .getState()
     .getAvailableTranslators()

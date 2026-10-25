@@ -12,6 +12,7 @@ import { useTrafficLight } from '@/hooks/useTrafficLight';
 import { useSettingsStore } from '@/store/settingsStore';
 import { debounce } from '@/utils/debounce';
 import WindowButtons from '@/components/WindowButtons';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { closeOPDSBrowser } from '../utils/opdsClose';
 import Dropdown from '@/components/Dropdown';
 import Menu from '@/components/Menu';
@@ -261,6 +262,7 @@ export function Navigation({
           )
         )}
 
+        <LanguageSwitcher />
         <WindowButtons
           className='window-buttons flex h-full items-center'
           headerRef={headerRef}

@@ -8,6 +8,7 @@ import { useBookDataStore } from '@/store/bookDataStore';
 import { useResponsiveSize } from '@/hooks/useResponsiveSize';
 import { saveViewSettings } from '@/helpers/settings';
 import { isTranslationAvailable } from '@/services/translators/utils';
+import { getRuntimeConfig } from '@/services/runtimeConfig';
 import Button from '@/components/Button';
 
 const TranslationToggler = ({ bookKey }: { bookKey: string }) => {
@@ -41,6 +42,10 @@ const TranslationToggler = ({ bookKey }: { bookKey: string }) => {
       isTranslationAvailable(bookData?.book, viewSettings.translateTargetLang),
     );
   }, [bookData, viewSettings.translationEnabled, viewSettings.translateTargetLang]);
+
+  // Online translation is disabled in library mode: the header language
+  // selector switches to a pre-translated edition instead.
+  if (getRuntimeConfig()?.onlineTranslationDisabled) return null;
 
   return (
     <Button

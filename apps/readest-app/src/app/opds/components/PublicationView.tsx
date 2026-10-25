@@ -11,6 +11,7 @@ import { audioMimeType, pickAudioLinks } from '@/services/opds/audiobook';
 import { isAudioLink } from '@/services/opds/formats';
 import type { OpdsAudioTrackLink } from '@/services/opds/audiobook';
 import { getOPDSCoverHref } from '@/services/opds/cover';
+import { REQUEST_REL } from '@/services/gutenbergLibrary';
 import {
   classifyAcquisitionLink,
   getFormatName,
@@ -94,6 +95,30 @@ export function PublicationView({
     () => groupByArray(publication.links, (link) => link.rel),
     [publication.links],
   );
+
+  // Our library offers "request translation/narration" actions for editions
+  // that do not exist yet; the pipeline produces them on demand.
+  const requestLinks = useMemo(
+    () => (linksByRel.get(REQUEST_REL) || []).filter((link) => !!link.href),
+    [linksByRel],
+  );
+  const [requested, setRequested] = useState<Set<string>>(new Set());
+  const handleRequest = async (href: string) => {
+    try {
+      const res = await fetch(href, { method: 'POST' });
+      if (!res.ok) throw new Error(String(res.status));
+      setRequested((prev) => new Set(prev).add(href));
+      eventDispatcher.dispatch('toast', {
+        message: _('Requested. It will appear in the library when it is ready.'),
+        type: 'info',
+      });
+    } catch {
+      eventDispatcher.dispatch('toast', {
+        message: _('Request failed, please try again.'),
+        type: 'error',
+      });
+    }
+  };
 
   // Same pick the download path stores as the book cover, so the detail view
   // never previews artwork the library won't end up showing (issue #5270).
@@ -504,6 +529,18 @@ export function PublicationView({
                   {_('Play')}
                 </button>
               )}
+
+              {requestLinks.map((link) => (
+                <button
+                  key={link.href}
+                  type='button'
+                  disabled={requested.has(link.href!)}
+                  onClick={() => handleRequest(link.href!)}
+                  className='btn btn-outline min-w-20 rounded-3xl'
+                >
+                  {requested.has(link.href!) ? `✓ ${link.title}` : link.title}
+                </button>
+              ))}
 
               {/* Rendered only while a download is running. A permanently
                   mounted 48px slot left a dead gap after the actions on every

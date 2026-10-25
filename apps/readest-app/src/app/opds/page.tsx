@@ -21,6 +21,11 @@ import { useTransferQueue } from '@/hooks/useTransferQueue';
 import { useTheme } from '@/hooks/useTheme';
 import { useLibrary } from '@/hooks/useLibrary';
 import { eventDispatcher } from '@/utils/event';
+import {
+  CONTENT_LANGUAGE_EVENT,
+  isLibraryUrl,
+  withContentLanguage,
+} from '@/services/gutenbergLibrary';
 import { navigateToReader } from '@/utils/nav';
 import { getFileExtFromMimeType } from '@/libs/document';
 import { OPDSFeed, OPDSPublication, OPDSSearch, REL } from '@/types/opds';
@@ -228,6 +233,8 @@ export default function BrowserPage() {
 
       setViewMode('loading');
       setError(null);
+      // Our own library lists each work in the reader's language.
+      url = withContentLanguage(url);
 
       try {
         const useProxy = isWebAppPlatform();
@@ -431,6 +438,17 @@ export default function BrowserPage() {
       setError(new Error('No OPDS URL provided'));
     }
   }, [catalogUrl, catalogId, settings, libraryLoaded, loadOPDS]);
+
+  // Re-list the current library feed when the reader switches language.
+  useEffect(() => {
+    const reload = () => {
+      if (state.currentURL && isLibraryUrl(state.currentURL)) {
+        void loadOPDS(state.currentURL, { skipHistory: true });
+      }
+    };
+    eventDispatcher.on(CONTENT_LANGUAGE_EVENT, reload);
+    return () => eventDispatcher.off(CONTENT_LANGUAGE_EVENT, reload);
+  }, [state.currentURL, loadOPDS]);
 
   const handleNavigate = useCallback(
     (url: string, isSearch = false) => {

@@ -15,6 +15,10 @@ export interface ReadestRuntimeConfig {
   opdsTrustedHosts?: string[];
   /** Starter books imported on a browser's first visit instead of the bundled demo set. */
   demoBookUrls?: string[];
+  /** Read Aloud plays only recordings shipped with the book: no Edge, Google, Readest or custom TTS. */
+  recordedNarrationOnly?: boolean;
+  /** Hide on-the-fly machine translation (DeepL, Google, Azure, Yandex, AI providers). */
+  onlineTranslationDisabled?: boolean;
 }
 
 /** Parse the comma-separated OPDS_TRUSTED_HOSTS env value. */
@@ -79,4 +83,6 @@ export const getServerRuntimeConfig = (): ReadestRuntimeConfig => ({
     .split(',')
     .map((u) => u.trim())
     .filter(Boolean),
+  recordedNarrationOnly: process.env['RECORDED_NARRATION_ONLY'] === 'true' || undefined,
+  onlineTranslationDisabled: process.env['DISABLE_ONLINE_TRANSLATION'] === 'true' || undefined,
 });

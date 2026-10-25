@@ -1,6 +1,7 @@
 import { AppService } from '@/types/system';
 import { EdgeSpeechTTS, EdgeTTSPayload } from '@/libs/edgeTTS';
 import { isTauriAppPlatform } from '@/services/environment';
+import { getRuntimeConfig } from '@/services/runtimeConfig';
 import { isSameLang } from '@/utils/lang';
 import { genSSMLRaw } from '@/utils/ssml';
 import { TTSClient } from './TTSClient';
@@ -143,6 +144,11 @@ export const pronounceWord = async (
   options: PronounceWordOptions,
   onStatus?: (status: PronounceStatus) => void,
 ): Promise<void> => {
+  // Library mode: no word audio from Edge or the browser's online voices.
+  if (getRuntimeConfig()?.recordedNarrationOnly) {
+    onStatus?.('error');
+    return;
+  }
   const token = ++requestToken;
   const emit = (status: PronounceStatus) => {
     if (token === requestToken) onStatus?.(status);

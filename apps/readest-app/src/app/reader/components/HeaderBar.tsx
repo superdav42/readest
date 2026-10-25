@@ -32,6 +32,8 @@ import SidebarToggler from './SidebarToggler';
 import BookmarkToggler from './BookmarkToggler';
 import NotebookToggler from './NotebookToggler';
 import TranslationToggler from './TranslationToggler';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
+import { useEditionSwitch } from '../hooks/useEditionSwitch';
 import ViewMenu from './ViewMenu';
 import SyncInfoDialog from './SyncInfoDialog';
 
@@ -89,6 +91,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
   const [headerWidth, setHeaderWidth] = useState(0);
   const view = getView(bookKey);
   const iconSize18 = useResponsiveSize(18);
+  useEditionSwitch(bookKey);
 
   const docs = view?.renderer.getContents() ?? [];
   const pointerInDoc = docs.some(({ doc }) => doc?.body?.style.cursor === 'pointer');
@@ -287,6 +290,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
             </button>
             <BookmarkToggler bookKey={bookKey} />
             <TranslationToggler bookKey={bookKey} />
+            <LanguageSwitcher />
           </div>
           {enableAnnotationQuickActions && (
             <Dropdown

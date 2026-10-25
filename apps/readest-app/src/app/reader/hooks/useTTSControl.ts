@@ -18,7 +18,12 @@ import {
   TTSVoicesGroup,
 } from '@/services/tts';
 import { DEFAULT_SENTENCE_GAP_SEC } from '@/services/tts/EdgeTTSClient';
-import { DEFAULT_PARAGRAPH_GAP_SEC, TTSLoopState } from '@/services/tts/TTSController';
+import {
+  DEFAULT_PARAGRAPH_GAP_SEC,
+  NarrationUnavailableError,
+  TTSLoopState,
+} from '@/services/tts/TTSController';
+import { parseWorkId, requestEdition, toContentLanguage } from '@/services/gutenbergLibrary';
 import { scaleGapForRate } from '@/services/tts/gap';
 import { eventDispatcher } from '@/utils/event';
 import { genSSMLRaw, parseSSMLLang } from '@/utils/ssml';
@@ -1107,6 +1112,32 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
         onRequestHidePanel?.();
         setShowIndicator(false);
         setIsPlaying(false);
+        if (error instanceof NarrationUnavailableError) {
+          // Recorded-narration-only mode: ask our pipeline to narrate this book.
+          const metadata = view.book?.metadata as {
+            identifier?: string;
+            language?: string | string[];
+          };
+          const workId = parseWorkId(metadata?.identifier);
+          const lang = toContentLanguage(
+            (Array.isArray(metadata?.language) ? metadata.language[0] : metadata?.language) ||
+              bookData.book.primaryLanguage,
+          );
+          const requested =
+            workId !== null && (await requestEdition(workId, lang, 'readalong').catch(() => null));
+          eventDispatcher.dispatch('toast', {
+            message: requested
+              ? requested.status === 'unsupported'
+                ? _('Narration is not available in this language yet.')
+                : _(
+                    'This book has no narration yet. It has been requested and will appear in your library when ready.',
+                  )
+              : _('This book has no narration.'),
+            type: 'info',
+            timeout: 6000,
+          });
+          return;
+        }
         eventDispatcher.dispatch('toast', {
           message: _('TTS not available for this page'),
           type: 'error',
