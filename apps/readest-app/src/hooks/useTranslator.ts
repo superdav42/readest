@@ -54,7 +54,9 @@ export function useTranslator({
       isTranslatorAvailable(t, !!token, hasPremium),
     );
     const selectedTranslator =
-      availableTranslators.find((t) => t.name === provider) || availableTranslators[0]!;
+      availableTranslators.find((t) => t.name === provider) || availableTranslators[0];
+    // No translators at all when online translation is disabled (library mode).
+    if (!selectedTranslator) return;
     const selectedProviderName = selectedTranslator.name as TranslatorName;
     setTransltor(selectedTranslator);
     setSelectedProvider(selectedProviderName);

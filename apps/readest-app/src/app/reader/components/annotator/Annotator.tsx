@@ -22,6 +22,7 @@ import { useNotebookStore } from '@/store/notebookStore';
 import { useSidebarStore } from '@/store/sidebarStore';
 import { useCustomDictionaryStore } from '@/store/customDictionaryStore';
 import { isSystemDictionaryEnabled } from '@/services/dictionaries/registry';
+import { getRuntimeConfig } from '@/services/runtimeConfig';
 import { invokeSystemDictionary } from '@/services/dictionaries/systemDictionary';
 import { buildSelectionContext } from '@/services/dictionaries/contextDictionary';
 import type { DictionarySelectionContext } from '@/services/dictionaries/types';
@@ -2640,7 +2641,13 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
       case 'dictionary':
         return { tooltipText: _(label), Icon, onClick: handleDictionary };
       case 'translate':
-        return { tooltipText: _(label), Icon, onClick: handleTranslation };
+        return {
+          tooltipText: _(label),
+          Icon,
+          onClick: handleTranslation,
+          // Library mode: books are pre-translated; no online translators.
+          disabled: !!getRuntimeConfig()?.onlineTranslationDisabled,
+        };
       case 'tts':
         return {
           tooltipText: _(label),
