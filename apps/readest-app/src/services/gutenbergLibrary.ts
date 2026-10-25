@@ -76,7 +76,11 @@ export const withContentLanguage = (url: string, lang = getContentLanguage()): s
 
 /** Work id from an edition identifier: `urn:gutenberg-ai:<id>[:<lang>]` or `urn:gutenberg-ai:<id>-…`. */
 export const parseWorkId = (identifier?: string | null): number | null => {
-  const match = identifier?.match(/urn:gutenberg-ai:(\d+)/);
+  // Derived editions use our URN; verbatim originals keep PG's own identifier
+  // (http://www.gutenberg.org/<id>), which the catalog also serves.
+  const match =
+    identifier?.match(/urn:gutenberg-ai:(\d+)/) ??
+    identifier?.match(/^https?:\/\/(?:www\.)?gutenberg\.org\/(?:ebooks\/)?(\d+)\/?$/);
   return match ? Number(match[1]) : null;
 };
 
