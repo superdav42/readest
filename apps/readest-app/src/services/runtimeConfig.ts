@@ -7,7 +7,20 @@ export interface ReadestRuntimeConfig {
   translationFixedQuota?: number;
   fontBaseUrl?: string;
   selfHosted?: boolean;
+  /** The operator's own OPDS catalog: listed first and added on first run. */
+  featuredCatalogUrl?: string;
+  featuredCatalogName?: string;
+  featuredCatalogDescription?: string;
+  /** Hostnames the OPDS proxy may reach even though they are private (the operator's own catalog). */
+  opdsTrustedHosts?: string[];
 }
+
+/** Parse the comma-separated OPDS_TRUSTED_HOSTS env value. */
+export const parseTrustedHosts = (raw: string | undefined): string[] =>
+  (raw ?? '')
+    .split(',')
+    .map((h) => h.trim().toLowerCase())
+    .filter(Boolean);
 
 declare global {
   interface Window {
@@ -56,4 +69,8 @@ export const getServerRuntimeConfig = (): ReadestRuntimeConfig => ({
   // and an empty string would build root-relative font URLs.
   fontBaseUrl:
     process.env['FONT_BASE_URL'] || process.env['NEXT_PUBLIC_FONT_BASE_URL'] || undefined,
+  featuredCatalogUrl: process.env['FEATURED_OPDS_CATALOG_URL'] || undefined,
+  featuredCatalogName: process.env['FEATURED_OPDS_CATALOG_NAME'] || undefined,
+  featuredCatalogDescription: process.env['FEATURED_OPDS_CATALOG_DESCRIPTION'] || undefined,
+  opdsTrustedHosts: parseTrustedHosts(process.env['OPDS_TRUSTED_HOSTS']),
 });

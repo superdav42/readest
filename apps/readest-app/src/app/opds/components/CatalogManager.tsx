@@ -44,6 +44,7 @@ import { isCredentialsSyncEnabled } from '@/services/sync/syncCategories';
 import { isSyncError } from '@/libs/errors';
 import { OPDSCatalog } from '@/types/opds';
 import { isLanAddress } from '@/utils/network';
+import { getRuntimeConfig } from '@/services/runtimeConfig';
 import { allowsSelfSignedCert } from '@/utils/tls';
 import { eventDispatcher } from '@/utils/event';
 import { SectionTitle } from '@/components/settings/primitives';
@@ -88,6 +89,35 @@ const POPULAR_CATALOGS: OPDSCatalog[] = [
     icon: '🔓',
   },
 ];
+
+const FEATURED_SEEDED_KEY = 'featuredOPDSCatalogSeeded';
+
+/** The operator's own catalog from runtime config (self-hosted deployments). */
+const getFeaturedCatalog = (): OPDSCatalog | null => {
+  const config = getRuntimeConfig();
+  if (!config?.featuredCatalogUrl) return null;
+  return {
+    id: 'featured',
+    name: config.featuredCatalogName || 'Library',
+    url: config.featuredCatalogUrl,
+    description: config.featuredCatalogDescription || '',
+    icon: '⭐',
+  };
+};
+
+const getPopularCatalogs = (): OPDSCatalog[] => {
+  const featured = getFeaturedCatalog();
+  return featured ? [featured, ...POPULAR_CATALOGS] : POPULAR_CATALOGS;
+};
+
+const isTrustedCatalogUrl = (url: string): boolean => {
+  try {
+    const host = new URL(url).hostname.toLowerCase().replace(/^\[|\]$/g, '');
+    return (getRuntimeConfig()?.opdsTrustedHosts ?? []).includes(host);
+  } catch {
+    return false;
+  }
+};
 
 async function validateOPDSCatalog(
   url: string,
@@ -387,7 +417,7 @@ export function CatalogManager({ inSubPage = false }: CatalogManagerProps = {}) 
   // Only surface popular catalogs the user hasn't already added; otherwise an
   // added entry would render in both sections and read as a duplicate (#4782).
   const popularCatalogs = appService?.isOnlineCatalogsAccessible
-    ? getUnaddedPopularCatalogs(POPULAR_CATALOGS, catalogs)
+    ? getUnaddedPopularCatalogs(getPopularCatalogs(), catalogs)
     : [];
   const [subscriptionStates, setSubscriptionStates] = useState<
     Record<string, OPDSSubscriptionState>
@@ -438,7 +468,17 @@ export function CatalogManager({ inSubPage = false }: CatalogManagerProps = {}) 
   // happens once per mount; the store handles backfilling contentId
   // for legacy entries.
   useEffect(() => {
-    void useCustomOPDSStore.getState().loadCustomOPDSCatalogs(envConfig);
+    void (async () => {
+      await useCustomOPDSStore.getState().loadCustomOPDSCatalogs(envConfig);
+      // Seed the operator's own catalog once per URL; a user who removes it
+      // afterwards keeps it removed.
+      const featured = getFeaturedCatalog();
+      if (!featured || localStorage.getItem(FEATURED_SEEDED_KEY) === featured.url) return;
+      localStorage.setItem(FEATURED_SEEDED_KEY, featured.url);
+      if (useCustomOPDSStore.getState().findByUrl(featured.url)) return;
+      useCustomOPDSStore.getState().addCatalog({ ...featured });
+      await useCustomOPDSStore.getState().saveCustomOPDSCatalogs(envConfig);
+    })();
   }, [envConfig]);
 
   // Surface the latest store state into the local mirror used by
@@ -473,7 +513,8 @@ export function CatalogManager({ inSubPage = false }: CatalogManagerProps = {}) 
     if (
       process.env['NODE_ENV'] === 'production' &&
       isWebAppPlatform() &&
-      isLanAddress(newCatalog.url)
+      isLanAddress(newCatalog.url) &&
+      !isTrustedCatalogUrl(newCatalog.url)
     ) {
       setUrlError(_('Adding LAN addresses is not supported in the web app version.'));
       return;
