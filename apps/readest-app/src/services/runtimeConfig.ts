@@ -13,6 +13,8 @@ export interface ReadestRuntimeConfig {
   featuredCatalogDescription?: string;
   /** Hostnames the OPDS proxy may reach even though they are private (the operator's own catalog). */
   opdsTrustedHosts?: string[];
+  /** Starter books imported on a browser's first visit instead of the bundled demo set. */
+  demoBookUrls?: string[];
 }
 
 /** Parse the comma-separated OPDS_TRUSTED_HOSTS env value. */
@@ -73,4 +75,8 @@ export const getServerRuntimeConfig = (): ReadestRuntimeConfig => ({
   featuredCatalogName: process.env['FEATURED_OPDS_CATALOG_NAME'] || undefined,
   featuredCatalogDescription: process.env['FEATURED_OPDS_CATALOG_DESCRIPTION'] || undefined,
   opdsTrustedHosts: parseTrustedHosts(process.env['OPDS_TRUSTED_HOSTS']),
+  demoBookUrls: (process.env['DEMO_BOOK_URLS'] ?? '')
+    .split(',')
+    .map((u) => u.trim())
+    .filter(Boolean),
 });

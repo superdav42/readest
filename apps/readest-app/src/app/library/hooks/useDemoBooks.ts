@@ -5,6 +5,7 @@ import { Book } from '@/types/book';
 import { getUserLang } from '@/utils/misc';
 import { isWebAppPlatform } from '@/services/environment';
 import { demoLibraries as libraries } from '@/services/demoBooks';
+import { getRuntimeConfig } from '@/services/runtimeConfig';
 
 interface DemoBooks {
   library: string[];
@@ -23,7 +24,11 @@ export const useDemoBooks = () => {
     const fetchDemoBooks = async () => {
       try {
         const appService = await envConfig.getAppService();
-        const demoBooks = libraries[userLang] || (libraries.en as DemoBooks);
+        // A self-hosted deployment can seed its own starter books (DEMO_BOOK_URLS).
+        const custom = getRuntimeConfig()?.demoBookUrls;
+        const demoBooks: DemoBooks = custom?.length
+          ? { library: custom }
+          : libraries[userLang] || (libraries.en as DemoBooks);
         const books = await Promise.all(
           demoBooks.library.map((url) => appService.importBook(url, [], { saveBook: false })),
         );
