@@ -2661,5 +2661,6 @@
   "This book has no narration.": "इस पुस्तक का वाचन उपलब्ध नहीं है।",
   "This book is not available in your language yet. It has been requested.": "यह पुस्तक अभी आपकी भाषा में उपलब्ध नहीं है। इसके लिए अनुरोध किया गया है।",
   "Opening {{title}}…": "{{title}} खोली जा रही है…",
-  "Added {{count}} books in your language": "आपकी भाषा में {{count}} पुस्तकें जोड़ी गईं"
+  "Added {{count}} books in your language": "आपकी भाषा में {{count}} पुस्तकें जोड़ी गईं",
+  "Source code (AGPL)": "स्रोत कोड (AGPL)"
 }

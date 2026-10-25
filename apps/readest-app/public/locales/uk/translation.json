@@ -2797,5 +2797,6 @@
   "This book has no narration.": "У цієї книги немає озвучення.",
   "This book is not available in your language yet. It has been requested.": "Ця книга ще недоступна вашою мовою. Запит на неї надіслано.",
   "Opening {{title}}…": "Відкриття {{title}}…",
-  "Added {{count}} books in your language": "Додано {{count}} книг вашою мовою"
+  "Added {{count}} books in your language": "Додано {{count}} книг вашою мовою",
+  "Source code (AGPL)": "Вихідний код (AGPL)"
 }

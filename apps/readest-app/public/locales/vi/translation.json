@@ -2593,5 +2593,6 @@
   "This book has no narration.": "Sách này không có bản đọc thành tiếng.",
   "This book is not available in your language yet. It has been requested.": "Sách này chưa có bằng ngôn ngữ của bạn. Sách đã được yêu cầu.",
   "Opening {{title}}…": "Đang mở {{title}}…",
-  "Added {{count}} books in your language": "Đã thêm {{count}} sách bằng ngôn ngữ của bạn"
+  "Added {{count}} books in your language": "Đã thêm {{count}} sách bằng ngôn ngữ của bạn",
+  "Source code (AGPL)": "Mã nguồn (AGPL)"
 }

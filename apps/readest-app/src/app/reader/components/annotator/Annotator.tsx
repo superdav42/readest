@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 

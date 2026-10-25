@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { invoke } from '@tauri-apps/api/core';
@@ -10,6 +11,12 @@ import { parseWebViewInfo } from '@/utils/ua';
 import { getAppVersion } from '@/utils/version';
 import { writeTextToClipboard } from '@/utils/clipboard';
 import { eventDispatcher } from '@/utils/event';
+import {
+  UPSTREAM_REPOSITORY_URL,
+  getSourceCodeUrl,
+  getSourceCommit,
+  isModifiedVersion,
+} from '@/utils/sourceOffer';
 import SupportLinks from './SupportLinks';
 import LegalLinks from './LegalLinks';
 import Dialog from './Dialog';
@@ -188,10 +195,22 @@ export const AboutWindow = () => {
               . You are free to use, modify, and distribute this software under the terms of the
               AGPL v3 license. Please see the license for more details.
             </p>
+            {isModifiedVersion() && (
+              <p className='text-neutral-content text-xs'>
+                This is a modified version of Readest, changed by the Gutenberg AI project
+                (modifications © {new Date().getFullYear()} Gutenberg AI contributors, see
+                MODIFICATIONS.md). The original project is at{' '}
+                <Link href={UPSTREAM_REPOSITORY_URL} className='text-blue-500 underline'>
+                  github.com/readest/readest
+                </Link>
+                .
+              </p>
+            )}
             <p className='text-neutral-content text-xs'>
-              Source code is available at{' '}
-              <Link href='https://github.com/readest/readest' className='text-blue-500 underline'>
-                GitHub
+              The complete source code of this version
+              {getSourceCommit() ? ` (${getSourceCommit()})` : ''} is available at{' '}
+              <Link href={getSourceCodeUrl()} className='text-blue-500 underline'>
+                {getSourceCodeUrl().replace(/^https?:\/\//, '')}
               </Link>
               .
             </p>

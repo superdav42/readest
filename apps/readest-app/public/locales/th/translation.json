@@ -2593,5 +2593,6 @@
   "This book has no narration.": "หนังสือเล่มนี้ไม่มีเสียงบรรยาย",
   "This book is not available in your language yet. It has been requested.": "หนังสือเล่มนี้ยังไม่มีให้บริการในภาษาของคุณ ได้ส่งคำขอแล้ว",
   "Opening {{title}}…": "กำลังเปิด {{title}}…",
-  "Added {{count}} books in your language": "เพิ่มหนังสือในภาษาของคุณแล้ว {{count}} เล่ม"
+  "Added {{count}} books in your language": "เพิ่มหนังสือในภาษาของคุณแล้ว {{count}} เล่ม",
+  "Source code (AGPL)": "รหัสต้นฉบับ (AGPL)"
 }

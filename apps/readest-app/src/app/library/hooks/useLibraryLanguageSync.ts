@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Added 2026-10-25 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
 // Keep the library in the reader's language: for every work on the shelf that
 // has an edition in the current language, add that edition (the bookshelf then
 // shows it instead of the other-language copy). Runs once the library has

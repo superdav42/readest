@@ -2729,5 +2729,6 @@
   "This book has no narration.": "לספר הזה אין קריינות.",
   "This book is not available in your language yet. It has been requested.": "הספר הזה עדיין אינו זמין בשפה שלך. נשלחה בקשה עבורו.",
   "Opening {{title}}…": "פתיחת {{title}}…",
-  "Added {{count}} books in your language": "נוספו {{count}} ספרים בשפה שלך"
+  "Added {{count}} books in your language": "נוספו {{count}} ספרים בשפה שלך",
+  "Source code (AGPL)": "קוד המקור (AGPL)"
 }

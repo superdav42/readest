@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Added 2026-10-25 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
 // Switching language while reading a library book opens the same work in the
 // new language at the same chapter, or requests that edition when it does not
 // exist yet. Chapter order is stable across editions (translations keep the

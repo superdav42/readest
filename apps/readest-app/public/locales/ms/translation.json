@@ -2593,5 +2593,6 @@
   "This book has no narration.": "Buku ini tidak mempunyai penceritaan.",
   "This book is not available in your language yet. It has been requested.": "Buku ini belum tersedia dalam bahasa anda. Permintaan telah dibuat.",
   "Opening {{title}}…": "Membuka {{title}}…",
-  "Added {{count}} books in your language": "{{count}} buku dalam bahasa anda telah ditambahkan"
+  "Added {{count}} books in your language": "{{count}} buku dalam bahasa anda telah ditambahkan",
+  "Source code (AGPL)": "Kod sumber (AGPL)"
 }

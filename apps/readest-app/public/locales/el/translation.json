@@ -2661,5 +2661,6 @@
   "This book has no narration.": "Αυτό το βιβλίο δεν έχει αφήγηση.",
   "This book is not available in your language yet. It has been requested.": "Αυτό το βιβλίο δεν είναι ακόμη διαθέσιμο στη γλώσσα σας. Έχει ζητηθεί.",
   "Opening {{title}}…": "Άνοιγμα του {{title}}…",
-  "Added {{count}} books in your language": "Προστέθηκαν {{count}} βιβλία στη γλώσσα σας"
+  "Added {{count}} books in your language": "Προστέθηκαν {{count}} βιβλία στη γλώσσα σας",
+  "Source code (AGPL)": "Πηγαίος κώδικας (AGPL)"
 }

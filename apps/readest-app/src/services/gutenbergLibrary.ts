@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Added 2026-10-25 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
 // The operator's own library (self-hosted OPDS catalog + on-demand editions).
 //
 // One language setting drives everything: the interface language chosen in the

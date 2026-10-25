@@ -2661,5 +2661,6 @@
   "This book has no narration.": "Den här boken har ingen uppläsning.",
   "This book is not available in your language yet. It has been requested.": "Den här boken är ännu inte tillgänglig på ditt språk. Den har begärts.",
   "Opening {{title}}…": "Öppnar {{title}}…",
-  "Added {{count}} books in your language": "Lade till {{count}} böcker på ditt språk"
+  "Added {{count}} books in your language": "Lade till {{count}} böcker på ditt språk",
+  "Source code (AGPL)": "Källkod (AGPL)"
 }

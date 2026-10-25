@@ -2593,5 +2593,6 @@
   "This book has no narration.": "この本にはナレーションがありません。",
   "This book is not available in your language yet. It has been requested.": "この本はまだお使いの言語では利用できません。リクエスト済みです。",
   "Opening {{title}}…": "{{title}}を開いています…",
-  "Added {{count}} books in your language": "お使いの言語の本を{{count}}冊追加しました"
+  "Added {{count}} books in your language": "お使いの言語の本を{{count}}冊追加しました",
+  "Source code (AGPL)": "ソースコード（AGPL）"
 }

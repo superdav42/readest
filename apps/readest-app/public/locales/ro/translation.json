@@ -2729,5 +2729,6 @@
   "This book has no narration.": "Această carte nu are narațiune.",
   "This book is not available in your language yet. It has been requested.": "Această carte nu este încă disponibilă în limba ta. A fost solicitată.",
   "Opening {{title}}…": "Se deschide {{title}}…",
-  "Added {{count}} books in your language": "Au fost adăugate {{count}} de cărți în limba ta"
+  "Added {{count}} books in your language": "Au fost adăugate {{count}} de cărți în limba ta",
+  "Source code (AGPL)": "Cod sursă (AGPL)"
 }

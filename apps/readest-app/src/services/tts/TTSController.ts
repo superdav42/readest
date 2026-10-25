@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { FoliateView, ViewTTS } from '@/types/view';
 import { AppService } from '@/types/system';
 import type { PageInfo, PairedAudiobook } from '@/types/book';

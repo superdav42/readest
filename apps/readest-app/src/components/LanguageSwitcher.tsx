@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Added 2026-10-25 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
 'use client';
 
 // Header language selector: one choice switches the interface language and the

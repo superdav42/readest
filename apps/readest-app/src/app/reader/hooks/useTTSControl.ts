@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useEnv } from '@/context/EnvContext';
 import { useAuth } from '@/context/AuthContext';

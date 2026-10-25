@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { PiUserCircle, PiUserCircleCheck, PiGear, PiChartBar } from 'react-icons/pi';
@@ -25,6 +26,7 @@ import { useTransferQueue } from '@/hooks/useTransferQueue';
 import { navigateToLogin, navigateToProfile } from '@/utils/nav';
 import { canToggleFullScreen, tauriHandleSetAlwaysOnTop, toggleFullScreen } from '@/utils/window';
 import { setAboutDialogVisible } from '@/components/AboutWindow';
+import { getSourceCodeUrl } from '@/utils/sourceOffer';
 import { setMigrateDataDirDialogVisible } from '@/app/library/components/MigrateDataWindow';
 import { requestStoragePermission } from '@/utils/permission';
 import { saveSysSettings } from '@/helpers/settings';
@@ -104,6 +106,12 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({ onPullLibrary, setIsDropdow
 
   const showAboutReadest = () => {
     setAboutDialogVisible(true);
+    setIsDropdownOpen?.(false);
+  };
+
+  // AGPL section 13: offer the source of the running (modified) version.
+  const openSourceCode = () => {
+    window.open(getSourceCodeUrl(), '_blank', 'noopener');
     setIsDropdownOpen?.(false);
   };
 
@@ -481,6 +489,7 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({ onPullLibrary, setIsDropdow
       )}
       {isWebAppPlatform() && <MenuItem label={_('Download Readest')} onClick={downloadReadest} />}
       <MenuItem label={_('About Readest')} onClick={showAboutReadest} />
+      <MenuItem label={_('Source code (AGPL)')} onClick={openSourceCode} />
     </Menu>
   );
 };

@@ -2593,5 +2593,6 @@
   "This book has no narration.": "这本书没有朗读内容。",
   "This book is not available in your language yet. It has been requested.": "这本书暂时没有您所用语言的版本。已提交请求。",
   "Opening {{title}}…": "正在打开 {{title}}…",
-  "Added {{count}} books in your language": "已添加 {{count}} 本您所用语言的书籍"
+  "Added {{count}} books in your language": "已添加 {{count}} 本您所用语言的书籍",
+  "Source code (AGPL)": "源代码（AGPL）"
 }

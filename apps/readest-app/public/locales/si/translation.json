@@ -2661,5 +2661,6 @@
   "This book has no narration.": "මෙම පොත සඳහා ශ්‍රව්‍ය කියවීමක් නොමැත.",
   "This book is not available in your language yet. It has been requested.": "මෙම පොත තවම ඔබේ භාෂාවෙන් ලබා ගත නොහැක. එය ඉල්ලා ඇත.",
   "Opening {{title}}…": "{{title}} විවෘත කරමින්…",
-  "Added {{count}} books in your language": "ඔබේ භාෂාවෙන් පොත් {{count}}ක් එක් කරන ලදී"
+  "Added {{count}} books in your language": "ඔබේ භාෂාවෙන් පොත් {{count}}ක් එක් කරන ලදී",
+  "Source code (AGPL)": "මූලාශ්‍ර කේතය (AGPL)"
 }

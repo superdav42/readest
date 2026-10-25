@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 export interface ReadestRuntimeConfig {
   supabaseUrl?: string;
   supabaseAnonKey?: string;
@@ -19,6 +20,8 @@ export interface ReadestRuntimeConfig {
   recordedNarrationOnly?: boolean;
   /** Hide on-the-fly machine translation (DeepL, Google, Azure, Yandex, AI providers). */
   onlineTranslationDisabled?: boolean;
+  /** Public repository of this modified version (AGPL section 13 source offer). */
+  sourceRepositoryUrl?: string;
 }
 
 /** Parse the comma-separated OPDS_TRUSTED_HOSTS env value. */
@@ -85,4 +88,5 @@ export const getServerRuntimeConfig = (): ReadestRuntimeConfig => ({
     .filter(Boolean),
   recordedNarrationOnly: process.env['RECORDED_NARRATION_ONLY'] === 'true' || undefined,
   onlineTranslationDisabled: process.env['DISABLE_ONLINE_TRANSLATION'] === 'true' || undefined,
+  sourceRepositoryUrl: process.env['SOURCE_REPOSITORY_URL'] || undefined,
 });

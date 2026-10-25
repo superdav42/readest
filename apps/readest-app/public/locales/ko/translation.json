@@ -2593,5 +2593,6 @@
   "This book has no narration.": "이 책에는 낭독이 없습니다.",
   "This book is not available in your language yet. It has been requested.": "이 책은 아직 회원님의 언어로 제공되지 않습니다. 요청되었습니다.",
   "Opening {{title}}…": "{{title}} 여는 중…",
-  "Added {{count}} books in your language": "회원님의 언어로 된 책 {{count}}권을 추가했습니다."
+  "Added {{count}} books in your language": "회원님의 언어로 된 책 {{count}}권을 추가했습니다.",
+  "Source code (AGPL)": "소스 코드(AGPL)"
 }

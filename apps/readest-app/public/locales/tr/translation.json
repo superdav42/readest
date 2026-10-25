@@ -2661,5 +2661,6 @@
   "This book has no narration.": "Bu kitabın sesli anlatımı yok.",
   "This book is not available in your language yet. It has been requested.": "Bu kitap henüz dilinizde mevcut değil. İstendi.",
   "Opening {{title}}…": "{{title}} açılıyor…",
-  "Added {{count}} books in your language": "Dilinizde {{count}} kitap eklendi"
+  "Added {{count}} books in your language": "Dilinizde {{count}} kitap eklendi",
+  "Source code (AGPL)": "Kaynak kodu (AGPL)"
 }

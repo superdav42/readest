@@ -39,6 +39,9 @@ ARG NEXT_PUBLIC_API_BASE_URL
 ARG NEXT_PUBLIC_OBJECT_STORAGE_TYPE
 ARG NEXT_PUBLIC_STORAGE_FIXED_QUOTA
 ARG NEXT_PUBLIC_TRANSLATION_FIXED_QUOTA
+# Gutenberg AI fork: commit of the source this image is built from, shown in the
+# AGPL section 13 source offer (About window, "Source code" menu item).
+ARG NEXT_PUBLIC_SOURCE_COMMIT
 COPY --from=dependencies /app/node_modules /app/node_modules
 COPY --from=dependencies /app/apps/readest-app/node_modules /app/apps/readest-app/node_modules
 COPY --from=dependencies /app/apps/readest-app/public/vendor /app/apps/readest-app/public/vendor

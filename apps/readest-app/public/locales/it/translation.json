@@ -2729,5 +2729,6 @@
   "This book has no narration.": "Questo libro non ha una narrazione.",
   "This book is not available in your language yet. It has been requested.": "Questo libro non è ancora disponibile nella tua lingua. È stato richiesto.",
   "Opening {{title}}…": "Apertura di {{title}}…",
-  "Added {{count}} books in your language": "Aggiunti {{count}} libri nella tua lingua"
+  "Added {{count}} books in your language": "Aggiunti {{count}} libri nella tua lingua",
+  "Source code (AGPL)": "Codice sorgente (AGPL)"
 }

@@ -2661,5 +2661,6 @@
   "This book has no narration.": "ამ წიგნს ხმოვანი კითხვა არ აქვს.",
   "This book is not available in your language yet. It has been requested.": "ეს წიგნი ჯერ არ არის ხელმისაწვდომი თქვენს ენაზე. მისი მოთხოვნა უკვე გაგზავნილია.",
   "Opening {{title}}…": "იხსნება {{title}}…",
-  "Added {{count}} books in your language": "თქვენს ენაზე {{count}} წიგნი დაემატა"
+  "Added {{count}} books in your language": "თქვენს ენაზე {{count}} წიგნი დაემატა",
+  "Source code (AGPL)": "წყაროს კოდი (AGPL)"
 }

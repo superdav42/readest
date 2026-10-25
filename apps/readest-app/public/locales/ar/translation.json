@@ -2933,5 +2933,6 @@
   "This book has no narration.": "لا يتوفر لهذا الكتاب سرد صوتي.",
   "This book is not available in your language yet. It has been requested.": "هذا الكتاب غير متاح بلغتك بعد. تم تقديم طلب للحصول عليه.",
   "Opening {{title}}…": "جارٍ فتح {{title}}…",
-  "Added {{count}} books in your language": "تمت إضافة {{count}} كتابًا بلغتك"
+  "Added {{count}} books in your language": "تمت إضافة {{count}} كتابًا بلغتك",
+  "Source code (AGPL)": "الشفرة المصدرية (AGPL)"
 }

@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import LibraryEmptyState from './LibraryEmptyState';
 import LibraryImportButton from './LibraryImportButton';
 import clsx from 'clsx';

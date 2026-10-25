@@ -2593,5 +2593,6 @@
   "This book has no narration.": "དཔེ་དེབ་འདིར་སྒྲ་ཀློག་མེད།",
   "This book is not available in your language yet. It has been requested.": "དཔེ་དེབ་འདི་ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་ད་ལྟ་མེད། དེའི་ཞུ་བ་ཕུལ་ཟིན།",
   "Opening {{title}}…": "{{title}} ཁ་ཕྱེ་བཞིན་ཡོད…",
-  "Added {{count}} books in your language": "ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་གི་དཔེ་དེབ་{{count}} ཁ་སྣོན་བྱས་ཟིན།"
+  "Added {{count}} books in your language": "ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་གི་དཔེ་དེབ་{{count}} ཁ་སྣོན་བྱས་ཟིན།",
+  "Source code (AGPL)": "ཁུངས་ཀྱི་ཨང་རྟགས་ (AGPL)"
 }

@@ -2661,5 +2661,6 @@
   "This book has no narration.": "Bu kitobda ovozli o‘qish mavjud emas.",
   "This book is not available in your language yet. It has been requested.": "Bu kitob hali sizning tilingizda mavjud emas. Unga so‘rov yuborildi.",
   "Opening {{title}}…": "{{title}} ochilmoqda…",
-  "Added {{count}} books in your language": "Tilingizdagi {{count}} ta kitob qo‘shildi"
+  "Added {{count}} books in your language": "Tilingizdagi {{count}} ta kitob qo‘shildi",
+  "Source code (AGPL)": "Manba kodi (AGPL)"
 }
