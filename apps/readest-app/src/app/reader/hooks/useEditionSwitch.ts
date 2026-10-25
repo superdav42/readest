@@ -15,6 +15,7 @@ import {
   requestEdition,
   toContentLanguage,
 } from '@/services/gutenbergLibrary';
+import { isWebAppPlatform } from '@/services/environment';
 import { eventDispatcher } from '@/utils/event';
 import { navigateToReader } from '@/utils/nav';
 
@@ -81,7 +82,10 @@ export const useEditionSwitch = (bookKey: string) => {
         await appService.saveLibraryBooks(library);
         const index = getProgress(bookKey)?.index ?? 0;
         sessionStorage.setItem(PENDING_KEY, JSON.stringify({ hash: book.hash, index }));
-        navigateToReader(router, [book.hash]);
+        // The reader initialises its book from the URL once; a full navigation
+        // swaps the open book on web, the router does on native.
+        if (isWebAppPlatform()) window.location.assign(`/reader/${book.hash}`);
+        else navigateToReader(router, [book.hash]);
       } catch (error) {
         console.error('Edition switch failed', error);
       }
