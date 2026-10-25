@@ -210,7 +210,9 @@ export const AboutWindow = () => {
               The complete source code of this version
               {getSourceCommit() ? ` (${getSourceCommit()})` : ''} is available at{' '}
               <Link href={getSourceCodeUrl()} className='text-blue-500 underline'>
-                {getSourceCodeUrl().replace(/^https?:\/\//, '')}
+                {getSourceCodeUrl()
+                  .replace(/^https?:\/\//, '')
+                  .replace(/\/tree\/.*$/, '')}
               </Link>
               .
             </p>
