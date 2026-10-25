@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createSupabaseAdminClient } from '@/utils/supabase';
 import { corsAllMethods, runMiddleware } from '@/utils/cors';
@@ -37,6 +38,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const { fileName, fileSize, bookHash, replicaKind, replicaId, temp = false, media } = req.body;
+
+  // Shared library mode: book files are served from the shared catalog, never
+  // stored per user (settings replicas still sync).
+  if (process.env['SHARED_LIBRARY_ONLY'] === 'true' && bookHash && !replicaKind) {
+    return res.status(403).json({ error: 'Book file uploads are disabled on this server' });
+  }
 
   // Reject object-key path traversal before building any key. `fileName` is
   // fully client-controlled and is interpolated into `${user.id}/${fileName}`;

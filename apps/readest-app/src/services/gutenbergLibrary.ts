@@ -117,7 +117,23 @@ export const announceContentLanguage = (lang: string) =>
   eventDispatcher.dispatch(CONTENT_LANGUAGE_EVENT, { lang });
 
 /** Work id of a library book imported from our catalog, else null. */
-export const getBookWorkId = (book: Book): number | null => parseWorkId(book.metadata?.identifier);
+export const getBookWorkId = (book: Pick<Book, 'metadata'>): number | null =>
+  parseWorkId(book.metadata?.identifier);
+
+/** Shared library mode: book files come from the catalog, never per-user uploads. */
+export const isSharedLibraryOnly = (): boolean => !!getRuntimeConfig()?.sharedLibraryOnly;
+
+export const isSharedLibraryBook = (book: Pick<Book, 'metadata'>): boolean =>
+  isSharedLibraryOnly() && getBookWorkId(book) !== null;
+
+/** Catalog URL of the exact file a library book was imported from (or its cover). */
+export const getSharedBookUrl = (book: Book, part: 'book' | 'cover' = 'book'): string | null => {
+  const base = getCatalogBase();
+  if (!base) return null;
+  const lang = getBookLanguage(book);
+  const query = new URLSearchParams({ identifier: book.metadata?.identifier ?? '', lang });
+  return `${base}/api/files/by-hash/${book.hash}${part === 'cover' ? '/cover' : ''}?${query}`;
+};
 
 export const getBookLanguage = (book: Book): string => {
   const lang = book.metadata?.language;

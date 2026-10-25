@@ -22,6 +22,8 @@ export interface ReadestRuntimeConfig {
   onlineTranslationDisabled?: boolean;
   /** Public repository of this modified version (AGPL section 13 source offer). */
   sourceRepositoryUrl?: string;
+  /** Book files come only from the shared catalog: no per-user file uploads. */
+  sharedLibraryOnly?: boolean;
 }
 
 /** Parse the comma-separated OPDS_TRUSTED_HOSTS env value. */
@@ -89,4 +91,5 @@ export const getServerRuntimeConfig = (): ReadestRuntimeConfig => ({
   recordedNarrationOnly: process.env['RECORDED_NARRATION_ONLY'] === 'true' || undefined,
   onlineTranslationDisabled: process.env['DISABLE_ONLINE_TRANSLATION'] === 'true' || undefined,
   sourceRepositoryUrl: process.env['SOURCE_REPOSITORY_URL'] || undefined,
+  sharedLibraryOnly: process.env['SHARED_LIBRARY_ONLY'] === 'true' || undefined,
 });

@@ -31,6 +31,7 @@ deploy commits that are pushed to that repository.
 | 2026-10-25 | Speech | `src/services/tts/TTSController.ts`, `src/services/tts/wordPronouncer.ts`, `src/app/reader/hooks/useTTSControl.ts` | `RECORDED_NARRATION_ONLY`: only narration embedded in the book plays (no Edge, Web Speech, Readest Voice or custom TTS); missing narration is requested from the library |
 | 2026-10-25 | Translation | `src/services/translators/providers/index.ts`, `src/hooks/useTranslator.ts`, `src/app/reader/components/TranslationToggler.tsx`, `src/app/reader/components/annotator/Annotator.tsx` | `DISABLE_ONLINE_TRANSLATION`: no DeepL, Azure, Google, Yandex or AI translators |
 | 2026-10-25 | Licensing | `src/utils/sourceOffer.ts` (new), `src/components/AboutWindow.tsx`, `src/app/library/components/SettingsMenu.tsx`, `Dockerfile`, `MODIFICATIONS.md` (new) | AGPL section 13 source offer and modification notices |
+| 2026-10-25 | Shared library | `src/services/cloudService.ts`, `src/services/bookService.ts`, `src/services/gutenbergLibrary.ts`, `src/pages/api/storage/upload.ts`, `src/app/library/components/BookItem.tsx`, `src/app/library/utils/libraryUtils.ts` | `SHARED_LIBRARY_ONLY`: catalog books are never uploaded per user; every device fetches the exact file (by Readest hash) from the shared catalog; book uploads and sharing are disabled |
 | 2026-10-25 | Strings | `public/locales/*/translation.json` | Translations of the new UI strings |
 
 "Readest" is a name of the upstream project; this fork is not endorsed by Bilingify LLC.

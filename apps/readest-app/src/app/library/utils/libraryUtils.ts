@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { Book, BooksGroup, ReadingStatus } from '@/types/book';
 import {
   LibraryGroupByType,
@@ -17,6 +18,7 @@ import { stubTranslation as _ } from '@/utils/misc';
 import { SIZE_PER_LOC, SIZE_PER_TIME_UNIT } from '@/services/constants';
 import { isFeedBook } from '@/services/rss/feedBookUrl';
 import { isAbsOfflineCapable, isAudiobook } from '@/utils/audiobook';
+import { isSharedLibraryOnly } from '@/services/gutenbergLibrary';
 
 /** Valid sort types for the library */
 const VALID_SORT_TYPES: LibrarySortByType[] = Object.values(LibrarySortByType);
@@ -1181,10 +1183,12 @@ export const getBookContextMenuItemIds = (
   // share dialog uploads before it can hand out a link (issue #5307).
   if (!isFeedBook(book)) {
     if (book.uploadedAt && !book.downloadedAt) ids.push('download');
-    if (!book.uploadedAt && book.downloadedAt) ids.push('upload');
+    // Shared library mode: no per-user uploads, and sharing would upload first.
+    const sharedOnly = isSharedLibraryOnly();
+    if (!sharedOnly && !book.uploadedAt && book.downloadedAt) ids.push('upload');
     // Share is offered for any local-or-uploaded book; the dialog uploads first
     // if the book hasn't been pushed yet.
-    if (book.downloadedAt || book.uploadedAt) ids.push('share');
+    if (!sharedOnly && (book.downloadedAt || book.uploadedAt)) ids.push('share');
     // LocalSend needs the file on this device; cloud-only books are excluded.
     if (opts?.localSend && (book.downloadedAt || book.filePath)) ids.push('sendNearby');
   }

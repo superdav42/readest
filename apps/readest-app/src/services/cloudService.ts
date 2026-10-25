@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { AppService, FileSystem, BaseDir, DeleteAction } from '@/types/system';
 import { Book } from '@/types/book';
 import {
@@ -19,6 +20,7 @@ import { ProgressHandler } from '@/utils/transfer';
 import { CLOUD_BOOKS_SUBDIR, CLOUD_REPLICAS_SUBDIR } from './constants';
 import { isBookFileContentSource, resolveBookContentSource } from './bookContent';
 import { getAbsOfflineDir } from '@/utils/audiobook';
+import { getSharedBookUrl, isSharedLibraryBook, isSharedLibraryOnly } from './gutenbergLibrary';
 
 export async function deleteBook(
   fs: FileSystem,
@@ -191,6 +193,13 @@ export async function uploadBook(
   book: Book,
   onProgress?: ProgressHandler,
 ): Promise<void> {
+  // Shared library mode: catalog books are served to every device from the
+  // shared catalog; nothing is stored per user, and personal uploads are off.
+  if (isSharedLibraryOnly()) {
+    if (!isSharedLibraryBook(book)) throw new Error('Personal file uploads are disabled');
+    book.uploadedAt = book.uploadedAt || Date.now();
+    return;
+  }
   const completedFiles = { count: 0 };
   const coverExist = await fs.exists(getCoverFilename(book), 'Books');
 
@@ -250,6 +259,7 @@ export async function uploadBookCover(
   book: Book,
   onProgress?: ProgressHandler,
 ): Promise<void> {
+  if (isSharedLibraryOnly()) return; // covers come from the shared catalog
   if (!(await fs.exists(getCoverFilename(book), 'Books'))) return;
   const completedFiles = { count: 0 };
   const handleProgress = createProgressHandler(1, completedFiles, onProgress);
@@ -286,7 +296,14 @@ export async function downloadBookCovers(
     lfp: getCoverFilename(book),
     cfp: `${CLOUD_BOOKS_SUBDIR}/${getCoverFilename(book)}`,
   }));
-  const downloadUrls = await batchGetDownloadUrls(filePaths);
+  // Shared library books: covers come from the catalog, not user storage.
+  const downloadUrls = isSharedLibraryOnly()
+    ? books.map((book) => ({
+        lfp: getCoverFilename(book),
+        cfp: `${CLOUD_BOOKS_SUBDIR}/${getCoverFilename(book)}`,
+        downloadUrl: isSharedLibraryBook(book) ? getSharedBookUrl(book, 'cover') : null,
+      }))
+    : await batchGetDownloadUrls(filePaths);
   await Promise.all(
     books.map(async (book) => {
       if (!(await fs.exists(getDir(book), 'Books'))) {
@@ -340,11 +357,27 @@ export async function downloadBook(
     await fs.createDir(getDir(book), 'Books');
   }
 
+  // Shared library books are fetched from the catalog by their exact file hash.
+  const sharedBook = isSharedLibraryBook(book);
+  const fetchFile = async (lfp: string, cfp: string, url: string | null) => {
+    if (sharedBook && url) {
+      await downloadFile({
+        appService,
+        cfp,
+        dst: `${localBooksDir}/${lfp}`,
+        url,
+        onProgress: handleProgress,
+      });
+    } else {
+      await downloadCloudFile(appService, localBooksDir, lfp, cfp, handleProgress);
+    }
+  };
+
   try {
     if (needDownCover) {
       const lfp = getCoverFilename(book);
       const cfp = `${CLOUD_BOOKS_SUBDIR}/${lfp}`;
-      await downloadCloudFile(appService, localBooksDir, lfp, cfp, handleProgress);
+      await fetchFile(lfp, cfp, getSharedBookUrl(book, 'cover'));
       bookCoverDownloaded = true;
     }
   } catch (error) {
@@ -359,7 +392,7 @@ export async function downloadBook(
   if (needDownBook) {
     const lfp = getLocalBookFilename(book);
     const cfp = `${CLOUD_BOOKS_SUBDIR}/${getRemoteBookFilename(book)}`;
-    await downloadCloudFile(appService, localBooksDir, lfp, cfp, handleProgress);
+    await fetchFile(lfp, cfp, getSharedBookUrl(book, 'book'));
     const localFullpath = `${localBooksDir}/${lfp}`;
     bookDownloaded = await fs.exists(localFullpath, 'None');
     completedFiles.count++;

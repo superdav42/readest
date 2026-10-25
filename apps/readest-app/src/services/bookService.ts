@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { SystemSettings } from '@/types/settings';
 import { FileSystem, AppPlatform, BaseDir, OsPlatform } from '@/types/system';
 import {
@@ -45,6 +46,7 @@ import { TxtToEpubConverter } from '@/utils/txt';
 import { svg2png } from '@/utils/svg';
 import { normalizeMetadataIsbn } from '@/utils/isbn';
 import { BookFileNotFoundError } from './errors';
+import { isSharedLibraryBook } from './gutenbergLibrary';
 import { fetch as tauriFetch } from '@tauri-apps/plugin-http';
 import {
   isBookFileContentSource,
@@ -753,7 +755,13 @@ export async function importBook(
       pageCount: getBookDocPageCount(loadedBook, format),
       metadata: loadedBook.metadata,
       createdAt: existingBook ? existingBook.createdAt : Date.now(),
-      uploadedAt: existingBook ? existingBook.uploadedAt : null,
+      // Shared library mode: a catalog book's file already lives in the shared
+      // catalog, so it counts as "in the cloud" without a per-user upload.
+      uploadedAt: existingBook?.uploadedAt
+        ? existingBook.uploadedAt
+        : isSharedLibraryBook({ metadata: loadedBook.metadata })
+          ? Date.now()
+          : null,
       deletedAt: transient ? Date.now() : null,
       downloadedAt: Date.now(),
       updatedAt: Date.now(),

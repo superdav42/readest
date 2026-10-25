@@ -1,3 +1,4 @@
+// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import { useState } from 'react';
 import { MdCheckCircle, MdCheckCircleOutline, MdOutlineOfflinePin } from 'react-icons/md';
@@ -26,6 +27,7 @@ import { INDETERMINATE_PROGRESS } from '@/utils/transfer';
 import { getBookTags } from '../utils/libraryUtils';
 import ReadingProgress from './ReadingProgress';
 import BookCover from '@/components/BookCover';
+import { isSharedLibraryOnly } from '@/services/gutenbergLibrary';
 
 interface BookItemProps {
   book: Book;
@@ -320,7 +322,10 @@ const BookItem: React.FC<BookItemProps> = ({
                 // would render forever and Upload would always fail.
                 !isFeedBook(book) &&
                 !isAudiobook(book) &&
-                (!book.uploadedAt || (book.uploadedAt && !book.downloadedAt)) && (
+                // Shared library mode: no Upload badge (downloads still show).
+                (isSharedLibraryOnly()
+                  ? !!book.uploadedAt && !book.downloadedAt
+                  : !book.uploadedAt || (book.uploadedAt && !book.downloadedAt)) && (
                   <button
                     aria-label={!book.uploadedAt ? _('Upload Book') : _('Download Book')}
                     className='show-cloud-button -m-2 p-2'
