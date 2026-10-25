@@ -2721,5 +2721,13 @@
   "Note Template": "Șablon de notă",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "Fiecare evidențiere este redată ca Markdown cu Nunjucks, apoi trimisă în Notion sub formă de blocuri",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "Citatele preiau culoarea evidențierii, iar > [!NOTE] devine o casetă de evidențiere",
-  "Variables: {{variables}}": "Variabile: {{variables}}"
+  "Variables: {{variables}}": "Variabile: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "Solicitarea a fost trimisă. Va apărea în bibliotecă atunci când va fi gata.",
+  "Request failed, please try again.": "Solicitarea a eșuat. Încearcă din nou.",
+  "Narration is not available in this language yet.": "Narațiunea nu este încă disponibilă în această limbă.",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "Această carte nu are încă narațiune. A fost solicitată și va apărea în biblioteca ta când va fi gata.",
+  "This book has no narration.": "Această carte nu are narațiune.",
+  "This book is not available in your language yet. It has been requested.": "Această carte nu este încă disponibilă în limba ta. A fost solicitată.",
+  "Opening {{title}}…": "Se deschide {{title}}…",
+  "Added {{count}} books in your language": "Au fost adăugate {{count}} de cărți în limba ta"
 }

@@ -2721,5 +2721,13 @@
   "Note Template": "Plantilla de nota",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "Cada resaltado se genera como Markdown con Nunjucks y luego se envía a Notion como bloques",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "Las citas toman el color del resaltado y > [!NOTE] se convierte en un destacado",
-  "Variables: {{variables}}": "Variables: {{variables}}"
+  "Variables: {{variables}}": "Variables: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "Solicitado. Aparecerá en la biblioteca cuando esté listo.",
+  "Request failed, please try again.": "La solicitud falló. Inténtalo de nuevo.",
+  "Narration is not available in this language yet.": "La narración aún no está disponible en este idioma.",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "Este libro aún no tiene narración. Se ha solicitado y aparecerá en tu biblioteca cuando esté lista.",
+  "This book has no narration.": "Este libro no tiene narración.",
+  "This book is not available in your language yet. It has been requested.": "Este libro aún no está disponible en tu idioma. Se ha solicitado.",
+  "Opening {{title}}…": "Abriendo {{title}}…",
+  "Added {{count}} books in your language": "Se añadieron {{count}} libros en tu idioma"
 }

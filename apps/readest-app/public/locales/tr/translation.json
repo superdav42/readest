@@ -2653,5 +2653,13 @@
   "Note Template": "Not Şablonu",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "Her vurgu Nunjucks ile Markdown olarak işlenir ve ardından Notion'a bloklar halinde gönderilir",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "Alıntılar vurgu rengini alır ve > [!NOTE] bir bilgi kutusuna dönüşür",
-  "Variables: {{variables}}": "Değişkenler: {{variables}}"
+  "Variables: {{variables}}": "Değişkenler: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "İstendi. Hazır olduğunda kütüphanede görünecek.",
+  "Request failed, please try again.": "İstek başarısız oldu, lütfen tekrar deneyin.",
+  "Narration is not available in this language yet.": "Sesli anlatım bu dilde henüz mevcut değil.",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "Bu kitabın henüz sesli anlatımı yok. İstendi ve hazır olduğunda kütüphanenizde görünecek.",
+  "This book has no narration.": "Bu kitabın sesli anlatımı yok.",
+  "This book is not available in your language yet. It has been requested.": "Bu kitap henüz dilinizde mevcut değil. İstendi.",
+  "Opening {{title}}…": "{{title}} açılıyor…",
+  "Added {{count}} books in your language": "Dilinizde {{count}} kitap eklendi"
 }

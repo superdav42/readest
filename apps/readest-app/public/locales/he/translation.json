@@ -2721,5 +2721,13 @@
   "Note Template": "תבנית הערה",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "כל הדגשה מעובדת ל-Markdown באמצעות Nunjucks ולאחר מכן נשלחת ל-Notion כבלוקים",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "ציטוטים מקבלים את צבע ההדגשה, ו-‎> [!NOTE]‎ הופך לתיבת הסבר",
-  "Variables: {{variables}}": "משתנים: {{variables}}"
+  "Variables: {{variables}}": "משתנים: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "הבקשה נשלחה. הוא יופיע בספרייה כשהוא יהיה מוכן.",
+  "Request failed, please try again.": "הבקשה נכשלה, נסו שוב.",
+  "Narration is not available in this language yet.": "קריינות עדיין אינה זמינה בשפה זו.",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "לספר הזה עדיין אין קריינות. נשלחה בקשה, והוא יופיע בספרייה שלך כשיהיה מוכן.",
+  "This book has no narration.": "לספר הזה אין קריינות.",
+  "This book is not available in your language yet. It has been requested.": "הספר הזה עדיין אינו זמין בשפה שלך. נשלחה בקשה עבורו.",
+  "Opening {{title}}…": "פתיחת {{title}}…",
+  "Added {{count}} books in your language": "נוספו {{count}} ספרים בשפה שלך"
 }

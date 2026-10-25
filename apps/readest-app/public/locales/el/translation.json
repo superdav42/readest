@@ -2653,5 +2653,13 @@
   "Note Template": "Πρότυπο σημείωσης",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "Κάθε επισήμανση αποδίδεται ως Markdown με το Nunjucks και στη συνέχεια αποστέλλεται στο Notion ως μπλοκ",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "Τα αποσπάσματα παίρνουν το χρώμα της επισήμανσης και το > [!NOTE] γίνεται πλαίσιο επισήμανσης",
-  "Variables: {{variables}}": "Μεταβλητές: {{variables}}"
+  "Variables: {{variables}}": "Μεταβλητές: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "Ζητήθηκε. Θα εμφανιστεί στη βιβλιοθήκη όταν είναι έτοιμο.",
+  "Request failed, please try again.": "Το αίτημα απέτυχε. Παρακαλώ δοκιμάστε ξανά.",
+  "Narration is not available in this language yet.": "Η αφήγηση δεν είναι ακόμη διαθέσιμη σε αυτήν τη γλώσσα.",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "Αυτό το βιβλίο δεν έχει ακόμη αφήγηση. Έχει ζητηθεί και θα εμφανιστεί στη βιβλιοθήκη σας όταν είναι έτοιμη.",
+  "This book has no narration.": "Αυτό το βιβλίο δεν έχει αφήγηση.",
+  "This book is not available in your language yet. It has been requested.": "Αυτό το βιβλίο δεν είναι ακόμη διαθέσιμο στη γλώσσα σας. Έχει ζητηθεί.",
+  "Opening {{title}}…": "Άνοιγμα του {{title}}…",
+  "Added {{count}} books in your language": "Προστέθηκαν {{count}} βιβλία στη γλώσσα σας"
 }

@@ -58,6 +58,7 @@ import DeleteConfirmAlert from '@/components/DeleteConfirmAlert';
 import Spinner from '@/components/Spinner';
 import ModalPortal from '@/components/ModalPortal';
 import BookshelfItem from './BookshelfItem';
+import { pickEditionsForLanguage, useContentLanguage } from '@/services/gutenbergLibrary';
 import SelectModeActions from './SelectModeActions';
 import ShareBookDialog from './ShareBookDialog';
 import { createCollectionPack, READEST_PACK_MIME } from '@/services/pack/packService';
@@ -255,10 +256,16 @@ const Bookshelf: React.FC<BookshelfProps> = ({
   // the one settings field it reads keeps unrelated settings writes from
   // re-filtering and re-sorting every shelf.
   const absServers = useABSServerStore((state) => state.servers);
+  // Our library's works appear once, in the reader's language.
+  const contentLanguage = useContentLanguage();
   const visibleBooks = useMemo(
-    () => libraryBooks.filter((book) => !book.deletedAt && !isAbsBookOrphaned(book)),
+    () =>
+      pickEditionsForLanguage(
+        libraryBooks.filter((book) => !book.deletedAt && !isAbsBookOrphaned(book)),
+        contentLanguage,
+      ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [libraryBooks, absServers, settings.absServers],
+    [libraryBooks, absServers, settings.absServers, contentLanguage],
   );
 
   const filteredBooks = useMemo(() => {

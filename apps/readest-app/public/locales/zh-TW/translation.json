@@ -2585,5 +2585,13 @@
   "Note Template": "筆記範本",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "每則螢光標記會以 Nunjucks 轉為 Markdown，再以區塊形式傳送到 Notion",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "引文會套用螢光標記的顏色，> [!NOTE] 會變成標註區塊",
-  "Variables: {{variables}}": "變數：{{variables}}"
+  "Variables: {{variables}}": "變數：{{variables}}",
+  "Requested. It will appear in the library when it is ready.": "已提出要求。準備好後會出現在圖書館中。",
+  "Request failed, please try again.": "請求失敗，請再試一次。",
+  "Narration is not available in this language yet.": "此語言目前尚未提供朗讀功能。",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "這本書目前尚無朗讀內容。已提出要求，準備好後會出現在您的圖書館中。",
+  "This book has no narration.": "這本書沒有朗讀內容。",
+  "This book is not available in your language yet. It has been requested.": "這本書目前尚未提供您所使用的語言版本。已提出要求。",
+  "Opening {{title}}…": "正在開啟 {{title}}…",
+  "Added {{count}} books in your language": "已新增 {{count}} 本您所使用語言的書籍"
 }

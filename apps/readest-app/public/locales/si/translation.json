@@ -2653,5 +2653,13 @@
   "Note Template": "සටහන් අච්චුව",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "සෑම උද්දීපනයක්ම Nunjucks සමඟ Markdown ලෙස සකසා, පසුව Notion වෙත කොටස් ලෙස යවනු ලැබේ",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "උපුටා දැක්වීම් උද්දීපනයේ වර්ණය ගන්නා අතර, > [!NOTE] විස්තර කොටුවක් බවට පත් වේ",
-  "Variables: {{variables}}": "විචල්‍ය: {{variables}}"
+  "Variables: {{variables}}": "විචල්‍ය: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "ඉල්ලීම යවන ලදී. සූදානම් වූ විට එය පුස්තකාලයේ දිස්වනු ඇත.",
+  "Request failed, please try again.": "ඉල්ලීම අසාර්ථක විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+  "Narration is not available in this language yet.": "මෙම භාෂාවෙන් ශ්‍රව්‍ය කියවීම තවම ලබා ගත නොහැක.",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "මෙම පොත සඳහා තවම ශ්‍රව්‍ය කියවීමක් නොමැත. එය ඉල්ලා ඇති අතර, සූදානම් වූ විට ඔබේ පුස්තකාලයේ දිස්වනු ඇත.",
+  "This book has no narration.": "මෙම පොත සඳහා ශ්‍රව්‍ය කියවීමක් නොමැත.",
+  "This book is not available in your language yet. It has been requested.": "මෙම පොත තවම ඔබේ භාෂාවෙන් ලබා ගත නොහැක. එය ඉල්ලා ඇත.",
+  "Opening {{title}}…": "{{title}} විවෘත කරමින්…",
+  "Added {{count}} books in your language": "ඔබේ භාෂාවෙන් පොත් {{count}}ක් එක් කරන ලදී"
 }

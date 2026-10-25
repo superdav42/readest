@@ -4,7 +4,9 @@
 // header is also the language books are shown and read in. Catalog feeds take a
 // `lang` parameter; each work is listed once in the best form available in that
 // language, and missing translations or narrations can be requested.
+import { useEffect, useState } from 'react';
 import i18n from '@/i18n/i18n';
+import type { Book } from '@/types/book';
 import { getRuntimeConfig } from '@/services/runtimeConfig';
 import { eventDispatcher } from '@/utils/event';
 
@@ -111,3 +113,48 @@ export const requestEdition = (workId: number, lang: string, kind: 'translation'
 /** Announce a language change to pages that show library content. */
 export const announceContentLanguage = (lang: string) =>
   eventDispatcher.dispatch(CONTENT_LANGUAGE_EVENT, { lang });
+
+/** Work id of a library book imported from our catalog, else null. */
+export const getBookWorkId = (book: Book): number | null => parseWorkId(book.metadata?.identifier);
+
+export const getBookLanguage = (book: Book): string => {
+  const lang = book.metadata?.language;
+  return toContentLanguage((Array.isArray(lang) ? lang[0] : lang) || book.primaryLanguage);
+};
+
+/**
+ * One shelf entry per work: the edition in the reader's language (narrated
+ * first), else the most recently used edition. Books from other sources pass
+ * through unchanged.
+ */
+export const pickEditionsForLanguage = (books: Book[], lang: string): Book[] => {
+  const byWork = new Map<number, Book[]>();
+  const others: Book[] = [];
+  for (const book of books) {
+    const workId = getBookWorkId(book);
+    if (workId === null) others.push(book);
+    else byWork.set(workId, [...(byWork.get(workId) ?? []), book]);
+  }
+  const picked = [...byWork.values()].map((editions) => {
+    const inLang = editions.filter((book) => getBookLanguage(book) === lang);
+    const pool = inLang.length ? inLang : editions;
+    return [...pool].sort(
+      (a, b) =>
+        Number(!!b.hasNarration) - Number(!!a.hasNarration) ||
+        (b.updatedAt ?? 0) - (a.updatedAt ?? 0),
+    )[0]!;
+  });
+  const keep = new Set([...others, ...picked]);
+  return books.filter((book) => keep.has(book));
+};
+
+/** Current content language, updated when the reader switches language. */
+export const useContentLanguage = (): string => {
+  const [lang, setLang] = useState(getContentLanguage());
+  useEffect(() => {
+    const onChange = (event: CustomEvent) => setLang((event.detail as { lang: string }).lang);
+    eventDispatcher.on(CONTENT_LANGUAGE_EVENT, onChange);
+    return () => eventDispatcher.off(CONTENT_LANGUAGE_EVENT, onChange);
+  }, []);
+  return lang;
+};

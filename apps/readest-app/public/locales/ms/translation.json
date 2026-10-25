@@ -2585,5 +2585,13 @@
   "Note Template": "Templat Nota",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "Setiap serlahan dipaparkan sebagai Markdown dengan Nunjucks, kemudian dihantar ke Notion sebagai blok",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "Petikan mengambil warna serlahan, dan > [!NOTE] menjadi kotak serlahan",
-  "Variables: {{variables}}": "Pemboleh ubah: {{variables}}"
+  "Variables: {{variables}}": "Pemboleh ubah: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "Diminta. Ia akan muncul dalam pustaka apabila sudah tersedia.",
+  "Request failed, please try again.": "Permintaan gagal, sila cuba lagi.",
+  "Narration is not available in this language yet.": "Penceritaan belum tersedia dalam bahasa ini.",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "Buku ini belum mempunyai penceritaan. Permintaan telah dibuat dan buku ini akan muncul dalam pustaka anda apabila tersedia.",
+  "This book has no narration.": "Buku ini tidak mempunyai penceritaan.",
+  "This book is not available in your language yet. It has been requested.": "Buku ini belum tersedia dalam bahasa anda. Permintaan telah dibuat.",
+  "Opening {{title}}…": "Membuka {{title}}…",
+  "Added {{count}} books in your language": "{{count}} buku dalam bahasa anda telah ditambahkan"
 }

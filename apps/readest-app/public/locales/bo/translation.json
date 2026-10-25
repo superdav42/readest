@@ -2585,5 +2585,13 @@
   "Note Template": "མཆན་གྱི་དཔེ་གཞི",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "འོད་རྟགས་རེ་རེ་ Nunjucks བེད་སྤྱོད་ནས་ Markdown ལ་བསྒྱུར་ཏེ་ Notion ལ་དུམ་བུའི་རྣམ་པར་བསྐུར་གྱི་རེད",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "ལུང་འདྲེན་ལ་འོད་རྟགས་ཀྱི་ཚོན་མདོག་ཐོབ་ཅིང་། > [!NOTE] དེ་གསལ་བཤད་སྒྲོམ་དུ་འགྱུར",
-  "Variables: {{variables}}": "འགྱུར་ཚད: {{variables}}"
+  "Variables: {{variables}}": "འགྱུར་ཚད: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "ཞུ་འབུལ་བྱས་ཟིན། གྲ་སྒྲིག་ཚར་རྗེས་དཔེ་མཛོད་ནང་མངོན་ཡོང་།",
+  "Request failed, please try again.": "ཞུ་འབུལ་ཕམ་སོང་། ཡང་བསྐྱར་ཚོད་ལྟ་གནང་།",
+  "Narration is not available in this language yet.": "ཁྱེད་ཀྱི་སྐད་ཡིག་འདིའི་ནང་ད་ལྟ་སྒྲ་ཀློག་མེད།",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "དཔེ་དེབ་འདིར་ད་ལྟ་སྒྲ་ཀློག་མེད། དེའི་ཞུ་བ་ཕུལ་ཟིན་པ་དང་། གྲ་སྒྲིག་ཚར་རྗེས་ཁྱེད་ཀྱི་དཔེ་མཛོད་ནང་མངོན་ཡོང་།",
+  "This book has no narration.": "དཔེ་དེབ་འདིར་སྒྲ་ཀློག་མེད།",
+  "This book is not available in your language yet. It has been requested.": "དཔེ་དེབ་འདི་ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་ད་ལྟ་མེད། དེའི་ཞུ་བ་ཕུལ་ཟིན།",
+  "Opening {{title}}…": "{{title}} ཁ་ཕྱེ་བཞིན་ཡོད…",
+  "Added {{count}} books in your language": "ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་གི་དཔེ་དེབ་{{count}} ཁ་སྣོན་བྱས་ཟིན།"
 }

@@ -2585,5 +2585,13 @@
   "Note Template": "Mẫu ghi chú",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "Mỗi đoạn tô sáng được hiển thị dưới dạng Markdown bằng Nunjucks, sau đó gửi đến Notion dưới dạng khối",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "Trích dẫn mang màu của đoạn tô sáng, và > [!NOTE] trở thành khung chú thích",
-  "Variables: {{variables}}": "Biến: {{variables}}"
+  "Variables: {{variables}}": "Biến: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "Đã yêu cầu. Sách sẽ xuất hiện trong thư viện khi sẵn sàng.",
+  "Request failed, please try again.": "Yêu cầu không thành công, vui lòng thử lại.",
+  "Narration is not available in this language yet.": "Tính năng đọc thành tiếng chưa có bằng ngôn ngữ này.",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "Sách này chưa có bản đọc thành tiếng. Bản đọc đã được yêu cầu và sẽ xuất hiện trong thư viện của bạn khi sẵn sàng.",
+  "This book has no narration.": "Sách này không có bản đọc thành tiếng.",
+  "This book is not available in your language yet. It has been requested.": "Sách này chưa có bằng ngôn ngữ của bạn. Sách đã được yêu cầu.",
+  "Opening {{title}}…": "Đang mở {{title}}…",
+  "Added {{count}} books in your language": "Đã thêm {{count}} sách bằng ngôn ngữ của bạn"
 }

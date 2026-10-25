@@ -2585,5 +2585,13 @@
   "Note Template": "笔记模板",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "每条高亮会用 Nunjucks 渲染为 Markdown，再以块的形式发送到 Notion",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "引用会使用高亮颜色，> [!NOTE] 会变成标注块",
-  "Variables: {{variables}}": "变量：{{variables}}"
+  "Variables: {{variables}}": "变量：{{variables}}",
+  "Requested. It will appear in the library when it is ready.": "已请求。准备好后，它会出现在书库中。",
+  "Request failed, please try again.": "请求失败，请重试。",
+  "Narration is not available in this language yet.": "此语言暂不支持朗读。",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "这本书暂时没有朗读内容。已提交请求，准备好后会出现在您的书库中。",
+  "This book has no narration.": "这本书没有朗读内容。",
+  "This book is not available in your language yet. It has been requested.": "这本书暂时没有您所用语言的版本。已提交请求。",
+  "Opening {{title}}…": "正在打开 {{title}}…",
+  "Added {{count}} books in your language": "已添加 {{count}} 本您所用语言的书籍"
 }

@@ -2585,5 +2585,13 @@
   "Note Template": "เทมเพลตโน้ต",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "ไฮไลต์แต่ละรายการจะถูกเรนเดอร์เป็น Markdown ด้วย Nunjucks แล้วส่งไปยัง Notion เป็นบล็อก",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "คำอ้างอิงจะใช้สีของไฮไลต์ และ > [!NOTE] จะกลายเป็นกล่องข้อความเน้น",
-  "Variables: {{variables}}": "ตัวแปร: {{variables}}"
+  "Variables: {{variables}}": "ตัวแปร: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "ส่งคำขอแล้ว รายการนี้จะปรากฏในคลังเมื่อพร้อมใช้งาน",
+  "Request failed, please try again.": "ส่งคำขอไม่สำเร็จ โปรดลองอีกครั้ง",
+  "Narration is not available in this language yet.": "ยังไม่มีเสียงบรรยายในภาษานี้",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "หนังสือเล่มนี้ยังไม่มีเสียงบรรยาย ได้ส่งคำขอแล้ว และจะปรากฏในคลังของคุณเมื่อพร้อมใช้งาน",
+  "This book has no narration.": "หนังสือเล่มนี้ไม่มีเสียงบรรยาย",
+  "This book is not available in your language yet. It has been requested.": "หนังสือเล่มนี้ยังไม่มีให้บริการในภาษาของคุณ ได้ส่งคำขอแล้ว",
+  "Opening {{title}}…": "กำลังเปิด {{title}}…",
+  "Added {{count}} books in your language": "เพิ่มหนังสือในภาษาของคุณแล้ว {{count}} เล่ม"
 }

@@ -2653,5 +2653,13 @@
   "Note Template": "قالب یادداشت",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "هر هایلایت با Nunjucks به Markdown تبدیل می‌شود و سپس به‌صورت بلوک به Notion ارسال می‌شود",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "نقل‌قول‌ها رنگ هایلایت را می‌گیرند و ‎> [!NOTE]‎ به کادر توضیح تبدیل می‌شود",
-  "Variables: {{variables}}": "متغیرها: {{variables}}"
+  "Variables: {{variables}}": "متغیرها: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "درخواست شد. وقتی آماده شود، در کتابخانه نمایش داده خواهد شد.",
+  "Request failed, please try again.": "درخواست ناموفق بود؛ لطفاً دوباره تلاش کنید.",
+  "Narration is not available in this language yet.": "روایت صوتی هنوز به این زبان در دسترس نیست.",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "این کتاب هنوز روایت صوتی ندارد. درخواست آن ثبت شده است و وقتی آماده شود، در کتابخانه شما نمایش داده خواهد شد.",
+  "This book has no narration.": "این کتاب روایت صوتی ندارد.",
+  "This book is not available in your language yet. It has been requested.": "این کتاب هنوز به زبان شما در دسترس نیست. درخواست آن ثبت شده است.",
+  "Opening {{title}}…": "در حال باز کردن {{title}}…",
+  "Added {{count}} books in your language": "{{count}} کتاب به زبان شما اضافه شد"
 }

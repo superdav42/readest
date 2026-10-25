@@ -2653,5 +2653,13 @@
   "Note Template": "შენიშვნის შაბლონი",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "თითოეული მონიშვნა Nunjucks-ით Markdown-ად გამოისახება და შემდეგ Notion-ში ბლოკების სახით იგზავნება",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "ციტატები მონიშვნის ფერს იღებს, ხოლო > [!NOTE] ხდება გამოყოფილი ბლოკი",
-  "Variables: {{variables}}": "ცვლადები: {{variables}}"
+  "Variables: {{variables}}": "ცვლადები: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "მოთხოვნილია. მზად რომ იქნება, ბიბლიოთეკაში გამოჩნდება.",
+  "Request failed, please try again.": "მოთხოვნა ვერ შესრულდა, გთხოვთ, სცადოთ ხელახლა.",
+  "Narration is not available in this language yet.": "ხმოვანი კითხვა ჯერ არ არის ხელმისაწვდომი ამ ენაზე.",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "ამ წიგნის ხმოვანი კითხვა ჯერ არ არის ხელმისაწვდომი. მისი მოთხოვნა უკვე გაგზავნილია და მზად რომ იქნება, თქვენს ბიბლიოთეკაში გამოჩნდება.",
+  "This book has no narration.": "ამ წიგნს ხმოვანი კითხვა არ აქვს.",
+  "This book is not available in your language yet. It has been requested.": "ეს წიგნი ჯერ არ არის ხელმისაწვდომი თქვენს ენაზე. მისი მოთხოვნა უკვე გაგზავნილია.",
+  "Opening {{title}}…": "იხსნება {{title}}…",
+  "Added {{count}} books in your language": "თქვენს ენაზე {{count}} წიგნი დაემატა"
 }

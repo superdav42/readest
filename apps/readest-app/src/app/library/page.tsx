@@ -57,6 +57,7 @@ import { usePullToRefresh } from '@/hooks/usePullToRefresh';
 import { useTheme } from '@/hooks/useTheme';
 import { useUICSS } from '@/hooks/useUICSS';
 import { useDemoBooks } from './hooks/useDemoBooks';
+import { useLibraryLanguageSync } from './hooks/useLibraryLanguageSync';
 import { useBooksSync } from './hooks/useBooksSync';
 import { useLibraryFileSync } from './hooks/useLibraryFileSync';
 import { useBookTransferActions } from './hooks/useBookTransferActions';
@@ -338,6 +339,7 @@ const LibraryPageContent = ({ searchParams }: { searchParams: ReadonlyURLSearchP
   const iconSize = useResponsiveSize(18);
   const viewSettings = settings.globalViewSettings;
   const demoBooks = useDemoBooks();
+  useLibraryLanguageSync();
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const handleScrollerRef = useCallback((el: HTMLDivElement | null) => {
     scrollRef.current = el;

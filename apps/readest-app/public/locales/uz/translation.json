@@ -2653,5 +2653,13 @@
   "Note Template": "Eslatma shabloni",
   "Each highlight is rendered as Markdown with Nunjucks, then sent to Notion as blocks": "Har bir belgilash Nunjucks yordamida Markdown sifatida chiqariladi, so‘ng Notion’ga bloklar ko‘rinishida yuboriladi",
   "Quotes take the highlight color, and > [!NOTE] becomes a callout": "Iqtiboslar belgilash rangini oladi, > [!NOTE] esa izoh blokiga aylanadi",
-  "Variables: {{variables}}": "O‘zgaruvchilar: {{variables}}"
+  "Variables: {{variables}}": "O‘zgaruvchilar: {{variables}}",
+  "Requested. It will appear in the library when it is ready.": "So‘rov yuborildi. Tayyor bo‘lgach, u kutubxonada paydo bo‘ladi.",
+  "Request failed, please try again.": "So‘rov amalga oshmadi, qaytadan urinib ko‘ring.",
+  "Narration is not available in this language yet.": "Bu tilda ovozli o‘qish hali mavjud emas.",
+  "This book has no narration yet. It has been requested and will appear in your library when ready.": "Bu kitob uchun hali ovozli o‘qish mavjud emas. Unga so‘rov yuborildi va tayyor bo‘lgach, kutubxonangizda paydo bo‘ladi.",
+  "This book has no narration.": "Bu kitobda ovozli o‘qish mavjud emas.",
+  "This book is not available in your language yet. It has been requested.": "Bu kitob hali sizning tilingizda mavjud emas. Unga so‘rov yuborildi.",
+  "Opening {{title}}…": "{{title}} ochilmoqda…",
+  "Added {{count}} books in your language": "Tilingizdagi {{count}} ta kitob qo‘shildi"
 }
