@@ -6,7 +6,6 @@
 // header is also the language books are shown and read in. Catalog feeds take a
 // `lang` parameter; each work is listed once in the best form available in that
 // language, and missing translations or narrations can be requested.
-import { useEffect, useState } from 'react';
 import i18n from '@/i18n/i18n';
 import type { Book } from '@/types/book';
 import { getRuntimeConfig } from '@/services/runtimeConfig';
@@ -164,15 +163,4 @@ export const pickEditionsForLanguage = (books: Book[], lang: string): Book[] => 
   });
   const keep = new Set([...others, ...picked]);
   return books.filter((book) => keep.has(book));
-};
-
-/** Current content language, updated when the reader switches language. */
-export const useContentLanguage = (): string => {
-  const [lang, setLang] = useState(getContentLanguage());
-  useEffect(() => {
-    const onChange = (event: CustomEvent) => setLang((event.detail as { lang: string }).lang);
-    eventDispatcher.on(CONTENT_LANGUAGE_EVENT, onChange);
-    return () => eventDispatcher.off(CONTENT_LANGUAGE_EVENT, onChange);
-  }, []);
-  return lang;
 };
