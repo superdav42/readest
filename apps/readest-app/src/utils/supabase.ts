@@ -13,20 +13,6 @@ const supabaseAnonKey =
   process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'] ||
   atob(process.env['NEXT_PUBLIC_DEFAULT_SUPABASE_KEY_BASE64']!);
 
-// Serverless deployments talk to the Supabase services without an API gateway:
-// Auth's own CORS policy rejects the gateway-only `apikey` header (which Auth does
-// not need), so it is dropped from browser requests to /auth/v1.
-const serverlessFetch: typeof fetch = (input, init) => {
-  const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
-  if (!url.includes('/auth/v1/')) return fetch(input, init);
-  const headers = new Headers(
-    init?.headers ?? (input instanceof Request ? input.headers : undefined),
-  );
-  headers.delete('apikey');
-  return fetch(input, { ...init, headers });
-};
-const globalOptions = getRuntimeConfig()?.serverless ? { fetch: serverlessFetch } : {};
-
 // supabase-js persists the session under a key derived from the URL's first
 // host label. Readest Cloud keeps the key from its original host so moving the
 // client to another of its hosts doesn't sign everyone out.
@@ -40,8 +26,8 @@ export const supabase = createClient(
   supabaseUrl,
   supabaseAnonKey,
   READEST_CLOUD_HOSTS.includes(new URL(supabaseUrl).hostname)
-    ? { auth: { storageKey: 'sb-readest-auth-token' }, global: globalOptions }
-    : { global: globalOptions },
+    ? { auth: { storageKey: 'sb-readest-auth-token' } }
+    : undefined,
 );
 
 export const createSupabaseClient = (accessToken?: string) => {
@@ -51,7 +37,6 @@ export const createSupabaseClient = (accessToken?: string) => {
     // or it would race the app's own client for the refresh token.
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     global: {
-      ...globalOptions,
       headers: accessToken
         ? {
             Authorization: `Bearer ${accessToken}`,
