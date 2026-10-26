@@ -46,6 +46,10 @@ export const supabase = createClient(
 
 export const createSupabaseClient = (accessToken?: string) => {
   return createClient(supabaseUrl, supabaseAnonKey, {
+    // A per-request client for a given token (route handlers, which also run in the
+    // browser in serverless mode): never touch the persisted session or refresh it,
+    // or it would race the app's own client for the refresh token.
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     global: {
       ...globalOptions,
       headers: accessToken

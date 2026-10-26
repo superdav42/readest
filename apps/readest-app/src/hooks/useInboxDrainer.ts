@@ -1,3 +1,5 @@
+// Modified 2026-10-26 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+import { getRuntimeConfig } from '@/services/runtimeConfig';
 import { useCallback, useEffect, useRef } from 'react';
 import { useEnv } from '@/context/EnvContext';
 import { useAuth } from '@/context/AuthContext';
@@ -56,6 +58,8 @@ export function useInboxDrainer(): void {
     if (!user || !appService || runningRef.current) return;
     // Per-device opt-out: this device does not claim/process inbox items.
     if (!isInboxDrainEnabled()) return;
+    // Send to Readest needs the /api/send server routes, which serverless hosting lacks.
+    if (getRuntimeConfig()?.serverless) return;
     // Throttle: focus, visibility and remounts fire in bursts, so drain (and so
     // claim_inbox_item) at most once a minute.
     if (Date.now() - lastDrainAt < DRAIN_THROTTLE_MS) return;

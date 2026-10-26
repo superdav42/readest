@@ -1,3 +1,4 @@
+// Modified 2026-10-26 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import * as React from 'react';
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
@@ -129,6 +130,9 @@ const devHmrPatchScript = `(${patchTauriHmrWebSocket.toString()})(${JSON.stringi
 // fallback HTML and crash with `Unexpected token '<'`. All runtime-config
 // consumers fall back to `NEXT_PUBLIC_*` envs baked at build time on Tauri.
 const shouldInjectRuntimeConfig = process.env['NEXT_PUBLIC_APP_PLATFORM'] === 'web';
+// Static web export: no server to send the cross-origin isolation headers the
+// Turso WASM database needs, so a service worker adds them (public/coi-serviceworker.js).
+const shouldInjectIsolationWorker = process.env['BUILD_STATIC_EXPORT'] === 'true';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   // Browser extensions can inject attributes on <html> before React hydrates it.
@@ -141,6 +145,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {shouldInjectRuntimeConfig ? (
           <Script src='/runtime-config.js' strategy='beforeInteractive' />
+        ) : null}
+        {shouldInjectIsolationWorker ? (
+          <Script src='/coi-serviceworker.js' strategy='beforeInteractive' />
         ) : null}
         {shouldInjectDevHmrPatch ? (
           <script dangerouslySetInnerHTML={{ __html: devHmrPatchScript }} />
