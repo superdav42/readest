@@ -1,3 +1,4 @@
+// Modified 2026-10-26 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useRef } from 'react';
 import Image from 'next/image';
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -7,6 +8,14 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { ProviderLogin, type OAuthProvider } from './ProviderLogin';
 import EmailPasswordAuth from './EmailPasswordAuth';
 import ReadestCloudOptIn from './ReadestCloudOptIn';
+import { useAuthProviders } from '../hooks/useAuthProviders';
+
+const PROVIDERS: Partial<Record<OAuthProvider, { Icon: React.ElementType; name: string }>> = {
+  google: { Icon: FcGoogle, name: 'Google' },
+  apple: { Icon: FaApple, name: 'Apple' },
+  github: { Icon: FaGithub, name: 'GitHub' },
+  discord: { Icon: FaDiscord, name: 'Discord' },
+};
 
 interface AuthPanelProps {
   supabaseClient: SupabaseClient;
@@ -22,6 +31,8 @@ export default function AuthPanel({
   onProviderSignIn,
 }: AuthPanelProps) {
   const _ = useTranslation();
+  // Only the providers the Auth server has enabled (self-hosted); Readest Cloud lists all.
+  const providers = useAuthProviders();
   // `signInWithOAuth` redirects the whole page on web, which can cut off the
   // opt-in's settings write. Hold sign-in until it has landed. Null until the
   // user actually touches the checkbox, so the common path adds no delay.
@@ -42,37 +53,31 @@ export default function AuthPanel({
           </p>
         </div>
       </div>
-      <div className='flex w-full flex-col gap-2.5'>
-        <ProviderLogin
-          provider='google'
-          handleSignIn={handleProviderSignIn}
-          Icon={FcGoogle}
-          label={_('Sign in with {{provider}}', { provider: 'Google' })}
-        />
-        <ProviderLogin
-          provider='apple'
-          handleSignIn={handleProviderSignIn}
-          Icon={FaApple}
-          label={_('Sign in with {{provider}}', { provider: 'Apple' })}
-        />
-        <ProviderLogin
-          provider='github'
-          handleSignIn={handleProviderSignIn}
-          Icon={FaGithub}
-          label={_('Sign in with {{provider}}', { provider: 'GitHub' })}
-        />
-        <ProviderLogin
-          provider='discord'
-          handleSignIn={handleProviderSignIn}
-          Icon={FaDiscord}
-          label={_('Sign in with {{provider}}', { provider: 'Discord' })}
-        />
-      </div>
-      <div className='flex w-full items-center gap-3' aria-hidden='true'>
-        <hr className='border-base-300 flex-1 border-t' />
-        <span className='text-base-content/50 text-xs'>{_('or continue with email')}</span>
-        <hr className='border-base-300 flex-1 border-t' />
-      </div>
+      {providers && providers.length > 0 ? (
+        <>
+          <div className='flex w-full flex-col gap-2.5'>
+            {providers.map((provider) => {
+              const entry = PROVIDERS[provider];
+              if (!entry) return null;
+              const { Icon, name } = entry;
+              return (
+                <ProviderLogin
+                  key={provider}
+                  provider={provider}
+                  handleSignIn={handleProviderSignIn}
+                  Icon={Icon}
+                  label={_('Sign in with {{provider}}', { provider: name })}
+                />
+              );
+            })}
+          </div>
+          <div className='flex w-full items-center gap-3' aria-hidden='true'>
+            <hr className='border-base-300 flex-1 border-t' />
+            <span className='text-base-content/50 text-xs'>{_('or continue with email')}</span>
+            <hr className='border-base-300 flex-1 border-t' />
+          </div>
+        </>
+      ) : null}
       <EmailPasswordAuth
         supabaseClient={supabaseClient}
         redirectTo={redirectTo}

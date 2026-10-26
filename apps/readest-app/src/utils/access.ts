@@ -1,3 +1,4 @@
+// Modified 2026-10-26 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { jwtDecode } from 'jwt-decode';
 import { supabase } from '@/utils/supabase';
 import { UserPlan } from '@/types/quota';
@@ -282,10 +283,32 @@ export const getAccessToken = async (): Promise<string | null> => {
   // and the other in the pages route, and they might have different sessions
   // making the access token invalid for API calls. In that case we should use localStorage.
   if (isWebAppPlatform()) {
-    return localStorage.getItem('token') ?? null;
+    const stored = localStorage.getItem('token');
+    // A page opened after the access token expired would otherwise send the stale
+    // token with its first sync (refused as "Not authenticated") while the session
+    // refresh is still in flight. Wait for supabase-js to refresh it first.
+    if (stored && isTokenExpiring(stored)) {
+      const { data } = await supabase.auth.getSession();
+      const fresh = data?.session?.access_token;
+      if (fresh && fresh !== stored) {
+        localStorage.setItem('token', fresh);
+        return fresh;
+      }
+    }
+    return stored ?? null;
   }
   const { data } = await supabase.auth.getSession();
   return data?.session?.access_token ?? null;
+};
+
+/** True when a JWT expires within `marginSeconds` (or cannot be decoded). */
+export const isTokenExpiring = (token: string, marginSeconds = 60): boolean => {
+  try {
+    const { exp } = jwtDecode<{ exp?: number }>(token);
+    return !exp || exp * 1000 - Date.now() < marginSeconds * 1000;
+  } catch {
+    return true;
+  }
 };
 
 export const getUserID = async (): Promise<string | null> => {
