@@ -1,3 +1,4 @@
+// Modified 2026-10-26 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import { READEST_WEB_BASE_URL, SHARE_BASE_URL } from '@/services/constants';
@@ -23,7 +24,11 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   // replaced at build time, so this early return DCEs the rest of the function
   // out of the Tauri bundle and the route becomes fully static. The web build
   // keeps the full dynamic implementation below.
-  if (process.env['NEXT_PUBLIC_APP_PLATFORM'] !== 'web') {
+  // The serverless static web export (BUILD_STATIC_EXPORT) is static the same way.
+  if (
+    process.env['NEXT_PUBLIC_APP_PLATFORM'] !== 'web' ||
+    process.env['BUILD_STATIC_EXPORT'] === 'true'
+  ) {
     return {
       title: 'Open in Readest',
       description: 'Open-source ebook reader for everyone, on every device.',

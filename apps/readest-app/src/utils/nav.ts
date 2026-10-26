@@ -1,7 +1,9 @@
+// Modified 2026-10-26 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { redirect, useRouter } from 'next/navigation';
 import { getCurrentWindow, ScrollBarStyle } from '@tauri-apps/api/window';
 import { getAllWebviewWindows, WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { isPWA, isTauriAppPlatform, isWebAppPlatform } from '@/services/environment';
+import { getRuntimeConfig } from '@/services/runtimeConfig';
 import { BOOK_IDS_SEPARATOR } from '@/services/constants';
 import { AppService } from '@/types/system';
 import { windowNeedsClientOutline } from '@/utils/window';
@@ -116,7 +118,8 @@ export const navigateToReader = (
   navOptions?: { scroll?: boolean },
 ) => {
   const ids = bookIds.join(BOOK_IDS_SEPARATOR);
-  if (isWebAppPlatform() && !isPWA()) {
+  // Static (serverless) hosting has no rewrite for /reader/<ids>: use the query form.
+  if (isWebAppPlatform() && !isPWA() && !getRuntimeConfig()?.serverless) {
     router.push(`/reader/${ids}${queryParams ? `?${queryParams}` : ''}`, navOptions);
   } else {
     const params = new URLSearchParams(queryParams || '');

@@ -24,6 +24,14 @@ export interface ReadestRuntimeConfig {
   sourceRepositoryUrl?: string;
   /** Book files come only from the shared catalog: no per-user file uploads. */
   sharedLibraryOnly?: boolean;
+  /**
+   * Static export without a Next.js server: account routes run in the browser
+   * against Supabase (libs/serverlessApi.ts) and OPDS feeds are fetched directly.
+   */
+  serverless?: boolean;
+  /** Content-addressed library files (`<hash>.epub`) and covers (`<hash>.jpg`). */
+  libraryFilesUrl?: string;
+  libraryCoversUrl?: string;
 }
 
 /** Parse the comma-separated OPDS_TRUSTED_HOSTS env value. */
@@ -92,4 +100,7 @@ export const getServerRuntimeConfig = (): ReadestRuntimeConfig => ({
   onlineTranslationDisabled: process.env['DISABLE_ONLINE_TRANSLATION'] === 'true' || undefined,
   sourceRepositoryUrl: process.env['SOURCE_REPOSITORY_URL'] || undefined,
   sharedLibraryOnly: process.env['SHARED_LIBRARY_ONLY'] === 'true' || undefined,
+  serverless: process.env['SERVERLESS_WEB'] === 'true' || undefined,
+  libraryFilesUrl: process.env['LIBRARY_FILES_URL'] || undefined,
+  libraryCoversUrl: process.env['LIBRARY_COVERS_URL'] || undefined,
 });

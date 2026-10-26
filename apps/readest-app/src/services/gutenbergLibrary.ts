@@ -6,6 +6,10 @@
 // header is also the language books are shown and read in. Catalog feeds take a
 // `lang` parameter; each work is listed once in the best form available in that
 // language, and missing translations or narrations can be requested.
+//
+// Two catalog backends share this API: the self-hosted catalog server
+// (`<base>/opds…`, `<base>/api/…`) and a Supabase/PostgREST catalog whose feeds
+// are RPCs (`<supabase>/rest/v1/rpc/opds?path=…`; serverless deployments).
 import i18n from '@/i18n/i18n';
 import type { Book } from '@/types/book';
 import { getRuntimeConfig } from '@/services/runtimeConfig';
@@ -84,17 +88,24 @@ export const parseWorkId = (identifier?: string | null): number | null => {
   return match ? Number(match[1]) : null;
 };
 
+/** The catalog is a set of PostgREST RPCs (`…/rest/v1/rpc`) rather than the catalog server. */
+const isRpcCatalog = (base: string): boolean => /\/rest\/v1\/rpc$/.test(base);
+
 const api = async <T>(path: string, init?: RequestInit): Promise<T> => {
   const base = getCatalogBase();
   if (!base) throw new Error('library_not_configured');
-  const res = await fetch(`${base}/api${path}`, init);
+  const res = await fetch(`${base}${isRpcCatalog(base) ? '' : '/api'}${path}`, init);
   if (!res.ok) throw new Error(`library_api_${res.status}`);
   return (await res.json()) as T;
 };
 
+const rpcBase = (): boolean => isRpcCatalog(getCatalogBase() ?? '');
+
 let languagesPromise: Promise<LibraryLanguage[]> | null = null;
 export const fetchLibraryLanguages = (): Promise<LibraryLanguage[]> => {
-  languagesPromise ??= api<LibraryLanguage[]>('/languages').catch((error) => {
+  languagesPromise ??= api<LibraryLanguage[]>(
+    rpcBase() ? '/catalog_languages' : '/languages',
+  ).catch((error) => {
     languagesPromise = null;
     throw error;
   });
@@ -102,18 +113,28 @@ export const fetchLibraryLanguages = (): Promise<LibraryLanguage[]> => {
 };
 
 export const fetchWork = (workId: number, lang = getContentLanguage()) =>
-  api<LibraryWork>(`/works/${workId}?lang=${encodeURIComponent(lang)}`);
+  api<LibraryWork>(
+    rpcBase()
+      ? `/catalog_work?p_work_id=${workId}&p_lang=${encodeURIComponent(lang)}`
+      : `/works/${workId}?lang=${encodeURIComponent(lang)}`,
+  );
 
 export type RequestResult =
   | (LibraryJob & { status: LibraryJob['status'] })
   | { status: 'available' | 'unsupported'; kind?: string };
 
 export const requestEdition = (workId: number, lang: string, kind: 'translation' | 'readalong') =>
-  api<RequestResult>('/requests', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ work_id: workId, lang, kind }),
-  });
+  rpcBase()
+    ? api<RequestResult>('/request_edition', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p_work_id: workId, p_lang: lang, p_kind: kind }),
+      })
+    : api<RequestResult>('/requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ work_id: workId, lang, kind }),
+      });
 
 /** Announce a language change to pages that show library content. */
 export const announceContentLanguage = (lang: string) =>
@@ -131,10 +152,19 @@ export const isSharedLibraryBook = (book: Pick<Book, 'metadata'>): boolean =>
 
 /** Catalog URL of the exact file a library book was imported from (or its cover). */
 export const getSharedBookUrl = (book: Book, part: 'book' | 'cover' = 'book'): string | null => {
+  // Content-addressed hosting: every edition ever published stays at its hash.
+  const config = getRuntimeConfig();
+  if (part === 'book' && config?.libraryFilesUrl)
+    return `${config.libraryFilesUrl}/${book.hash}.epub`;
+  if (part === 'cover' && config?.libraryCoversUrl)
+    return `${config.libraryCoversUrl}/${book.hash}.jpg`;
   const base = getCatalogBase();
   if (!base) return null;
   const lang = getBookLanguage(book);
-  const query = new URLSearchParams({ identifier: book.metadata?.identifier ?? '', lang });
+  const query = new URLSearchParams({
+    identifier: book.metadata?.identifier ?? '',
+    lang,
+  });
   return `${base}/api/files/by-hash/${book.hash}${part === 'cover' ? '/cover' : ''}?${query}`;
 };
 

@@ -1,3 +1,5 @@
+// Modified 2026-10-26 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+import { getRuntimeConfig } from '@/services/runtimeConfig';
 import { md5 } from 'js-md5';
 import {
   getAPIBaseUrl,
@@ -44,6 +46,9 @@ const extractCredentialsFromURL = (
 };
 
 export const needsProxy = (url: string): boolean => {
+  // Serverless deployments have no proxy route: feeds must allow CORS
+  // (the operator's own catalog does).
+  if (getRuntimeConfig()?.serverless) return false;
   return isWebAppPlatform() && url.startsWith('http');
 };
 

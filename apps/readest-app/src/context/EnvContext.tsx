@@ -1,4 +1,5 @@
 'use client';
+// Modified 2026-10-26 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 
 import React, { createContext, useContext, useState, useMemo, ReactNode } from 'react';
 import { EnvConfigType } from '../services/environment';
@@ -9,6 +10,10 @@ import { initReplicaSync } from '@/services/sync/replicaSync';
 import { createSettingsCursorStore } from '@/services/sync/replicaCursorStore';
 import { startReplicaTransferIntegration } from '@/services/sync/replicaTransferIntegration';
 import { enableReplicaAutoPersist } from '@/services/sync/replicaPersist';
+import { installServerlessApi } from '@/libs/serverlessApi';
+
+// Serverless static deployments answer /api/* in the browser (see serverlessApi.ts).
+installServerlessApi();
 
 interface EnvContextType {
   envConfig: EnvConfigType;

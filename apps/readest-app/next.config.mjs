@@ -1,3 +1,4 @@
+// Modified 2026-10-26 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import withSerwistInit from '@serwist/next';
 import withBundleAnalyzer from '@next/bundle-analyzer';
 import path from 'node:path';
@@ -13,7 +14,11 @@ if (isDev) {
   initOpenNextCloudflareForDev();
 }
 
-const exportOutput = appPlatform !== 'web' && !isDev;
+// Serverless web: a static export of the web app (no Next.js server) for static
+// hosting next to Supabase; /api routes run in the browser (src/libs/serverlessApi.ts).
+const staticWebExport =
+  appPlatform === 'web' && !isDev && process.env['BUILD_STATIC_EXPORT'] === 'true';
+const exportOutput = (appPlatform !== 'web' && !isDev) || staticWebExport;
 // Opt-in standalone output, set only by the Docker production build
 // (Dockerfile). Every other path keeps the original behavior: Tauri `export`,
 // local `build-web` (output undefined), dev, and the Cloudflare/OpenNext
@@ -36,6 +41,8 @@ const nextConfig = {
   // standalone tree. Only relevant to — and only set for — the Docker build.
   outputFileTracingRoot: standaloneOutput ? path.join(__dirname, '../../') : undefined,
   pageExtensions: exportOutput ? ['jsx', 'tsx'] : ['js', 'jsx', 'ts', 'tsx'],
+  // Static hosts serve directory indexes, not `<route>.html`.
+  trailingSlash: staticWebExport || undefined,
   // Note: This feature is required to use the Next.js Image component in SSG mode.
   // See https://nextjs.org/docs/messages/export-image-api for different workarounds.
   images: {
