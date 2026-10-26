@@ -238,7 +238,7 @@ export default function BrowserPage() {
       url = withContentLanguage(url);
 
       try {
-        const useProxy = isWebAppPlatform();
+        const useProxy = needsProxy(url);
         const username = usernameRef.current || '';
         const password = passwordRef.current || '';
         const customHeaders = customHeadersRef.current;
@@ -538,7 +538,7 @@ export default function BrowserPage() {
   const fetchPublicationDocument = useCallback(
     async (url: string): Promise<OPDSPublication | null> => {
       try {
-        const useProxy = isWebAppPlatform();
+        const useProxy = needsProxy(url);
         const username = usernameRef.current || '';
         const password = passwordRef.current || '';
         const customHeaders = customHeadersRef.current;

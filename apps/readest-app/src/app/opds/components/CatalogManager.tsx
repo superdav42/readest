@@ -52,6 +52,7 @@ import { SectionTitle } from '@/components/settings/primitives';
 import { deleteSubscriptionState, loadSubscriptionState } from '@/services/opds';
 import type { OPDSSubscriptionState } from '@/services/opds/types';
 import { getUnaddedPopularCatalogs, validateOPDSURL } from '../utils/opdsUtils';
+import { needsProxy } from '../utils/opdsReq';
 import { FailedDownloadsDialog } from './FailedDownloadsDialog';
 import {
   formatCustomHeadersInput,
@@ -131,7 +132,7 @@ async function validateOPDSCatalog(
     url,
     username,
     password,
-    isWebAppPlatform(),
+    needsProxy(url),
     customHeaders,
     allowSelfSignedCert,
   );
