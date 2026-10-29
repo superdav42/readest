@@ -2662,5 +2662,11 @@
   "This book is not available in your language yet. It has been requested.": "Bu kitob hali sizning tilingizda mavjud emas. Unga so‘rov yuborildi.",
   "Opening {{title}}…": "{{title}} ochilmoqda…",
   "Added {{count}} books in your language": "Tilingizdagi {{count}} ta kitob qo‘shildi",
-  "Source code (AGPL)": "Manba kodi (AGPL)"
+  "Source code (AGPL)": "Manba kodi (AGPL)",
+  "Browse books": "Kitoblarni ko‘rib chiqish",
+  "Search all books": "Barcha kitoblarni qidirish",
+  "Search books...": "Kitoblarni qidiring...",
+  "Find your next book": "Keyingi kitobingizni toping",
+  "Thousands of classics, free to read in your language.": "Minglab mumtoz asarlarni tilingizda bepul o‘qing.",
+  "Sign in to {{app}}": "{{app}}ga kiring"
 }

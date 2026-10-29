@@ -1,6 +1,7 @@
 // Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 'use client';
 
+import { isLibraryUrl } from '@/services/gutenbergLibrary';
 import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -158,7 +159,11 @@ export function Navigation({
             type='text'
             ref={inputRef}
             value={searchQuery}
-            placeholder={_('Search in OPDS Catalog...')}
+            placeholder={
+              baseURL && isLibraryUrl(baseURL)
+                ? _('Search books...')
+                : _('Search in OPDS Catalog...')
+            }
             disabled={!hasSearch}
             onChange={handleSearchChange}
             spellCheck='false'

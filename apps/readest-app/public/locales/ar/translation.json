@@ -2934,5 +2934,11 @@
   "This book is not available in your language yet. It has been requested.": "هذا الكتاب غير متاح بلغتك بعد. تم تقديم طلب للحصول عليه.",
   "Opening {{title}}…": "جارٍ فتح {{title}}…",
   "Added {{count}} books in your language": "تمت إضافة {{count}} كتابًا بلغتك",
-  "Source code (AGPL)": "الشفرة المصدرية (AGPL)"
+  "Source code (AGPL)": "الشفرة المصدرية (AGPL)",
+  "Browse books": "تصفّح الكتب",
+  "Search all books": "ابحث في جميع الكتب",
+  "Search books...": "ابحث عن الكتب...",
+  "Find your next book": "اعثر على كتابك القادم",
+  "Thousands of classics, free to read in your language.": "آلاف الكتب الكلاسيكية، متاحة للقراءة مجانًا بلغتك.",
+  "Sign in to {{app}}": "سجّل الدخول إلى {{app}}"
 }

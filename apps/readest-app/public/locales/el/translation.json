@@ -2662,5 +2662,11 @@
   "This book is not available in your language yet. It has been requested.": "Αυτό το βιβλίο δεν είναι ακόμη διαθέσιμο στη γλώσσα σας. Έχει ζητηθεί.",
   "Opening {{title}}…": "Άνοιγμα του {{title}}…",
   "Added {{count}} books in your language": "Προστέθηκαν {{count}} βιβλία στη γλώσσα σας",
-  "Source code (AGPL)": "Πηγαίος κώδικας (AGPL)"
+  "Source code (AGPL)": "Πηγαίος κώδικας (AGPL)",
+  "Browse books": "Εξερεύνηση βιβλίων",
+  "Search all books": "Αναζήτηση σε όλα τα βιβλία",
+  "Search books...": "Αναζήτηση βιβλίων...",
+  "Find your next book": "Βρείτε το επόμενο βιβλίο σας",
+  "Thousands of classics, free to read in your language.": "Χιλιάδες κλασικά έργα, δωρεάν για ανάγνωση στη γλώσσα σας.",
+  "Sign in to {{app}}": "Συνδεθείτε στο {{app}}"
 }

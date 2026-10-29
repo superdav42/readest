@@ -2798,5 +2798,11 @@
   "This book is not available in your language yet. It has been requested.": "Ця книга ще недоступна вашою мовою. Запит на неї надіслано.",
   "Opening {{title}}…": "Відкриття {{title}}…",
   "Added {{count}} books in your language": "Додано {{count}} книг вашою мовою",
-  "Source code (AGPL)": "Вихідний код (AGPL)"
+  "Source code (AGPL)": "Вихідний код (AGPL)",
+  "Browse books": "Переглянути книжки",
+  "Search all books": "Шукати серед усіх книжок",
+  "Search books...": "Шукати книжки…",
+  "Find your next book": "Знайдіть свою наступну книжку",
+  "Thousands of classics, free to read in your language.": "Тисячі класичних творів, які можна безкоштовно читати вашою мовою.",
+  "Sign in to {{app}}": "Увійти до {{app}}"
 }

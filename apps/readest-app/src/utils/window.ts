@@ -1,3 +1,4 @@
+// Modified 2026-10-28 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { getAllWindows, getCurrentWindow } from '@tauri-apps/api/window';
 import { invoke } from '@tauri-apps/api/core';
 import { emitTo, TauriEvent } from '@tauri-apps/api/event';
@@ -7,7 +8,7 @@ import { AppService } from '@/types/system';
 import { useTrafficLightStore } from '@/store/trafficLightStore';
 import { eventDispatcher } from './event';
 
-const APP_NAME = 'Readest';
+import { APP_NAME } from './appBrand';
 
 /**
  * The OS window title, e.g. `Readest - The Hobbit`. It is never drawn in the

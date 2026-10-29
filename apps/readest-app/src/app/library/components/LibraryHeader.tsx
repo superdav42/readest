@@ -20,6 +20,7 @@ import useShortcuts from '@/hooks/useShortcuts';
 import WindowButtons from '@/components/WindowButtons';
 import Dropdown from '@/components/Dropdown';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import BrowseLibraryButton from '@/components/BrowseLibraryButton';
 import SettingsMenu from './SettingsMenu';
 import ImportMenu from './ImportMenu';
 import LibrarySearchOptionsMenu from './LibrarySearchOptionsMenu';
@@ -271,6 +272,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({
           </div>
         ) : (
           <div className='flex h-full items-center gap-x-2 sm:gap-x-4'>
+            <BrowseLibraryButton className='exclude-title-bar-mousedown' />
             <LanguageSwitcher className='exclude-title-bar-mousedown' />
             <Dropdown
               label={_('View Menu')}

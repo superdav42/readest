@@ -2594,5 +2594,11 @@
   "This book is not available in your language yet. It has been requested.": "หนังสือเล่มนี้ยังไม่มีให้บริการในภาษาของคุณ ได้ส่งคำขอแล้ว",
   "Opening {{title}}…": "กำลังเปิด {{title}}…",
   "Added {{count}} books in your language": "เพิ่มหนังสือในภาษาของคุณแล้ว {{count}} เล่ม",
-  "Source code (AGPL)": "รหัสต้นฉบับ (AGPL)"
+  "Source code (AGPL)": "รหัสต้นฉบับ (AGPL)",
+  "Browse books": "เรียกดูหนังสือ",
+  "Search all books": "ค้นหาหนังสือทั้งหมด",
+  "Search books...": "ค้นหาหนังสือ...",
+  "Find your next book": "ค้นหาหนังสือเล่มถัดไปของคุณ",
+  "Thousands of classics, free to read in your language.": "หนังสือคลาสสิกนับพันเล่ม อ่านฟรีในภาษาของคุณ",
+  "Sign in to {{app}}": "ลงชื่อเข้าใช้ {{app}}"
 }

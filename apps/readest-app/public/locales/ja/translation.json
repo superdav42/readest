@@ -2594,5 +2594,11 @@
   "This book is not available in your language yet. It has been requested.": "この本はまだお使いの言語では利用できません。リクエスト済みです。",
   "Opening {{title}}…": "{{title}}を開いています…",
   "Added {{count}} books in your language": "お使いの言語の本を{{count}}冊追加しました",
-  "Source code (AGPL)": "ソースコード（AGPL）"
+  "Source code (AGPL)": "ソースコード（AGPL）",
+  "Browse books": "本を探す",
+  "Search all books": "すべての本を検索",
+  "Search books...": "本を検索…",
+  "Find your next book": "次に読む本を見つけよう",
+  "Thousands of classics, free to read in your language.": "何千冊もの名作を、あなたの言語で無料で読めます。",
+  "Sign in to {{app}}": "{{app}}にサインイン"
 }

@@ -2594,5 +2594,11 @@
   "This book is not available in your language yet. It has been requested.": "Buku ini belum tersedia dalam bahasa Anda. Buku ini telah diminta.",
   "Opening {{title}}…": "Membuka {{title}}…",
   "Added {{count}} books in your language": "{{count}} buku dalam bahasa Anda ditambahkan",
-  "Source code (AGPL)": "Kode sumber (AGPL)"
+  "Source code (AGPL)": "Kode sumber (AGPL)",
+  "Browse books": "Jelajahi buku",
+  "Search all books": "Cari semua buku",
+  "Search books...": "Cari buku...",
+  "Find your next book": "Temukan bacaan Anda berikutnya",
+  "Thousands of classics, free to read in your language.": "Ribuan karya klasik, gratis dibaca dalam bahasa Anda.",
+  "Sign in to {{app}}": "Masuk ke {{app}}"
 }

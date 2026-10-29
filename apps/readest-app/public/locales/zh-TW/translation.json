@@ -2594,5 +2594,11 @@
   "This book is not available in your language yet. It has been requested.": "這本書目前尚未提供您所使用的語言版本。已提出要求。",
   "Opening {{title}}…": "正在開啟 {{title}}…",
   "Added {{count}} books in your language": "已新增 {{count}} 本您所使用語言的書籍",
-  "Source code (AGPL)": "原始碼（AGPL）"
+  "Source code (AGPL)": "原始碼（AGPL）",
+  "Browse books": "瀏覽書籍",
+  "Search all books": "搜尋所有書籍",
+  "Search books...": "搜尋書籍⋯",
+  "Find your next book": "探索你的下一本書",
+  "Thousands of classics, free to read in your language.": "數千本經典著作，免費以你的語言閱讀。",
+  "Sign in to {{app}}": "登入 {{app}}"
 }

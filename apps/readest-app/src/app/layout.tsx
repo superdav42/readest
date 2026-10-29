@@ -7,21 +7,23 @@ import { EnvProvider } from '@/context/EnvContext';
 import Providers from '@/components/Providers';
 
 import '../styles/globals.css';
+import { APP_DESCRIPTION, APP_NAME, APP_TAGLINE, APP_URL } from '@/utils/appBrand';
 
-const url = 'https://web.readest.com/';
-const title = 'Readest — Where You Read, Digest and Get Insight';
+const url = APP_URL;
+const title = `${APP_NAME} — ${APP_TAGLINE}`;
 const description =
+  APP_DESCRIPTION ||
   'Discover Readest, the ultimate online ebook reader for immersive and organized reading. ' +
-  'Enjoy seamless access to your digital library, powerful tools for highlighting, bookmarking, ' +
-  'and note-taking, and support for multiple book views. ' +
-  'Perfect for deep reading, analysis, and understanding. Explore now!';
+    'Enjoy seamless access to your digital library, powerful tools for highlighting, bookmarking, ' +
+    'and note-taking, and support for multiple book views. ' +
+    'Perfect for deep reading, analysis, and understanding. Explore now!';
 const previewImage = 'https://cdn.readest.com/images/open_graph_preview_read_now.png';
 
 export const metadata: Metadata = {
   metadataBase: new URL(url),
   title: {
     default: title,
-    template: '%s | Readest',
+    template: `%s | ${APP_NAME}`,
   },
   description,
   generator: 'Next.js',
@@ -39,7 +41,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    title: 'Readest',
+    title: APP_NAME,
     statusBarStyle: 'default',
   },
   openGraph: {

@@ -9,6 +9,7 @@ import { ProviderLogin, type OAuthProvider } from './ProviderLogin';
 import EmailPasswordAuth from './EmailPasswordAuth';
 import ReadestCloudOptIn from './ReadestCloudOptIn';
 import { useAuthProviders } from '../hooks/useAuthProviders';
+import { APP_NAME } from '@/utils/appBrand';
 
 const PROVIDERS: Partial<Record<OAuthProvider, { Icon: React.ElementType; name: string }>> = {
   google: { Icon: FcGoogle, name: 'Google' },
@@ -47,7 +48,11 @@ export default function AuthPanel({
       <div className='flex flex-col items-center gap-3 text-center'>
         <Image src='/icon.png' alt='' width={56} height={56} className='eink-bordered rounded-xl' />
         <div>
-          <h1 className='text-xl font-semibold tracking-tight'>{_('Sign in to Readest')}</h1>
+          <h1 className='text-xl font-semibold tracking-tight'>
+            {APP_NAME === 'Readest'
+              ? _('Sign in to Readest')
+              : _('Sign in to {{app}}', { app: APP_NAME })}
+          </h1>
           <p className='text-base-content/70 mt-1.5 text-sm leading-relaxed'>
             {_('Sync your library, reading progress, and highlights across your devices.')}
           </p>

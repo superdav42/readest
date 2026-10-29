@@ -2798,5 +2798,11 @@
   "This book is not available in your language yet. It has been requested.": "Ta knjiga v vašem jeziku še ni na voljo. Zanjo smo poslali zahtevo.",
   "Opening {{title}}…": "Odpiranje {{title}} …",
   "Added {{count}} books in your language": "Dodanih je bilo {{count}} knjig v vašem jeziku",
-  "Source code (AGPL)": "Izvorna koda (AGPL)"
+  "Source code (AGPL)": "Izvorna koda (AGPL)",
+  "Browse books": "Brskaj po knjigah",
+  "Search all books": "Išči po vseh knjigah",
+  "Search books...": "Išči knjige ...",
+  "Find your next book": "Poiščite svojo naslednjo knjigo",
+  "Thousands of classics, free to read in your language.": "Na tisoče klasik, ki jih lahko brezplačno berete v svojem jeziku.",
+  "Sign in to {{app}}": "Prijavite se v {{app}}"
 }

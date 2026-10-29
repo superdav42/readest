@@ -2662,5 +2662,11 @@
   "This book is not available in your language yet. It has been requested.": "Den här boken är ännu inte tillgänglig på ditt språk. Den har begärts.",
   "Opening {{title}}…": "Öppnar {{title}}…",
   "Added {{count}} books in your language": "Lade till {{count}} böcker på ditt språk",
-  "Source code (AGPL)": "Källkod (AGPL)"
+  "Source code (AGPL)": "Källkod (AGPL)",
+  "Browse books": "Bläddra bland böcker",
+  "Search all books": "Sök bland alla böcker",
+  "Search books...": "Sök efter böcker...",
+  "Find your next book": "Hitta din nästa bok",
+  "Thousands of classics, free to read in your language.": "Tusentals klassiker, gratis att läsa på ditt språk.",
+  "Sign in to {{app}}": "Logga in på {{app}}"
 }

@@ -2662,5 +2662,11 @@
   "This book is not available in your language yet. It has been requested.": "Dit boek is nog niet beschikbaar in jouw taal. Het is aangevraagd.",
   "Opening {{title}}…": "{{title}} wordt geopend…",
   "Added {{count}} books in your language": "{{count}} boeken in jouw taal toegevoegd",
-  "Source code (AGPL)": "Broncode (AGPL)"
+  "Source code (AGPL)": "Broncode (AGPL)",
+  "Browse books": "Boeken bekijken",
+  "Search all books": "Zoek in alle boeken",
+  "Search books...": "Zoek naar boeken...",
+  "Find your next book": "Vind je volgende boek",
+  "Thousands of classics, free to read in your language.": "Duizenden klassiekers, gratis te lezen in jouw taal.",
+  "Sign in to {{app}}": "Aanmelden bij {{app}}"
 }

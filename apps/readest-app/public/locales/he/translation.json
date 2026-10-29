@@ -2730,5 +2730,11 @@
   "This book is not available in your language yet. It has been requested.": "הספר הזה עדיין אינו זמין בשפה שלך. נשלחה בקשה עבורו.",
   "Opening {{title}}…": "פתיחת {{title}}…",
   "Added {{count}} books in your language": "נוספו {{count}} ספרים בשפה שלך",
-  "Source code (AGPL)": "קוד המקור (AGPL)"
+  "Source code (AGPL)": "קוד המקור (AGPL)",
+  "Browse books": "עיון בספרים",
+  "Search all books": "חיפוש בכל הספרים",
+  "Search books...": "חיפוש ספרים...",
+  "Find your next book": "מצאו את הספר הבא שלכם",
+  "Thousands of classics, free to read in your language.": "אלפי יצירות קלאסיות, חינם לקריאה בשפה שלכם.",
+  "Sign in to {{app}}": "התחברות אל {{app}}"
 }

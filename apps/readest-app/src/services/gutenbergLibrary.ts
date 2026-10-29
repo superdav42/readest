@@ -136,6 +136,23 @@ export const requestEdition = (workId: number, lang: string, kind: 'translation'
         body: JSON.stringify({ work_id: workId, lang, kind }),
       });
 
+/** App route that opens the operator's catalog (in the reader's language), or null. */
+export const getLibraryBrowsePath = (): string | null => {
+  const url = getRuntimeConfig()?.featuredCatalogUrl;
+  return url ? `/opds/?url=${encodeURIComponent(withContentLanguage(url))}` : null;
+};
+
+/** App route that searches the operator's catalog for `query`, or null. */
+export const getLibrarySearchPath = (query: string, lang = getContentLanguage()): string | null => {
+  const base = getCatalogBase();
+  const q = query.trim();
+  if (!base || !q) return null;
+  const feed = isRpcCatalog(base)
+    ? `${base}/opds?path=search&lang=${encodeURIComponent(lang)}&query=${encodeURIComponent(q)}`
+    : `${base}/opds/search/${encodeURIComponent(lang)}?query=${encodeURIComponent(q)}`;
+  return `/opds/?url=${encodeURIComponent(feed)}`;
+};
+
 /** Announce a language change to pages that show library content. */
 export const announceContentLanguage = (lang: string) =>
   eventDispatcher.dispatch(CONTENT_LANGUAGE_EVENT, { lang });

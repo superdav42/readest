@@ -2594,5 +2594,11 @@
   "This book is not available in your language yet. It has been requested.": "Sách này chưa có bằng ngôn ngữ của bạn. Sách đã được yêu cầu.",
   "Opening {{title}}…": "Đang mở {{title}}…",
   "Added {{count}} books in your language": "Đã thêm {{count}} sách bằng ngôn ngữ của bạn",
-  "Source code (AGPL)": "Mã nguồn (AGPL)"
+  "Source code (AGPL)": "Mã nguồn (AGPL)",
+  "Browse books": "Duyệt sách",
+  "Search all books": "Tìm kiếm tất cả sách",
+  "Search books...": "Tìm sách...",
+  "Find your next book": "Tìm cuốn sách tiếp theo của bạn",
+  "Thousands of classics, free to read in your language.": "Hàng nghìn tác phẩm kinh điển, miễn phí đọc bằng ngôn ngữ của bạn.",
+  "Sign in to {{app}}": "Đăng nhập vào {{app}}"
 }

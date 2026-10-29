@@ -2730,5 +2730,11 @@
   "This book is not available in your language yet. It has been requested.": "Această carte nu este încă disponibilă în limba ta. A fost solicitată.",
   "Opening {{title}}…": "Se deschide {{title}}…",
   "Added {{count}} books in your language": "Au fost adăugate {{count}} de cărți în limba ta",
-  "Source code (AGPL)": "Cod sursă (AGPL)"
+  "Source code (AGPL)": "Cod sursă (AGPL)",
+  "Browse books": "Răsfoiește cărțile",
+  "Search all books": "Caută în toate cărțile",
+  "Search books...": "Caută cărți...",
+  "Find your next book": "Găsește următoarea ta carte",
+  "Thousands of classics, free to read in your language.": "Mii de cărți clasice, disponibile gratuit pentru lectură în limba ta.",
+  "Sign in to {{app}}": "Conectează-te la {{app}}"
 }

@@ -2662,5 +2662,11 @@
   "This book is not available in your language yet. It has been requested.": "ეს წიგნი ჯერ არ არის ხელმისაწვდომი თქვენს ენაზე. მისი მოთხოვნა უკვე გაგზავნილია.",
   "Opening {{title}}…": "იხსნება {{title}}…",
   "Added {{count}} books in your language": "თქვენს ენაზე {{count}} წიგნი დაემატა",
-  "Source code (AGPL)": "წყაროს კოდი (AGPL)"
+  "Source code (AGPL)": "წყაროს კოდი (AGPL)",
+  "Browse books": "წიგნების დათვალიერება",
+  "Search all books": "ყველა წიგნის ძიება",
+  "Search books...": "წიგნების ძიება...",
+  "Find your next book": "იპოვეთ თქვენი შემდეგი წიგნი",
+  "Thousands of classics, free to read in your language.": "ათასობით კლასიკა, რომლის წაკითხვაც თქვენს ენაზე უფასოდ შეგიძლიათ.",
+  "Sign in to {{app}}": "შედით {{app}}-ში"
 }

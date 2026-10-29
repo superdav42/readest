@@ -2730,5 +2730,11 @@
   "This book is not available in your language yet. It has been requested.": "Ce livre n’est pas encore disponible dans votre langue. Il a été demandé.",
   "Opening {{title}}…": "Ouverture de {{title}}…",
   "Added {{count}} books in your language": "{{count}} livres dans votre langue ajoutés",
-  "Source code (AGPL)": "Code source (AGPL)"
+  "Source code (AGPL)": "Code source (AGPL)",
+  "Browse books": "Parcourir les livres",
+  "Search all books": "Rechercher dans tous les livres",
+  "Search books...": "Rechercher des livres...",
+  "Find your next book": "Trouvez votre prochain livre",
+  "Thousands of classics, free to read in your language.": "Des milliers de classiques, à lire gratuitement dans votre langue.",
+  "Sign in to {{app}}": "Se connecter à {{app}}"
 }

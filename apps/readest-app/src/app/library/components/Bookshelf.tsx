@@ -1,11 +1,17 @@
 // Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import LibraryEmptyState from './LibraryEmptyState';
 import LibraryImportButton from './LibraryImportButton';
+import BrowseLibraryButton from '@/components/BrowseLibraryButton';
+import {
+  getLibraryBrowsePath,
+  getLibrarySearchPath,
+  isSharedLibraryOnly,
+} from '@/services/gutenbergLibrary';
 import clsx from 'clsx';
 import { MdManageSearch } from 'react-icons/md';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { PiPlus } from 'react-icons/pi';
+import { PiBooks, PiPlus } from 'react-icons/pi';
 import { useOverlayScrollbars } from 'overlayscrollbars-react';
 import 'overlayscrollbars/overlayscrollbars.css';
 import { Book, BooksGroup, type LibrarySearchConfig, ReadingStatus } from '@/types/book';
@@ -996,18 +1002,22 @@ const Bookshelf: React.FC<BookshelfProps> = ({
             : undefined
         }
       >
-        <button
-          type='button'
-          aria-label={_('Import Books')}
-          aria-haspopup='menu'
-          className={clsx(
-            'bookitem-main eink-bordered bg-base-100/50 hover:bg-base-300/50 flex aspect-28/41 w-full items-center justify-center rounded-sm',
-            'focus-visible:ring-base-content/15 focus-visible:outline-hidden focus-visible:ring-2',
-          )}
-          onClick={(event) => handleImportBooks(event.currentTarget)}
-        >
-          <PiPlus aria-hidden className='text-base-content/60 size-10' />
-        </button>
+        {isSharedLibraryOnly() && getLibraryBrowsePath() ? (
+          <BrowseLibraryButton variant='tile' />
+        ) : (
+          <button
+            type='button'
+            aria-label={_('Import Books')}
+            aria-haspopup='menu'
+            className={clsx(
+              'bookitem-main eink-bordered bg-base-100/50 hover:bg-base-300/50 flex aspect-28/41 w-full items-center justify-center rounded-sm',
+              'focus-visible:ring-base-content/15 focus-visible:outline-hidden focus-visible:ring-2',
+            )}
+            onClick={(event) => handleImportBooks(event.currentTarget)}
+          >
+            <PiPlus aria-hidden className='text-base-content/60 size-10' />
+          </button>
+        )}
       </div>
     ) : undefined;
   const importAction = !importTile ? (
@@ -1025,7 +1035,22 @@ const Bookshelf: React.FC<BookshelfProps> = ({
       className='bookshelf flex min-h-0 grow flex-col focus:outline-hidden'
     >
       {!contentSearch?.query.trim() && queryTerm && (
-        <div className='flex shrink-0 justify-center px-4 pb-2'>
+        <div className='flex shrink-0 flex-wrap justify-center gap-2 px-4 pb-2'>
+          {getLibrarySearchPath(queryTerm) && (
+            <button
+              type='button'
+              onClick={() => router.push(getLibrarySearchPath(queryTerm)!)}
+              className={clsx(
+                'eink-bordered border-base-200 bg-base-100 hover:border-base-300 hover:bg-base-300/40',
+                'text-base-content/80 hover:text-base-content not-eink:transition-colors',
+                'flex h-9 items-center gap-2 rounded-lg border px-4 text-sm font-medium duration-150',
+                'focus-visible:ring-base-content/15 focus-visible:outline-hidden focus-visible:ring-2',
+              )}
+            >
+              <PiBooks aria-hidden='true' className='h-5 w-5' />
+              {_('Search all books')}
+            </button>
+          )}
           <button
             type='button'
             onClick={onSearchContents}

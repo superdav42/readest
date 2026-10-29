@@ -2662,5 +2662,11 @@
   "This book is not available in your language yet. It has been requested.": "Bu kitap henüz dilinizde mevcut değil. İstendi.",
   "Opening {{title}}…": "{{title}} açılıyor…",
   "Added {{count}} books in your language": "Dilinizde {{count}} kitap eklendi",
-  "Source code (AGPL)": "Kaynak kodu (AGPL)"
+  "Source code (AGPL)": "Kaynak kodu (AGPL)",
+  "Browse books": "Kitaplara göz at",
+  "Search all books": "Tüm kitaplarda ara",
+  "Search books...": "Kitaplarda ara...",
+  "Find your next book": "Sıradaki kitabını bul",
+  "Thousands of classics, free to read in your language.": "Dilinizde ücretsiz okuyabileceğiniz binlerce klasik eser.",
+  "Sign in to {{app}}": "{{app}}'a giriş yap"
 }

@@ -2662,5 +2662,11 @@
   "This book is not available in your language yet. It has been requested.": "Ez a könyv még nem érhető el az Ön nyelvén. Igényeltük.",
   "Opening {{title}}…": "{{title}} megnyitása…",
   "Added {{count}} books in your language": "{{count}} könyv hozzáadva az Ön nyelvén",
-  "Source code (AGPL)": "Forráskód (AGPL)"
+  "Source code (AGPL)": "Forráskód (AGPL)",
+  "Browse books": "Könyvek böngészése",
+  "Search all books": "Keresés az összes könyv között",
+  "Search books...": "Könyvek keresése...",
+  "Find your next book": "Találd meg a következő könyvedet",
+  "Thousands of classics, free to read in your language.": "Több ezer klasszikus, amelyeket ingyen olvashatsz a saját nyelveden.",
+  "Sign in to {{app}}": "Jelentkezz be a(z) {{app}} alkalmazásba"
 }

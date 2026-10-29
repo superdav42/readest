@@ -2662,5 +2662,11 @@
   "This book is not available in your language yet. It has been requested.": "এই বইটি এখনও আপনার ভাষায় উপলভ্য নয়। এর জন্য অনুরোধ করা হয়েছে।",
   "Opening {{title}}…": "{{title}} খোলা হচ্ছে…",
   "Added {{count}} books in your language": "{{count}}টি বই আপনার ভাষায় যোগ করা হয়েছে",
-  "Source code (AGPL)": "সোর্স কোড (AGPL)"
+  "Source code (AGPL)": "সোর্স কোড (AGPL)",
+  "Browse books": "বই ব্রাউজ করুন",
+  "Search all books": "সব বই অনুসন্ধান করুন",
+  "Search books...": "বই অনুসন্ধান করুন...",
+  "Find your next book": "আপনার পরবর্তী বইটি খুঁজে নিন",
+  "Thousands of classics, free to read in your language.": "আপনার ভাষায় বিনামূল্যে পড়ার জন্য হাজার হাজার ক্লাসিক বই।",
+  "Sign in to {{app}}": "{{app}}-এ সাইন ইন করুন"
 }

@@ -1,3 +1,4 @@
+// Modified 2026-10-28 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import * as React from 'react';
 import clsx from 'clsx';
 import { PiBooks } from 'react-icons/pi';
@@ -8,6 +9,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useAppRouter } from '@/hooks/useAppRouter';
 import { navigateToLogin } from '@/utils/nav';
 import LibraryImportButton from './LibraryImportButton';
+import BrowseLibraryButton from '@/components/BrowseLibraryButton';
+import { getLibraryBrowsePath } from '@/services/gutenbergLibrary';
 
 interface LibraryEmptyStateProps {
   onImport: (anchor: HTMLElement) => void;
@@ -25,15 +28,18 @@ const LibraryEmptyState: React.FC<LibraryEmptyStateProps> = ({ onImport }) => {
       <div className='flex max-w-md flex-col items-center'>
         <PiBooks aria-hidden className='text-base-content/60 mb-10 size-16' />
         <h1 className='mb-5 text-balance text-4xl font-semibold leading-tight tracking-tight'>
-          {_('Start your library')}
+          {getLibraryBrowsePath() ? _('Find your next book') : _('Start your library')}
         </h1>
         <p className='text-base-content/70 mb-12 text-pretty text-base leading-relaxed'>
-          {isMobile
-            ? _('Pick a book from your device to add it to your library.')
-            : _('Drop a book anywhere on this window, or pick one from your computer.')}
+          {getLibraryBrowsePath()
+            ? _('Thousands of classics, free to read in your language.')
+            : isMobile
+              ? _('Pick a book from your device to add it to your library.')
+              : _('Drop a book anywhere on this window, or pick one from your computer.')}
         </p>
         <div className='flex w-full max-w-xs flex-col gap-3'>
-          <LibraryImportButton onImport={onImport} primary />
+          {getLibraryBrowsePath() && <BrowseLibraryButton variant='primary' />}
+          <LibraryImportButton onImport={onImport} primary={!getLibraryBrowsePath()} />
           {/* TODO: add a 'Browse free catalogs' secondary action that opens the
               OPDS dialog (handleShowOPDSDialog) once we settle on placement. */}
           {!user && (

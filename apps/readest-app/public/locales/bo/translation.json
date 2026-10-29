@@ -2594,5 +2594,11 @@
   "This book is not available in your language yet. It has been requested.": "དཔེ་དེབ་འདི་ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་ད་ལྟ་མེད། དེའི་ཞུ་བ་ཕུལ་ཟིན།",
   "Opening {{title}}…": "{{title}} ཁ་ཕྱེ་བཞིན་ཡོད…",
   "Added {{count}} books in your language": "ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་གི་དཔེ་དེབ་{{count}} ཁ་སྣོན་བྱས་ཟིན།",
-  "Source code (AGPL)": "ཁུངས་ཀྱི་ཨང་རྟགས་ (AGPL)"
+  "Source code (AGPL)": "ཁུངས་ཀྱི་ཨང་རྟགས་ (AGPL)",
+  "Browse books": "དཔེ་དེབ་ལ་བལྟ་བ",
+  "Search all books": "དཔེ་དེབ་ཚང་མ་འཚོལ",
+  "Search books...": "དཔེ་དེབ་འཚོལ་བ...",
+  "Find your next book": "ཁྱེད་ཀྱི་དཔེ་དེབ་རྗེས་མ་དེ་རྙེད",
+  "Thousands of classics, free to read in your language.": "ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་རིན་མེད་དུ་ཀློག་ཆོག་པའི་གནའ་རབས་ཀྱི་དཔེ་དེབ་སྟོང་ཕྲག་མང་པོ།",
+  "Sign in to {{app}}": "{{app}} ནང་དུ་འཛུལ་ཞུགས"
 }

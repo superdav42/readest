@@ -2662,5 +2662,11 @@
   "This book is not available in your language yet. It has been requested.": "இந்தப் புத்தகம் இன்னும் உங்கள் மொழியில் கிடைக்கவில்லை. இது கோரப்பட்டுள்ளது.",
   "Opening {{title}}…": "{{title}} திறக்கப்படுகிறது…",
   "Added {{count}} books in your language": "உங்கள் மொழியில் {{count}} புத்தகங்கள் சேர்க்கப்பட்டன",
-  "Source code (AGPL)": "மூலக் குறியீடு (AGPL)"
+  "Source code (AGPL)": "மூலக் குறியீடு (AGPL)",
+  "Browse books": "புத்தகங்களைப் பார்க்கவும்",
+  "Search all books": "அனைத்து புத்தகங்களையும் தேடுங்கள்",
+  "Search books...": "புத்தகங்களைத் தேடுங்கள்...",
+  "Find your next book": "உங்கள் அடுத்த புத்தகத்தைக் கண்டறியுங்கள்",
+  "Thousands of classics, free to read in your language.": "ஆயிரக்கணக்கான செவ்வியல் நூல்கள், உங்கள் மொழியில் இலவசமாகப் படிக்கலாம்.",
+  "Sign in to {{app}}": "{{app}}-இல் உள்நுழைக"
 }

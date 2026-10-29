@@ -2662,5 +2662,11 @@
   "This book is not available in your language yet. It has been requested.": "این کتاب هنوز به زبان شما در دسترس نیست. درخواست آن ثبت شده است.",
   "Opening {{title}}…": "در حال باز کردن {{title}}…",
   "Added {{count}} books in your language": "{{count}} کتاب به زبان شما اضافه شد",
-  "Source code (AGPL)": "کد منبع (AGPL)"
+  "Source code (AGPL)": "کد منبع (AGPL)",
+  "Browse books": "مرور کتاب‌ها",
+  "Search all books": "جست‌وجو در همه کتاب‌ها",
+  "Search books...": "جست‌وجوی کتاب‌ها...",
+  "Find your next book": "کتاب بعدی‌تان را پیدا کنید",
+  "Thousands of classics, free to read in your language.": "هزاران اثر کلاسیک، رایگان و قابل مطالعه به زبان شما.",
+  "Sign in to {{app}}": "ورود به {{app}}"
 }
