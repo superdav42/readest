@@ -135,6 +135,18 @@ const shouldInjectRuntimeConfig = process.env['NEXT_PUBLIC_APP_PLATFORM'] === 'w
 // Static web export: no server to send the cross-origin isolation headers the
 // Turso WASM database needs, so a service worker adds them (public/coi-serviceworker.js).
 const shouldInjectIsolationWorker = process.env['BUILD_STATIC_EXPORT'] === 'true';
+// Native (Tauri) builds get no /runtime-config.js: embed the deployment's
+// config at build time (NEXT_PUBLIC_EMBEDDED_RUNTIME_CONFIG, a JSON object).
+const embeddedRuntimeConfig =
+  process.env['NEXT_PUBLIC_APP_PLATFORM'] !== 'web'
+    ? process.env['NEXT_PUBLIC_EMBEDDED_RUNTIME_CONFIG']
+    : undefined;
+const embeddedRuntimeConfigScript = embeddedRuntimeConfig
+  ? `window.__READEST_RUNTIME_CONFIG=${JSON.stringify(JSON.parse(embeddedRuntimeConfig))
+      .replace(/</g, '\\u003c')
+      .replace(/\u2028/g, '\\u2028')
+      .replace(/\u2029/g, '\\u2029')};`
+  : null;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   // Browser extensions can inject attributes on <html> before React hydrates it.
@@ -145,6 +157,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={process.env['NEXT_PUBLIC_APP_PLATFORM'] === 'tauri' ? 'edge-to-edge' : ''}
     >
       <head>
+        {embeddedRuntimeConfigScript ? (
+          <Script id='embedded-runtime-config' strategy='beforeInteractive'>
+            {embeddedRuntimeConfigScript}
+          </Script>
+        ) : null}
         {shouldInjectRuntimeConfig ? (
           <Script src='/runtime-config.js' strategy='beforeInteractive' />
         ) : null}

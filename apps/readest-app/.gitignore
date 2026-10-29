@@ -43,6 +43,8 @@ Entitlements*.plist
 tauri.*.conf.json
 # tracked exception: the direct-distribution iCloud overlay ships in the repo
 !tauri.macos-nonestore.conf.json
+# tracked exception: the Librebooks Android override (Gutenberg AI fork)
+!tauri.librebooks.conf.json
 
 # vercel
 .vercel

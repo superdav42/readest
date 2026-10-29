@@ -1,3 +1,4 @@
+// Modified 2026-10-29 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import semver from 'semver';
 import { check } from '@tauri-apps/plugin-updater';
 import { type as osType, arch as osArch } from '@tauri-apps/plugin-os';
@@ -7,6 +8,7 @@ import { ScrollBarStyle } from '@tauri-apps/api/window';
 import { TranslationFunc } from '@/hooks/useTranslation';
 import { setUpdaterWindowVisible } from '@/components/UpdaterWindow';
 import { isTauriAppPlatform } from '@/services/environment';
+import { getRuntimeConfig } from '@/services/runtimeConfig';
 import { getAppVersion, isUpdateNewer } from '@/utils/version';
 import {
   CHECK_UPDATE_INTERVAL_SEC,
@@ -147,6 +149,8 @@ export const checkForAppUpdates = async (
   isAutoCheck = true,
   updateChannel: 'stable' | 'nightly' = 'stable',
 ): Promise<boolean> => {
+  // A self-hosted deployment ships its own builds: never ask Readest's release feeds.
+  if (getRuntimeConfig()?.selfHosted) return false;
   const lastCheck = localStorage.getItem(LAST_CHECK_KEY);
   const now = Date.now();
   if (isAutoCheck && lastCheck && now - parseInt(lastCheck, 10) < CHECK_UPDATE_INTERVAL_SEC * 1000)
@@ -222,6 +226,7 @@ export const getLastShownReleaseNotesVersion = () => {
 };
 
 export const checkAppReleaseNotes = async (isAutoCheck = true) => {
+  if (getRuntimeConfig()?.selfHosted) return false;
   const currentVersion = getAppVersion();
   const lastShownVersion = getLastShownReleaseNotesVersion();
   if ((lastShownVersion && semver.gt(currentVersion, lastShownVersion)) || !isAutoCheck) {
