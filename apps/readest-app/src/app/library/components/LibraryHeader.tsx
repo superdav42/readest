@@ -271,7 +271,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({
             )}
           </div>
         ) : (
-          <div className='flex h-full items-center gap-x-2 sm:gap-x-4'>
+          <div className='flex h-full shrink-0 items-center gap-x-2 sm:gap-x-4'>
             <BrowseLibraryButton className='exclude-title-bar-mousedown' />
             <LanguageSwitcher className='exclude-title-bar-mousedown' />
             <Dropdown
