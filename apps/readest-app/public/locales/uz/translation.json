@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "Tilingizdagi {{count}} ta kitob qo‘shildi",
   "Added {{count}} books in your language_other": "Tilingizdagi {{count}} ta kitob qo‘shildi",
   "About {{app}}": "{{app}} haqida",
-  "Based on Readest": "Readest asosida"
+  "Based on Readest": "Readest asosida",
+  "Discover": "Kashf etish",
+  "My books": "Kitoblarim",
+  "Library view": "Kutubxona ko‘rinishi",
+  "Popular": "Mashhur",
+  "Read-along": "Birgalikda o‘qish",
+  "Continue reading": "O‘qishni davom ettirish",
+  "Because you read {{title}}": "{{title}} kitobini o‘qiganingiz uchun",
+  "See all": "Barchasini ko‘rish",
+  "Could not open this book. Check your connection and try again.": "Bu kitobni ochib bo‘lmadi. Internet aloqangizni tekshirib, qayta urinib ko‘ring.",
+  "Could not load books. Check your connection and try again.": "Kitoblarni yuklab bo‘lmadi. Internet aloqangizni tekshirib, qayta urinib ko‘ring.",
+  "Try again": "Qayta urinish",
+  "Opening book…": "Kitob ochilmoqda…"
 }

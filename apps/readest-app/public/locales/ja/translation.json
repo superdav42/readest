@@ -2603,5 +2603,17 @@
   "Sign in to {{app}}": "{{app}}にサインイン",
   "Added {{count}} books in your language_other": "お使いの言語の本を{{count}}冊追加しました",
   "About {{app}}": "{{app}}について",
-  "Based on Readest": "Readestをベースにしています"
+  "Based on Readest": "Readestをベースにしています",
+  "Discover": "見つける",
+  "My books": "マイブック",
+  "Library view": "ライブラリ表示",
+  "Popular": "人気",
+  "Read-along": "音声付き読書",
+  "Continue reading": "続きを読む",
+  "Because you read {{title}}": "{{title}}を読んだあなたへのおすすめ",
+  "See all": "すべて見る",
+  "Could not open this book. Check your connection and try again.": "この本を開けませんでした。接続を確認して、もう一度お試しください。",
+  "Could not load books. Check your connection and try again.": "本を読み込めませんでした。接続を確認して、もう一度お試しください。",
+  "Try again": "再試行",
+  "Opening book…": "本を開いています…"
 }

@@ -2603,5 +2603,17 @@
   "Sign in to {{app}}": "Log masuk ke {{app}}",
   "Added {{count}} books in your language_other": "{{count}} buku dalam bahasa anda telah ditambahkan",
   "About {{app}}": "Perihal {{app}}",
-  "Based on Readest": "Berasaskan Readest"
+  "Based on Readest": "Berasaskan Readest",
+  "Discover": "Terokai",
+  "My books": "Buku saya",
+  "Library view": "Paparan pustaka",
+  "Popular": "Popular",
+  "Read-along": "Baca bersama",
+  "Continue reading": "Teruskan membaca",
+  "Because you read {{title}}": "Kerana anda membaca {{title}}",
+  "See all": "Lihat semua",
+  "Could not open this book. Check your connection and try again.": "Tidak dapat membuka buku ini. Semak sambungan anda dan cuba lagi.",
+  "Could not load books. Check your connection and try again.": "Tidak dapat memuatkan buku. Semak sambungan anda dan cuba lagi.",
+  "Try again": "Cuba lagi",
+  "Opening book…": "Membuka buku…"
 }

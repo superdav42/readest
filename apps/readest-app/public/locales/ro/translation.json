@@ -2741,5 +2741,17 @@
   "Added {{count}} books in your language_few": "Au fost adăugate {{count}} cărți în limba ta",
   "Added {{count}} books in your language_other": "Au fost adăugate {{count}} de cărți în limba ta",
   "About {{app}}": "Despre {{app}}",
-  "Based on Readest": "Bazat pe Readest"
+  "Based on Readest": "Bazat pe Readest",
+  "Discover": "Descoperă",
+  "My books": "Cărțile mele",
+  "Library view": "Vizualizare bibliotecă",
+  "Popular": "Populare",
+  "Read-along": "Citește împreună",
+  "Continue reading": "Continuă lectura",
+  "Because you read {{title}}": "Pentru că ai citit {{title}}",
+  "See all": "Vezi tot",
+  "Could not open this book. Check your connection and try again.": "Nu s-a putut deschide această carte. Verifică-ți conexiunea și încearcă din nou.",
+  "Could not load books. Check your connection and try again.": "Nu s-au putut încărca cărțile. Verifică-ți conexiunea și încearcă din nou.",
+  "Try again": "Încearcă din nou",
+  "Opening book…": "Se deschide cartea…"
 }

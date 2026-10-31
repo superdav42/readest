@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "{{count}}টি বই আপনার ভাষায় যোগ করা হয়েছে",
   "Added {{count}} books in your language_other": "{{count}}টি বই আপনার ভাষায় যোগ করা হয়েছে",
   "About {{app}}": "{{app}} সম্পর্কে",
-  "Based on Readest": "Readest-এর ওপর ভিত্তি করে"
+  "Based on Readest": "Readest-এর ওপর ভিত্তি করে",
+  "Discover": "আবিষ্কার করুন",
+  "My books": "আমার বই",
+  "Library view": "লাইব্রেরি ভিউ",
+  "Popular": "জনপ্রিয়",
+  "Read-along": "পড়ুন ও শুনুন",
+  "Continue reading": "পড়া চালিয়ে যান",
+  "Because you read {{title}}": "আপনি {{title}} পড়েছেন বলে",
+  "See all": "সব দেখুন",
+  "Could not open this book. Check your connection and try again.": "এই বইটি খোলা যায়নি। আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।",
+  "Could not load books. Check your connection and try again.": "বইগুলো লোড করা যায়নি। আপনার ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।",
+  "Try again": "আবার চেষ্টা করুন",
+  "Opening book…": "বই খোলা হচ্ছে…"
 }

@@ -2948,5 +2948,17 @@
   "Added {{count}} books in your language_many": "تمت إضافة {{count}} كتابًا إلى مكتبتك بلغتك",
   "Added {{count}} books in your language_other": "تمت إضافة {{count}} كتابًا بلغتك",
   "About {{app}}": "حول {{app}}",
-  "Based on Readest": "مبني على Readest"
+  "Based on Readest": "مبني على Readest",
+  "Discover": "اكتشف",
+  "My books": "كتبي",
+  "Library view": "عرض المكتبة",
+  "Popular": "الشائع",
+  "Read-along": "القراءة المتزامنة",
+  "Continue reading": "متابعة القراءة",
+  "Because you read {{title}}": "لأنك قرأت {{title}}",
+  "See all": "عرض الكل",
+  "Could not open this book. Check your connection and try again.": "تعذّر فتح هذا الكتاب. تحقّق من اتصالك وحاول مرة أخرى.",
+  "Could not load books. Check your connection and try again.": "تعذّر تحميل الكتب. تحقّق من اتصالك وحاول مرة أخرى.",
+  "Try again": "حاول مرة أخرى",
+  "Opening book…": "جارٍ فتح الكتاب…"
 }

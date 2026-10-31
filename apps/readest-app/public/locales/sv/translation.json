@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "Lade till {{count}} bok på ditt språk",
   "Added {{count}} books in your language_other": "Lade till {{count}} böcker på ditt språk",
   "About {{app}}": "Om {{app}}",
-  "Based on Readest": "Baserad på Readest"
+  "Based on Readest": "Baserad på Readest",
+  "Discover": "Upptäck",
+  "My books": "Mina böcker",
+  "Library view": "Biblioteksvy",
+  "Popular": "Populärt",
+  "Read-along": "Läs med",
+  "Continue reading": "Fortsätt läsa",
+  "Because you read {{title}}": "Eftersom du läste {{title}}",
+  "See all": "Visa alla",
+  "Could not open this book. Check your connection and try again.": "Det gick inte att öppna den här boken. Kontrollera din anslutning och försök igen.",
+  "Could not load books. Check your connection and try again.": "Det gick inte att läsa in böckerna. Kontrollera din anslutning och försök igen.",
+  "Try again": "Försök igen",
+  "Opening book…": "Öppnar boken…"
 }

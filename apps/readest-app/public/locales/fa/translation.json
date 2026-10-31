@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "{{count}} کتاب به زبان شما اضافه شد",
   "Added {{count}} books in your language_other": "{{count}} کتاب به زبان شما اضافه شد",
   "About {{app}}": "دربارهٔ {{app}}",
-  "Based on Readest": "بر پایهٔ Readest"
+  "Based on Readest": "بر پایهٔ Readest",
+  "Discover": "کشف",
+  "My books": "کتاب‌های من",
+  "Library view": "نمای کتابخانه",
+  "Popular": "محبوب",
+  "Read-along": "همراه‌خوانی",
+  "Continue reading": "ادامهٔ مطالعه",
+  "Because you read {{title}}": "چون {{title}} را خوانده‌اید",
+  "See all": "مشاهدهٔ همه",
+  "Could not open this book. Check your connection and try again.": "باز کردن این کتاب ممکن نیست. اتصال اینترنت خود را بررسی کنید و دوباره امتحان کنید.",
+  "Could not load books. Check your connection and try again.": "بارگذاری کتاب‌ها ممکن نیست. اتصال اینترنت خود را بررسی کنید و دوباره امتحان کنید.",
+  "Try again": "تلاش دوباره",
+  "Opening book…": "در حال باز کردن کتاب…"
 }

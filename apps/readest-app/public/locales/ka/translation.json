@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "თქვენს ენაზე {{count}} წიგნი დაემატა",
   "Added {{count}} books in your language_other": "თქვენს ენაზე {{count}} წიგნი დაემატა",
   "About {{app}}": "{{app}}-ის შესახებ",
-  "Based on Readest": "შექმნილია Readest-ის საფუძველზე"
+  "Based on Readest": "შექმნილია Readest-ის საფუძველზე",
+  "Discover": "აღმოაჩინეთ",
+  "My books": "ჩემი წიგნები",
+  "Library view": "ბიბლიოთეკის ხედი",
+  "Popular": "პოპულარული",
+  "Read-along": "წაიკითხეთ მოსმენასთან ერთად",
+  "Continue reading": "კითხვის გაგრძელება",
+  "Because you read {{title}}": "რადგან წაიკითხეთ {{title}}",
+  "See all": "ყველას ნახვა",
+  "Could not open this book. Check your connection and try again.": "ეს წიგნი ვერ გაიხსნა. შეამოწმეთ ინტერნეტკავშირი და სცადეთ ხელახლა.",
+  "Could not load books. Check your connection and try again.": "წიგნები ვერ ჩაიტვირთა. შეამოწმეთ ინტერნეტკავშირი და სცადეთ ხელახლა.",
+  "Try again": "სცადეთ ხელახლა",
+  "Opening book…": "წიგნი იხსნება…"
 }

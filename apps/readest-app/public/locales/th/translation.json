@@ -2603,5 +2603,17 @@
   "Sign in to {{app}}": "ลงชื่อเข้าใช้ {{app}}",
   "Added {{count}} books in your language_other": "เพิ่มหนังสือในภาษาของคุณแล้ว {{count}} เล่ม",
   "About {{app}}": "เกี่ยวกับ {{app}}",
-  "Based on Readest": "พัฒนาต่อยอดจาก Readest"
+  "Based on Readest": "พัฒนาต่อยอดจาก Readest",
+  "Discover": "ค้นพบ",
+  "My books": "หนังสือของฉัน",
+  "Library view": "มุมมองห้องสมุด",
+  "Popular": "ยอดนิยม",
+  "Read-along": "อ่านไปพร้อมกัน",
+  "Continue reading": "อ่านต่อ",
+  "Because you read {{title}}": "เพราะคุณอ่าน {{title}}",
+  "See all": "ดูทั้งหมด",
+  "Could not open this book. Check your connection and try again.": "เปิดหนังสือเล่มนี้ไม่ได้ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง",
+  "Could not load books. Check your connection and try again.": "โหลดหนังสือไม่ได้ ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง",
+  "Try again": "ลองอีกครั้ง",
+  "Opening book…": "กำลังเปิดหนังสือ…"
 }

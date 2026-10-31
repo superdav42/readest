@@ -215,3 +215,83 @@ export const pickEditionsForLanguage = (books: Book[], lang: string): Book[] => 
   const keep = new Set([...others, ...picked]);
   return books.filter((book) => keep.has(book));
 };
+
+// ---------- Discover home (catalog_home / catalog_related RPCs) ----------
+
+/** A book on the Discover screen: the edition to open in the reader's language. */
+export interface DiscoverCard {
+  work_id: number;
+  title: string;
+  author?: string | null;
+  kind: 'original' | 'translation' | 'readalong';
+  lang: string;
+  size?: number | null;
+  url: string;
+  cover: string;
+  identifier: string;
+}
+
+export interface DiscoverSection {
+  id: string;
+  kind: 'popular' | 'readalong' | 'shelf';
+  title?: string;
+  shelf?: string;
+  items: DiscoverCard[];
+}
+
+export interface DiscoverHome {
+  lang: string;
+  sections: DiscoverSection[];
+}
+
+/** Discover needs the Supabase catalog (its RPCs); other backends keep the plain library. */
+export const isDiscoverAvailable = (): boolean => isSharedLibraryOnly() && rpcBase();
+
+const homeCacheKey = (lang: string) => `librebooks-discover-home:${lang}`;
+
+/** The last home screen fetched for a language, shown instantly while a fresh one loads. */
+export const getCachedDiscoverHome = (lang = getContentLanguage()): DiscoverHome | null => {
+  try {
+    const raw = localStorage.getItem(homeCacheKey(lang));
+    return raw ? (JSON.parse(raw) as DiscoverHome) : null;
+  } catch {
+    return null;
+  }
+};
+
+export const fetchDiscoverHome = async (lang = getContentLanguage()): Promise<DiscoverHome> => {
+  const home = await api<DiscoverHome>(`/catalog_home?p_lang=${encodeURIComponent(lang)}`);
+  try {
+    localStorage.setItem(homeCacheKey(lang), JSON.stringify(home));
+  } catch {
+    // Storage full or unavailable: the screen still works, just without the instant cache.
+  }
+  return home;
+};
+
+export const fetchRelatedBooks = (workId: number, lang = getContentLanguage(), limit = 15) =>
+  api<DiscoverCard[]>(
+    `/catalog_related?p_work_id=${workId}&p_lang=${encodeURIComponent(lang)}&p_limit=${limit}`,
+  );
+
+/** The library's copy of a Discover card (same work in the same language), if imported. */
+export const findLibraryEdition = (books: Book[], card: DiscoverCard): Book | undefined =>
+  books.find(
+    (book) =>
+      !book.deletedAt &&
+      getBookWorkId(book) === card.work_id &&
+      getBookLanguage(book) === card.lang,
+  );
+
+/** App route for a full catalog feed (`popular`, `readalong` or a genre shelf), or null. */
+export const getLibraryFeedPath = (
+  feed: 'popular' | 'readalong' | 'shelf',
+  shelf?: string,
+  lang = getContentLanguage(),
+): string | null => {
+  const base = getCatalogBase();
+  if (!base || !isRpcCatalog(base)) return null;
+  const params = new URLSearchParams({ path: feed, lang });
+  if (shelf) params.set('shelf', shelf);
+  return `/opds/?url=${encodeURIComponent(`${base}/opds?${params}`)}`;
+};

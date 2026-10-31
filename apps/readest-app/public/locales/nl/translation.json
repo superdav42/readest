@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "{{count}} boek in jouw taal toegevoegd",
   "Added {{count}} books in your language_other": "{{count}} boeken in jouw taal toegevoegd",
   "About {{app}}": "Over {{app}}",
-  "Based on Readest": "Gebaseerd op Readest"
+  "Based on Readest": "Gebaseerd op Readest",
+  "Discover": "Ontdekken",
+  "My books": "Mijn boeken",
+  "Library view": "Bibliotheekweergave",
+  "Popular": "Populair",
+  "Read-along": "Samen lezen",
+  "Continue reading": "Verder lezen",
+  "Because you read {{title}}": "Omdat je {{title}} hebt gelezen",
+  "See all": "Alles bekijken",
+  "Could not open this book. Check your connection and try again.": "Dit boek kon niet worden geopend. Controleer je internetverbinding en probeer het opnieuw.",
+  "Could not load books. Check your connection and try again.": "De boeken konden niet worden geladen. Controleer je internetverbinding en probeer het opnieuw.",
+  "Try again": "Opnieuw proberen",
+  "Opening book…": "Boek openen…"
 }

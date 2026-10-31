@@ -2810,5 +2810,17 @@
   "Added {{count}} books in your language_many": "Додано {{count}} книг вашою мовою",
   "Added {{count}} books in your language_other": "Додано {{count}} книг вашою мовою",
   "About {{app}}": "Про {{app}}",
-  "Based on Readest": "На основі Readest"
+  "Based on Readest": "На основі Readest",
+  "Discover": "Відкривайте",
+  "My books": "Мої книги",
+  "Library view": "Вигляд бібліотеки",
+  "Popular": "Популярне",
+  "Read-along": "Читай разом",
+  "Continue reading": "Продовжити читання",
+  "Because you read {{title}}": "Оскільки ви читали {{title}}",
+  "See all": "Переглянути все",
+  "Could not open this book. Check your connection and try again.": "Не вдалося відкрити цю книгу. Перевірте підключення й спробуйте ще раз.",
+  "Could not load books. Check your connection and try again.": "Не вдалося завантажити книги. Перевірте підключення й спробуйте ще раз.",
+  "Try again": "Спробувати ще раз",
+  "Opening book…": "Відкриваємо книгу…"
 }

@@ -2603,5 +2603,17 @@
   "Sign in to {{app}}": "{{app}} ནང་དུ་འཛུལ་ཞུགས",
   "Added {{count}} books in your language_other": "ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་གི་དཔེ་དེབ་{{count}} ཁ་སྣོན་བྱས་ཟིན།",
   "About {{app}}": "{{app}}འཕྲོད་བསྟེན་སྐོར།",
-  "Based on Readest": "Readest ལ་གཞི་བཅོལ་བ།"
+  "Based on Readest": "Readest ལ་གཞི་བཅོལ་བ།",
+  "Discover": "འཚོལ་ཞིབ།",
+  "My books": "ངའི་དཔེ་དེབ།",
+  "Library view": "དཔེ་མཛོད་ཀྱི་ལྟ་སྟངས།",
+  "Popular": "དར་ཁྱབ་ཅན།",
+  "Read-along": "མཉམ་དུ་ཀློག་པ།",
+  "Continue reading": "ཀློག་མུ་མཐུད།",
+  "Because you read {{title}}": "{{title}} ཀློག་པའི་རྐྱེན་གྱིས།",
+  "See all": "ཚང་མ་ལྟ་བ།",
+  "Could not open this book. Check your connection and try again.": "དཔེ་དེབ་འདི་ཁ་ཕྱེ་ཐུབ་མ་སོང་། དྲ་སྦྲེལ་ལ་ཞིབ་བཤེར་བྱས་ནས་ཡང་བསྐྱར་ཚོད་ལྟ་གནང་།",
+  "Could not load books. Check your connection and try again.": "དཔེ་དེབ་རྣམས་ཕབ་ལེན་བྱེད་ཐུབ་མ་སོང་། དྲ་སྦྲེལ་ལ་ཞིབ་བཤེར་བྱས་ནས་ཡང་བསྐྱར་ཚོད་ལྟ་གནང་།",
+  "Try again": "ཡང་བསྐྱར་ཚོད་ལྟ་བྱོས།",
+  "Opening book…": "དཔེ་དེབ་ཁ་ཕྱེ་བཞིན་ཡོད་…"
 }

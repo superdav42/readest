@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "Dilinizde {{count}} kitap eklendi",
   "Added {{count}} books in your language_other": "Dilinizde {{count}} kitap eklendi",
   "About {{app}}": "{{app}} Hakkında",
-  "Based on Readest": "Readest temel alınarak"
+  "Based on Readest": "Readest temel alınarak",
+  "Discover": "Keşfet",
+  "My books": "Kitaplarım",
+  "Library view": "Kitaplık görünümü",
+  "Popular": "Popüler",
+  "Read-along": "Birlikte oku",
+  "Continue reading": "Okumaya devam et",
+  "Because you read {{title}}": "{{title}} kitabını okuduğunuz için",
+  "See all": "Tümünü gör",
+  "Could not open this book. Check your connection and try again.": "Bu kitap açılamadı. Bağlantınızı kontrol edip tekrar deneyin.",
+  "Could not load books. Check your connection and try again.": "Kitaplar yüklenemedi. Bağlantınızı kontrol edip tekrar deneyin.",
+  "Try again": "Tekrar dene",
+  "Opening book…": "Kitap açılıyor…"
 }

@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "உங்கள் மொழியில் {{count}} புத்தகம் சேர்க்கப்பட்டது",
   "Added {{count}} books in your language_other": "உங்கள் மொழியில் {{count}} புத்தகங்கள் சேர்க்கப்பட்டன",
   "About {{app}}": "{{app}} பற்றி",
-  "Based on Readest": "Readest-ஐ அடிப்படையாகக் கொண்டது"
+  "Based on Readest": "Readest-ஐ அடிப்படையாகக் கொண்டது",
+  "Discover": "கண்டறியுங்கள்",
+  "My books": "எனது புத்தகங்கள்",
+  "Library view": "நூலகக் காட்சி",
+  "Popular": "பிரபலமானவை",
+  "Read-along": "சேர்ந்து வாசித்தல்",
+  "Continue reading": "தொடர்ந்து படிக்கவும்",
+  "Because you read {{title}}": "{{title}} புத்தகத்தை நீங்கள் படித்ததால்",
+  "See all": "அனைத்தையும் காண்க",
+  "Could not open this book. Check your connection and try again.": "இந்தப் புத்தகத்தைத் திறக்க முடியவில்லை. உங்கள் இணைய இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+  "Could not load books. Check your connection and try again.": "புத்தகங்களை ஏற்ற முடியவில்லை. உங்கள் இணைய இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+  "Try again": "மீண்டும் முயற்சிக்கவும்",
+  "Opening book…": "புத்தகம் திறக்கப்படுகிறது…"
 }

@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "{{count}} Buch in Ihrer Sprache hinzugefügt",
   "Added {{count}} books in your language_other": "{{count}} Bücher in Ihrer Sprache hinzugefügt",
   "About {{app}}": "Über {{app}}",
-  "Based on Readest": "Basiert auf Readest"
+  "Based on Readest": "Basiert auf Readest",
+  "Discover": "Entdecken",
+  "My books": "Meine Bücher",
+  "Library view": "Bibliotheksansicht",
+  "Popular": "Beliebt",
+  "Read-along": "Mitlesen",
+  "Continue reading": "Weiterlesen",
+  "Because you read {{title}}": "Weil du {{title}} gelesen hast",
+  "See all": "Alle anzeigen",
+  "Could not open this book. Check your connection and try again.": "Dieses Buch konnte nicht geöffnet werden. Überprüfe deine Verbindung und versuche es erneut.",
+  "Could not load books. Check your connection and try again.": "Bücher konnten nicht geladen werden. Überprüfe deine Verbindung und versuche es erneut.",
+  "Try again": "Erneut versuchen",
+  "Opening book…": "Buch wird geöffnet …"
 }

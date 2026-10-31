@@ -2603,5 +2603,17 @@
   "Sign in to {{app}}": "登入 {{app}}",
   "Added {{count}} books in your language_other": "已新增 {{count}} 本您所使用語言的書籍",
   "About {{app}}": "關於 {{app}}",
-  "Based on Readest": "以 Readest 為基礎"
+  "Based on Readest": "以 Readest 為基礎",
+  "Discover": "探索",
+  "My books": "我的書籍",
+  "Library view": "書庫檢視",
+  "Popular": "熱門",
+  "Read-along": "跟讀",
+  "Continue reading": "繼續閱讀",
+  "Because you read {{title}}": "因為你讀了《{{title}}》",
+  "See all": "查看全部",
+  "Could not open this book. Check your connection and try again.": "無法開啟這本書。請檢查網路連線後再試一次。",
+  "Could not load books. Check your connection and try again.": "無法載入書籍。請檢查網路連線後再試一次。",
+  "Try again": "重試",
+  "Opening book…": "正在開啟書籍…"
 }

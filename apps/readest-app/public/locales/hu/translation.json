@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "{{count}} könyv hozzáadva az Ön nyelvén",
   "Added {{count}} books in your language_other": "{{count}} könyv hozzáadva az Ön nyelvén",
   "About {{app}}": "A(z) {{app}} névjegye",
-  "Based on Readest": "A Readest alapján"
+  "Based on Readest": "A Readest alapján",
+  "Discover": "Felfedezés",
+  "My books": "Könyveim",
+  "Library view": "Könyvtárnézet",
+  "Popular": "Népszerű",
+  "Read-along": "Olvass együtt",
+  "Continue reading": "Olvasás folytatása",
+  "Because you read {{title}}": "Mivel ezt olvastad: {{title}}",
+  "See all": "Összes megtekintése",
+  "Could not open this book. Check your connection and try again.": "Nem sikerült megnyitni a könyvet. Ellenőrizd a kapcsolatot, majd próbáld újra.",
+  "Could not load books. Check your connection and try again.": "Nem sikerült betölteni a könyveket. Ellenőrizd a kapcsolatot, majd próbáld újra.",
+  "Try again": "Próbáld újra",
+  "Opening book…": "Könyv megnyitása…"
 }

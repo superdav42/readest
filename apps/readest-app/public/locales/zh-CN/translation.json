@@ -2603,5 +2603,17 @@
   "Sign in to {{app}}": "登录 {{app}}",
   "Added {{count}} books in your language_other": "已添加 {{count}} 本您所用语言的书籍",
   "About {{app}}": "关于 {{app}}",
-  "Based on Readest": "基于 Readest"
+  "Based on Readest": "基于 Readest",
+  "Discover": "发现",
+  "My books": "我的图书",
+  "Library view": "书架视图",
+  "Popular": "热门",
+  "Read-along": "跟读",
+  "Continue reading": "继续阅读",
+  "Because you read {{title}}": "因为你读过《{{title}}》",
+  "See all": "查看全部",
+  "Could not open this book. Check your connection and try again.": "无法打开这本书。请检查网络连接后重试。",
+  "Could not load books. Check your connection and try again.": "无法加载图书。请检查网络连接后重试。",
+  "Try again": "重试",
+  "Opening book…": "正在打开图书…"
 }

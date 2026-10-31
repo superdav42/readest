@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "Προστέθηκε {{count}} βιβλίο στη γλώσσα σας",
   "Added {{count}} books in your language_other": "Προστέθηκαν {{count}} βιβλία στη γλώσσα σας",
   "About {{app}}": "Σχετικά με το {{app}}",
-  "Based on Readest": "Βασίζεται στο Readest"
+  "Based on Readest": "Βασίζεται στο Readest",
+  "Discover": "Ανακαλύψτε",
+  "My books": "Τα βιβλία μου",
+  "Library view": "Προβολή βιβλιοθήκης",
+  "Popular": "Δημοφιλή",
+  "Read-along": "Διαβάστε μαζί",
+  "Continue reading": "Συνέχεια ανάγνωσης",
+  "Because you read {{title}}": "Επειδή διαβάσατε το {{title}}",
+  "See all": "Δείτε όλα",
+  "Could not open this book. Check your connection and try again.": "Δεν ήταν δυνατό να ανοίξει αυτό το βιβλίο. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.",
+  "Could not load books. Check your connection and try again.": "Δεν ήταν δυνατή η φόρτωση των βιβλίων. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.",
+  "Try again": "Δοκιμάστε ξανά",
+  "Opening book…": "Άνοιγμα βιβλίου…"
 }

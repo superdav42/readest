@@ -2672,5 +2672,17 @@
   "Added {{count}} books in your language_one": "आपकी भाषा में {{count}} पुस्तक जोड़ी गई",
   "Added {{count}} books in your language_other": "आपकी भाषा में {{count}} पुस्तकें जोड़ी गईं",
   "About {{app}}": "{{app}} के बारे में",
-  "Based on Readest": "Readest पर आधारित"
+  "Based on Readest": "Readest पर आधारित",
+  "Discover": "खोजें",
+  "My books": "मेरी किताबें",
+  "Library view": "लाइब्रेरी दृश्य",
+  "Popular": "लोकप्रिय",
+  "Read-along": "सुनते हुए पढ़ें",
+  "Continue reading": "पढ़ना जारी रखें",
+  "Because you read {{title}}": "क्योंकि आपने {{title}} पढ़ी",
+  "See all": "सभी देखें",
+  "Could not open this book. Check your connection and try again.": "यह किताब नहीं खुल सकी। अपना कनेक्शन जाँचें और फिर से कोशिश करें।",
+  "Could not load books. Check your connection and try again.": "किताबें लोड नहीं हो सकीं। अपना कनेक्शन जाँचें और फिर से कोशिश करें।",
+  "Try again": "फिर से कोशिश करें",
+  "Opening book…": "किताब खुल रही है…"
 }

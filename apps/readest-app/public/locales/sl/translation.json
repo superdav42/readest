@@ -2810,5 +2810,17 @@
   "Added {{count}} books in your language_few": "Dodane so bile {{count}} knjige v vašem jeziku",
   "Added {{count}} books in your language_other": "Dodanih je bilo {{count}} knjig v vašem jeziku",
   "About {{app}}": "O aplikaciji {{app}}",
-  "Based on Readest": "Temelji na Readestu"
+  "Based on Readest": "Temelji na Readestu",
+  "Discover": "Odkrij",
+  "My books": "Moje knjige",
+  "Library view": "Pogled knjižnice",
+  "Popular": "Priljubljeno",
+  "Read-along": "Berite skupaj",
+  "Continue reading": "Nadaljuj z branjem",
+  "Because you read {{title}}": "Ker ste brali {{title}}",
+  "See all": "Prikaži vse",
+  "Could not open this book. Check your connection and try again.": "Te knjige ni bilo mogoče odpreti. Preverite povezavo in poskusite znova.",
+  "Could not load books. Check your connection and try again.": "Knjig ni bilo mogoče naložiti. Preverite povezavo in poskusite znova.",
+  "Try again": "Poskusi znova",
+  "Opening book…": "Odpiranje knjige…"
 }

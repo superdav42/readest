@@ -2603,5 +2603,17 @@
   "Sign in to {{app}}": "Đăng nhập vào {{app}}",
   "Added {{count}} books in your language_other": "Đã thêm {{count}} sách bằng ngôn ngữ của bạn",
   "About {{app}}": "Giới thiệu về {{app}}",
-  "Based on Readest": "Dựa trên Readest"
+  "Based on Readest": "Dựa trên Readest",
+  "Discover": "Khám phá",
+  "My books": "Sách của tôi",
+  "Library view": "Chế độ xem thư viện",
+  "Popular": "Phổ biến",
+  "Read-along": "Đọc cùng",
+  "Continue reading": "Tiếp tục đọc",
+  "Because you read {{title}}": "Vì bạn đã đọc {{title}}",
+  "See all": "Xem tất cả",
+  "Could not open this book. Check your connection and try again.": "Không thể mở sách này. Hãy kiểm tra kết nối rồi thử lại.",
+  "Could not load books. Check your connection and try again.": "Không thể tải sách. Hãy kiểm tra kết nối rồi thử lại.",
+  "Try again": "Thử lại",
+  "Opening book…": "Đang mở sách…"
 }

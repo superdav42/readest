@@ -118,6 +118,8 @@ import { createBookGroups, findGroupById, getBreadcrumbs } from './utils/library
 import Spinner from '@/components/Spinner';
 import LibraryHeader from './components/LibraryHeader';
 import Bookshelf from './components/Bookshelf';
+import DiscoverHome from './components/DiscoverHome';
+import { isDiscoverAvailable } from '@/services/gutenbergLibrary';
 import ImportMenuPopup from './components/ImportMenuPopup';
 import GroupHeader from './components/GroupHeader';
 import FailedImportsDialog, { FailedImport } from './components/FailedImportsDialog';
@@ -288,6 +290,16 @@ const LibraryPageContent = ({ searchParams }: { searchParams: ReadonlyURLSearchP
   const [isSelectAll, setIsSelectAll] = useState(false);
   const [isSelectNone, setIsSelectNone] = useState(false);
   const [librarySearchQuery, setLibrarySearchQuery] = useState(searchParams?.get('q') ?? '');
+  // Shared-library deployments open on Discover; "My books" is the classic bookshelf.
+  const discoverAvailable = isDiscoverAvailable();
+  const [libraryTab, setLibraryTabState] = useState<'discover' | 'books'>(() => {
+    if (typeof window === 'undefined') return 'discover';
+    return sessionStorage.getItem('library-tab') === 'books' ? 'books' : 'discover';
+  });
+  const setLibraryTab = (tab: 'discover' | 'books') => {
+    sessionStorage.setItem('library-tab', tab);
+    setLibraryTabState(tab);
+  };
   const pendingLibrarySearchQueryRef = useRef<string | null>(null);
   const [librarySearchProgress, setLibrarySearchProgress] = useState<number | null>(null);
   const [librarySearchHistory, setLibrarySearchHistory] = useState<string[]>([]);
@@ -1983,6 +1995,9 @@ const LibraryPageContent = ({ searchParams }: { searchParams: ReadonlyURLSearchP
   }
 
   const showBookshelf = libraryLoaded || libraryBooks.length > 0;
+  const showLibraryTabs =
+    discoverAvailable && !isSelectMode && !librarySearchQuery.trim() && !currentGroupPath;
+  const showDiscover = showLibraryTabs && libraryTab === 'discover';
 
   return (
     <div
@@ -2123,7 +2138,38 @@ const LibraryPageContent = ({ searchParams }: { searchParams: ReadonlyURLSearchP
         />
       )}
       <BookshelvesDialog />
-      {showBookshelf && (
+      {showLibraryTabs && (
+        <div
+          role='tablist'
+          aria-label={_('Library view')}
+          className='flex shrink-0 gap-1 px-4 pb-1 pt-1 sm:px-6'
+        >
+          {(
+            [
+              ['discover', _('Discover')],
+              ['books', _('My books')],
+            ] as const
+          ).map(([tab, label]) => (
+            <button
+              key={tab}
+              type='button'
+              role='tab'
+              aria-selected={libraryTab === tab}
+              onClick={() => setLibraryTab(tab)}
+              className={clsx(
+                'rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
+                libraryTab === tab
+                  ? 'bg-base-content text-base-100'
+                  : 'text-base-content/70 hover:bg-base-300',
+              )}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
+      {showDiscover && <DiscoverHome libraryBooks={libraryBooks} />}
+      {showBookshelf && !showDiscover && (
         <div aria-label={_('Your Bookshelf')} className='flex min-h-0 grow flex-col'>
           <div
             ref={containerRef}
