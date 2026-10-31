@@ -18,6 +18,8 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useLibraryStore } from '@/store/libraryStore';
 import { eventDispatcher } from '@/utils/event';
 import { navigateToReader } from '@/utils/nav';
+import { downloadFile } from '@/libs/storage';
+import { isTauriAppPlatform } from '@/services/environment';
 import {
   CONTENT_LANGUAGE_EVENT,
   type DiscoverCard,
@@ -53,6 +55,9 @@ const downloadEpub = async (url: string, onProgress: (fraction: number) => void)
   const name = url.split('/').pop() || 'book.epub';
   return new File(chunks as BlobPart[], name, { type: 'application/epub+zip' });
 };
+
+/** Web only: books larger than this open while they download; smaller ones download first. */
+const STREAM_MIN_BYTES = 3 * 1024 * 1024;
 
 const isInProgress = (book: Book) =>
   !book.deletedAt && !!book.progress && book.progress[0] < book.progress[1];
@@ -207,19 +212,41 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
       }
       setOpening({ card, progress: 0 });
       try {
-        // Read while it downloads: import from the URL without copying the file, so
-        // the reader streams just the parts it shows (RemoteFile range requests),
-        // and fetch the whole book in the background for offline reading.
         const { library, setLibrary } = useLibraryStore.getState();
-        let book = await appService
-          .importBook(card.url, library, { saveBook: false })
-          .catch(() => null);
-        let streaming = !!book;
-        if (!book) {
-          // Hosts without range support: download first, then open.
-          const file = await downloadEpub(card.url, (progress) =>
-            setOpening((current) => (current ? { ...current, progress } : current)),
+        const onProgress = (progress: number) =>
+          setOpening((current) => (current ? { ...current, progress } : current));
+        let book: Book | null = null;
+        let streaming = false;
+        if (isTauriAppPlatform()) {
+          // Apps: the native downloader saves the file at full speed and the native
+          // EPUB parser opens it from disk. Streaming would send every small range
+          // read through the HTTP bridge (11 s for a 290 KB book on Android).
+          const path = await appService.resolveFilePath(
+            `discover-${card.work_id}-${card.lang}.epub`,
+            'Cache',
           );
+          await downloadFile({
+            appService,
+            dst: path,
+            cfp: '',
+            url: card.url,
+            onProgress: ({ progress, total }) => total > 0 && onProgress(progress / total),
+          });
+          book = await appService.importBook(path, library);
+          await appService.deleteFile(path, 'None').catch(() => undefined);
+        } else if ((card.size ?? 0) > STREAM_MIN_BYTES) {
+          // Web, large books: read while it downloads. Importing from the URL without
+          // copying the file lets the reader fetch only the parts it shows (range
+          // requests); the whole book then downloads in the background.
+          book = await appService
+            .importBook(card.url, library, { saveBook: false })
+            .catch(() => null);
+          streaming = !!book;
+        }
+        if (!book) {
+          // Small books on the web (most of them are under 1 MB), or a host without
+          // range support: download, then open.
+          const file = await downloadEpub(card.url, onProgress);
           book = await appService.importBook(file, library);
           streaming = false;
         }
