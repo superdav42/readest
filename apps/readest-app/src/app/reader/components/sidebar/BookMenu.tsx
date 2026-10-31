@@ -1,3 +1,4 @@
+// Modified 2026-10-31 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React from 'react';
 
@@ -18,6 +19,7 @@ import { DOWNLOAD_READEST_URL } from '@/services/constants';
 import { saveViewSettings } from '@/helpers/settings';
 import { setProofreadRulesVisibility } from '@/app/reader/components/ProofreadRules';
 import { setAboutDialogVisible } from '@/components/AboutWindow';
+import { APP_NAME, isIndependentDeployment } from '@/utils/appBrand';
 import useBooksManager from '../../hooks/useBooksManager';
 import MenuItem from '@/components/MenuItem';
 import Menu from '@/components/Menu';
@@ -311,8 +313,15 @@ const BookMenu: React.FC<BookMenuProps> = ({ menuClassName, setIsDropdownOpen })
       )}
       <MenuItem label={_('Reload Page')} shortcut='Shift+R' onClick={handleReloadPage} />
       <hr aria-hidden='true' className='border-base-200 my-1' />
-      {isWebAppPlatform() && <MenuItem label={_('Download Readest')} onClick={downloadReadest} />}
-      <MenuItem label={_('About Readest')} onClick={showAboutReadest} />
+      {isWebAppPlatform() && !isIndependentDeployment() && (
+        <MenuItem label={_('Download Readest')} onClick={downloadReadest} />
+      )}
+      <MenuItem
+        label={
+          isIndependentDeployment() ? _('About {{app}}', { app: APP_NAME }) : _('About Readest')
+        }
+        onClick={showAboutReadest}
+      />
     </Menu>
   );
 };

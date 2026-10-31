@@ -2670,5 +2670,7 @@
   "Thousands of classics, free to read in your language.": "ඔබේ භාෂාවෙන් නොමිලේ කියවිය හැකි සම්භාව්‍ය කෘති දහස් ගණනක්.",
   "Sign in to {{app}}": "{{app}} වෙත පුරනය වන්න",
   "Added {{count}} books in your language_one": "ඔබේ භාෂාවෙන් පොත් {{count}}ක් එක් කරන ලදී",
-  "Added {{count}} books in your language_other": "ඔබේ භාෂාවෙන් පොත් {{count}}ක් එක් කරන ලදී"
+  "Added {{count}} books in your language_other": "ඔබේ භාෂාවෙන් පොත් {{count}}ක් එක් කරන ලදී",
+  "About {{app}}": "{{app}} පිළිබඳව",
+  "Based on Readest": "Readest මත පදනම්ව"
 }

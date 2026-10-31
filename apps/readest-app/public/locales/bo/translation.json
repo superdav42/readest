@@ -2601,5 +2601,7 @@
   "Find your next book": "ཁྱེད་ཀྱི་དཔེ་དེབ་རྗེས་མ་དེ་རྙེད",
   "Thousands of classics, free to read in your language.": "ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་རིན་མེད་དུ་ཀློག་ཆོག་པའི་གནའ་རབས་ཀྱི་དཔེ་དེབ་སྟོང་ཕྲག་མང་པོ།",
   "Sign in to {{app}}": "{{app}} ནང་དུ་འཛུལ་ཞུགས",
-  "Added {{count}} books in your language_other": "ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་གི་དཔེ་དེབ་{{count}} ཁ་སྣོན་བྱས་ཟིན།"
+  "Added {{count}} books in your language_other": "ཁྱེད་ཀྱི་སྐད་ཡིག་ནང་གི་དཔེ་དེབ་{{count}} ཁ་སྣོན་བྱས་ཟིན།",
+  "About {{app}}": "{{app}}འཕྲོད་བསྟེན་སྐོར།",
+  "Based on Readest": "Readest ལ་གཞི་བཅོལ་བ།"
 }

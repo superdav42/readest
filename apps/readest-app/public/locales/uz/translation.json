@@ -2670,5 +2670,7 @@
   "Thousands of classics, free to read in your language.": "Minglab mumtoz asarlarni tilingizda bepul o‘qing.",
   "Sign in to {{app}}": "{{app}}ga kiring",
   "Added {{count}} books in your language_one": "Tilingizdagi {{count}} ta kitob qo‘shildi",
-  "Added {{count}} books in your language_other": "Tilingizdagi {{count}} ta kitob qo‘shildi"
+  "Added {{count}} books in your language_other": "Tilingizdagi {{count}} ta kitob qo‘shildi",
+  "About {{app}}": "{{app}} haqida",
+  "Based on Readest": "Readest asosida"
 }

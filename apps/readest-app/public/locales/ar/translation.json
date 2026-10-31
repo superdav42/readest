@@ -2946,5 +2946,7 @@
   "Added {{count}} books in your language_two": "تمت إضافة {{count}} كتابين إلى مكتبتك بلغتك",
   "Added {{count}} books in your language_few": "تمت إضافة {{count}} كتب إلى مكتبتك بلغتك",
   "Added {{count}} books in your language_many": "تمت إضافة {{count}} كتابًا إلى مكتبتك بلغتك",
-  "Added {{count}} books in your language_other": "تمت إضافة {{count}} كتابًا بلغتك"
+  "Added {{count}} books in your language_other": "تمت إضافة {{count}} كتابًا بلغتك",
+  "About {{app}}": "حول {{app}}",
+  "Based on Readest": "مبني على Readest"
 }

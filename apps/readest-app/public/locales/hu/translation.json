@@ -2670,5 +2670,7 @@
   "Thousands of classics, free to read in your language.": "Több ezer klasszikus, amelyeket ingyen olvashatsz a saját nyelveden.",
   "Sign in to {{app}}": "Jelentkezz be a(z) {{app}} alkalmazásba",
   "Added {{count}} books in your language_one": "{{count}} könyv hozzáadva az Ön nyelvén",
-  "Added {{count}} books in your language_other": "{{count}} könyv hozzáadva az Ön nyelvén"
+  "Added {{count}} books in your language_other": "{{count}} könyv hozzáadva az Ön nyelvén",
+  "About {{app}}": "A(z) {{app}} névjegye",
+  "Based on Readest": "A Readest alapján"
 }

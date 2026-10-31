@@ -27,6 +27,7 @@ import { navigateToLogin, navigateToProfile } from '@/utils/nav';
 import { canToggleFullScreen, tauriHandleSetAlwaysOnTop, toggleFullScreen } from '@/utils/window';
 import { setAboutDialogVisible } from '@/components/AboutWindow';
 import { getSourceCodeUrl } from '@/utils/sourceOffer';
+import { APP_NAME, isIndependentDeployment } from '@/utils/appBrand';
 import { setMigrateDataDirDialogVisible } from '@/app/library/components/MigrateDataWindow';
 import { requestStoragePermission } from '@/utils/permission';
 import { saveSysSettings } from '@/helpers/settings';
@@ -484,11 +485,18 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({ onPullLibrary, setIsDropdow
         </ul>
       </MenuItem>
       <hr aria-hidden='true' className='border-base-200 my-1' />
-      {user && userProfilePlan === 'free' && (
+      {user && userProfilePlan === 'free' && !isIndependentDeployment() && (
         <MenuItem label={_('Upgrade to Readest Premium')} onClick={handleUpgrade} />
       )}
-      {isWebAppPlatform() && <MenuItem label={_('Download Readest')} onClick={downloadReadest} />}
-      <MenuItem label={_('About Readest')} onClick={showAboutReadest} />
+      {isWebAppPlatform() && !isIndependentDeployment() && (
+        <MenuItem label={_('Download Readest')} onClick={downloadReadest} />
+      )}
+      <MenuItem
+        label={
+          isIndependentDeployment() ? _('About {{app}}', { app: APP_NAME }) : _('About Readest')
+        }
+        onClick={showAboutReadest}
+      />
       <MenuItem label={_('Source code (AGPL)')} onClick={openSourceCode} />
     </Menu>
   );

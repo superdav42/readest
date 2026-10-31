@@ -2601,5 +2601,7 @@
   "Find your next book": "ค้นหาหนังสือเล่มถัดไปของคุณ",
   "Thousands of classics, free to read in your language.": "หนังสือคลาสสิกนับพันเล่ม อ่านฟรีในภาษาของคุณ",
   "Sign in to {{app}}": "ลงชื่อเข้าใช้ {{app}}",
-  "Added {{count}} books in your language_other": "เพิ่มหนังสือในภาษาของคุณแล้ว {{count}} เล่ม"
+  "Added {{count}} books in your language_other": "เพิ่มหนังสือในภาษาของคุณแล้ว {{count}} เล่ม",
+  "About {{app}}": "เกี่ยวกับ {{app}}",
+  "Based on Readest": "พัฒนาต่อยอดจาก Readest"
 }

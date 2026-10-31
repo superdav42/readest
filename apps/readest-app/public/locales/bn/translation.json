@@ -2670,5 +2670,7 @@
   "Thousands of classics, free to read in your language.": "আপনার ভাষায় বিনামূল্যে পড়ার জন্য হাজার হাজার ক্লাসিক বই।",
   "Sign in to {{app}}": "{{app}}-এ সাইন ইন করুন",
   "Added {{count}} books in your language_one": "{{count}}টি বই আপনার ভাষায় যোগ করা হয়েছে",
-  "Added {{count}} books in your language_other": "{{count}}টি বই আপনার ভাষায় যোগ করা হয়েছে"
+  "Added {{count}} books in your language_other": "{{count}}টি বই আপনার ভাষায় যোগ করা হয়েছে",
+  "About {{app}}": "{{app}} সম্পর্কে",
+  "Based on Readest": "Readest-এর ওপর ভিত্তি করে"
 }

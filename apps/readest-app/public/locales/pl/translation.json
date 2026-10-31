@@ -2808,5 +2808,7 @@
   "Added {{count}} books in your language_one": "Dodano {{count}} książkę w Twoim języku",
   "Added {{count}} books in your language_few": "Dodano {{count}} książki w Twoim języku",
   "Added {{count}} books in your language_many": "Dodano {{count}} książek w Twoim języku",
-  "Added {{count}} books in your language_other": "Dodano {{count}} książki w Twoim języku"
+  "Added {{count}} books in your language_other": "Dodano {{count}} książki w Twoim języku",
+  "About {{app}}": "O aplikacji {{app}}",
+  "Based on Readest": "Oparte na Readest"
 }

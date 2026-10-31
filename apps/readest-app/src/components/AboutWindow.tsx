@@ -21,6 +21,7 @@ import SupportLinks from './SupportLinks';
 import LegalLinks from './LegalLinks';
 import Dialog from './Dialog';
 import Link from './Link';
+import { APP_NAME, isIndependentDeployment } from '@/utils/appBrand';
 
 export const setAboutDialogVisible = (visible: boolean) => {
   const dialog = document.getElementById('about_window');
@@ -36,6 +37,8 @@ type UpdateStatus = 'checking' | 'updating' | 'updated' | 'error';
 
 export const AboutWindow = () => {
   const _ = useTranslation();
+  // Renamed/self-hosted builds: no Readest update check, community or legal links.
+  const independent = isIndependentDeployment();
   const { appService } = useEnv();
   const { settings } = useSettingsStore();
   const [updateStatus, setUpdateStatus] = useState<UpdateStatus | null>(null);
@@ -130,7 +133,7 @@ export const AboutWindow = () => {
     <Dialog
       id='about_window'
       isOpen={isOpen}
-      title={_('About Readest')}
+      title={independent ? _('About {{app}}', { app: APP_NAME }) : _('About Readest')}
       onClose={handleClose}
       boxClassName='sm:w-[480px]! sm:max-w-(--breakpoint-sm)! sm:h-auto'
     >
@@ -141,7 +144,10 @@ export const AboutWindow = () => {
               <Image src='/icon.png' alt='App Logo' className='h-20 w-20' width={64} height={64} />
             </div>
             <div className='flex select-text flex-col items-center'>
-              <h2 className='mb-2 text-2xl font-bold'>Readest</h2>
+              <h2 className='mb-2 text-2xl font-bold'>{independent ? APP_NAME : 'Readest'}</h2>
+              {independent && (
+                <p className='text-neutral-content mb-1 text-sm'>{_('Based on Readest')}</p>
+              )}
               <button
                 type='button'
                 title={_('Copy')}
@@ -152,7 +158,7 @@ export const AboutWindow = () => {
               </button>
             </div>
             <div className='my-1 h-5'>
-              {!updateStatus && (
+              {!updateStatus && !independent && (
                 <button
                   className='btn btn-sm btn-primary cursor-pointer p-1 text-xs'
                   onClick={appService?.hasUpdater ? handleCheckUpdate : handleShowRecentUpdates}
@@ -217,9 +223,9 @@ export const AboutWindow = () => {
               .
             </p>
 
-            <LegalLinks />
+            {!independent && <LegalLinks />}
           </div>
-          <SupportLinks />
+          {!independent && <SupportLinks />}
         </div>
       )}
     </Dialog>

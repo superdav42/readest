@@ -2739,5 +2739,7 @@
   "Sign in to {{app}}": "Conectează-te la {{app}}",
   "Added {{count}} books in your language_one": "A fost adăugată {{count}} carte în limba ta",
   "Added {{count}} books in your language_few": "Au fost adăugate {{count}} cărți în limba ta",
-  "Added {{count}} books in your language_other": "Au fost adăugate {{count}} de cărți în limba ta"
+  "Added {{count}} books in your language_other": "Au fost adăugate {{count}} de cărți în limba ta",
+  "About {{app}}": "Despre {{app}}",
+  "Based on Readest": "Bazat pe Readest"
 }

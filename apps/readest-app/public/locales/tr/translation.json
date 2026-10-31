@@ -2670,5 +2670,7 @@
   "Thousands of classics, free to read in your language.": "Dilinizde ücretsiz okuyabileceğiniz binlerce klasik eser.",
   "Sign in to {{app}}": "{{app}}'a giriş yap",
   "Added {{count}} books in your language_one": "Dilinizde {{count}} kitap eklendi",
-  "Added {{count}} books in your language_other": "Dilinizde {{count}} kitap eklendi"
+  "Added {{count}} books in your language_other": "Dilinizde {{count}} kitap eklendi",
+  "About {{app}}": "{{app}} Hakkında",
+  "Based on Readest": "Readest temel alınarak"
 }

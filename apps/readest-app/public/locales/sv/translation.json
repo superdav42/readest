@@ -2670,5 +2670,7 @@
   "Thousands of classics, free to read in your language.": "Tusentals klassiker, gratis att läsa på ditt språk.",
   "Sign in to {{app}}": "Logga in på {{app}}",
   "Added {{count}} books in your language_one": "Lade till {{count}} bok på ditt språk",
-  "Added {{count}} books in your language_other": "Lade till {{count}} böcker på ditt språk"
+  "Added {{count}} books in your language_other": "Lade till {{count}} böcker på ditt språk",
+  "About {{app}}": "Om {{app}}",
+  "Based on Readest": "Baserad på Readest"
 }

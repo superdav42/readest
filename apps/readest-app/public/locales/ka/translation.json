@@ -2670,5 +2670,7 @@
   "Thousands of classics, free to read in your language.": "ათასობით კლასიკა, რომლის წაკითხვაც თქვენს ენაზე უფასოდ შეგიძლიათ.",
   "Sign in to {{app}}": "შედით {{app}}-ში",
   "Added {{count}} books in your language_one": "თქვენს ენაზე {{count}} წიგნი დაემატა",
-  "Added {{count}} books in your language_other": "თქვენს ენაზე {{count}} წიგნი დაემატა"
+  "Added {{count}} books in your language_other": "თქვენს ენაზე {{count}} წიგნი დაემატა",
+  "About {{app}}": "{{app}}-ის შესახებ",
+  "Based on Readest": "შექმნილია Readest-ის საფუძველზე"
 }

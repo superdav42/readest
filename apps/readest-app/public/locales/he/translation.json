@@ -2738,5 +2738,7 @@
   "Thousands of classics, free to read in your language.": "אלפי יצירות קלאסיות, חינם לקריאה בשפה שלכם.",
   "Sign in to {{app}}": "התחברות אל {{app}}",
   "Added {{count}} books in your language_one": "נוסף {{count}} ספר בשפה שלך",
-  "Added {{count}} books in your language_other": "נוספו {{count}} ספרים בשפה שלך"
+  "Added {{count}} books in your language_other": "נוספו {{count}} ספרים בשפה שלך",
+  "About {{app}}": "מידע על {{app}}",
+  "Based on Readest": "מבוסס על Readest"
 }

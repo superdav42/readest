@@ -2808,5 +2808,7 @@
   "Added {{count}} books in your language_one": "Dodana je bila {{count}} knjiga v vašem jeziku",
   "Added {{count}} books in your language_two": "Dodani sta bili {{count}} knjigi v vašem jeziku",
   "Added {{count}} books in your language_few": "Dodane so bile {{count}} knjige v vašem jeziku",
-  "Added {{count}} books in your language_other": "Dodanih je bilo {{count}} knjig v vašem jeziku"
+  "Added {{count}} books in your language_other": "Dodanih je bilo {{count}} knjig v vašem jeziku",
+  "About {{app}}": "O aplikaciji {{app}}",
+  "Based on Readest": "Temelji na Readestu"
 }

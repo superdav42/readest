@@ -2601,5 +2601,7 @@
   "Find your next book": "寻找你的下一本书",
   "Thousands of classics, free to read in your language.": "数千本经典书籍，免费用你的语言阅读。",
   "Sign in to {{app}}": "登录 {{app}}",
-  "Added {{count}} books in your language_other": "已添加 {{count}} 本您所用语言的书籍"
+  "Added {{count}} books in your language_other": "已添加 {{count}} 本您所用语言的书籍",
+  "About {{app}}": "关于 {{app}}",
+  "Based on Readest": "基于 Readest"
 }

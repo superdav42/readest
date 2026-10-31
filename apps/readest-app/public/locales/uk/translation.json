@@ -2808,5 +2808,7 @@
   "Added {{count}} books in your language_one": "Додано {{count}} книгу вашою мовою",
   "Added {{count}} books in your language_few": "Додано {{count}} книги вашою мовою",
   "Added {{count}} books in your language_many": "Додано {{count}} книг вашою мовою",
-  "Added {{count}} books in your language_other": "Додано {{count}} книг вашою мовою"
+  "Added {{count}} books in your language_other": "Додано {{count}} книг вашою мовою",
+  "About {{app}}": "Про {{app}}",
+  "Based on Readest": "На основі Readest"
 }

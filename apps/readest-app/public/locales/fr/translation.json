@@ -2738,5 +2738,7 @@
   "Thousands of classics, free to read in your language.": "Des milliers de classiques, à lire gratuitement dans votre langue.",
   "Sign in to {{app}}": "Se connecter à {{app}}",
   "Added {{count}} books in your language_one": "{{count}} livre dans votre langue ajouté",
-  "Added {{count}} books in your language_other": "{{count}} livres dans votre langue ajoutés"
+  "Added {{count}} books in your language_other": "{{count}} livres dans votre langue ajoutés",
+  "About {{app}}": "À propos de {{app}}",
+  "Based on Readest": "Basé sur Readest"
 }

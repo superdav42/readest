@@ -2670,5 +2670,7 @@
   "Thousands of classics, free to read in your language.": "ஆயிரக்கணக்கான செவ்வியல் நூல்கள், உங்கள் மொழியில் இலவசமாகப் படிக்கலாம்.",
   "Sign in to {{app}}": "{{app}}-இல் உள்நுழைக",
   "Added {{count}} books in your language_one": "உங்கள் மொழியில் {{count}} புத்தகம் சேர்க்கப்பட்டது",
-  "Added {{count}} books in your language_other": "உங்கள் மொழியில் {{count}} புத்தகங்கள் சேர்க்கப்பட்டன"
+  "Added {{count}} books in your language_other": "உங்கள் மொழியில் {{count}} புத்தகங்கள் சேர்க்கப்பட்டன",
+  "About {{app}}": "{{app}} பற்றி",
+  "Based on Readest": "Readest-ஐ அடிப்படையாகக் கொண்டது"
 }
