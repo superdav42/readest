@@ -2804,5 +2804,9 @@
   "Search books...": "Išči knjige ...",
   "Find your next book": "Poiščite svojo naslednjo knjigo",
   "Thousands of classics, free to read in your language.": "Na tisoče klasik, ki jih lahko brezplačno berete v svojem jeziku.",
-  "Sign in to {{app}}": "Prijavite se v {{app}}"
+  "Sign in to {{app}}": "Prijavite se v {{app}}",
+  "Added {{count}} books in your language_one": "Dodana je bila {{count}} knjiga v vašem jeziku",
+  "Added {{count}} books in your language_two": "Dodani sta bili {{count}} knjigi v vašem jeziku",
+  "Added {{count}} books in your language_few": "Dodane so bile {{count}} knjige v vašem jeziku",
+  "Added {{count}} books in your language_other": "Dodanih je bilo {{count}} knjig v vašem jeziku"
 }

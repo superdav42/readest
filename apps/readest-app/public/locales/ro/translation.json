@@ -2736,5 +2736,8 @@
   "Search books...": "Caută cărți...",
   "Find your next book": "Găsește următoarea ta carte",
   "Thousands of classics, free to read in your language.": "Mii de cărți clasice, disponibile gratuit pentru lectură în limba ta.",
-  "Sign in to {{app}}": "Conectează-te la {{app}}"
+  "Sign in to {{app}}": "Conectează-te la {{app}}",
+  "Added {{count}} books in your language_one": "A fost adăugată {{count}} carte în limba ta",
+  "Added {{count}} books in your language_few": "Au fost adăugate {{count}} cărți în limba ta",
+  "Added {{count}} books in your language_other": "Au fost adăugate {{count}} de cărți în limba ta"
 }

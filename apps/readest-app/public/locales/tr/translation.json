@@ -2668,5 +2668,7 @@
   "Search books...": "Kitaplarda ara...",
   "Find your next book": "Sıradaki kitabını bul",
   "Thousands of classics, free to read in your language.": "Dilinizde ücretsiz okuyabileceğiniz binlerce klasik eser.",
-  "Sign in to {{app}}": "{{app}}'a giriş yap"
+  "Sign in to {{app}}": "{{app}}'a giriş yap",
+  "Added {{count}} books in your language_one": "Dilinizde {{count}} kitap eklendi",
+  "Added {{count}} books in your language_other": "Dilinizde {{count}} kitap eklendi"
 }

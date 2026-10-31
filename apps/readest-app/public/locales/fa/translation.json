@@ -2668,5 +2668,7 @@
   "Search books...": "جست‌وجوی کتاب‌ها...",
   "Find your next book": "کتاب بعدی‌تان را پیدا کنید",
   "Thousands of classics, free to read in your language.": "هزاران اثر کلاسیک، رایگان و قابل مطالعه به زبان شما.",
-  "Sign in to {{app}}": "ورود به {{app}}"
+  "Sign in to {{app}}": "ورود به {{app}}",
+  "Added {{count}} books in your language_one": "{{count}} کتاب به زبان شما اضافه شد",
+  "Added {{count}} books in your language_other": "{{count}} کتاب به زبان شما اضافه شد"
 }

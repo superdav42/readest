@@ -2668,5 +2668,7 @@
   "Search books...": "წიგნების ძიება...",
   "Find your next book": "იპოვეთ თქვენი შემდეგი წიგნი",
   "Thousands of classics, free to read in your language.": "ათასობით კლასიკა, რომლის წაკითხვაც თქვენს ენაზე უფასოდ შეგიძლიათ.",
-  "Sign in to {{app}}": "შედით {{app}}-ში"
+  "Sign in to {{app}}": "შედით {{app}}-ში",
+  "Added {{count}} books in your language_one": "თქვენს ენაზე {{count}} წიგნი დაემატა",
+  "Added {{count}} books in your language_other": "თქვენს ენაზე {{count}} წიგნი დაემატა"
 }

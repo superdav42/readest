@@ -2940,5 +2940,11 @@
   "Search books...": "ابحث عن الكتب...",
   "Find your next book": "اعثر على كتابك القادم",
   "Thousands of classics, free to read in your language.": "آلاف الكتب الكلاسيكية، متاحة للقراءة مجانًا بلغتك.",
-  "Sign in to {{app}}": "سجّل الدخول إلى {{app}}"
+  "Sign in to {{app}}": "سجّل الدخول إلى {{app}}",
+  "Added {{count}} books in your language_zero": "تمت إضافة {{count}} كتاب إلى مكتبتك بلغتك",
+  "Added {{count}} books in your language_one": "تمت إضافة {{count}} كتاب إلى مكتبتك بلغتك",
+  "Added {{count}} books in your language_two": "تمت إضافة {{count}} كتابين إلى مكتبتك بلغتك",
+  "Added {{count}} books in your language_few": "تمت إضافة {{count}} كتب إلى مكتبتك بلغتك",
+  "Added {{count}} books in your language_many": "تمت إضافة {{count}} كتابًا إلى مكتبتك بلغتك",
+  "Added {{count}} books in your language_other": "تمت إضافة {{count}} كتابًا بلغتك"
 }

@@ -2668,5 +2668,7 @@
   "Search books...": "Sök efter böcker...",
   "Find your next book": "Hitta din nästa bok",
   "Thousands of classics, free to read in your language.": "Tusentals klassiker, gratis att läsa på ditt språk.",
-  "Sign in to {{app}}": "Logga in på {{app}}"
+  "Sign in to {{app}}": "Logga in på {{app}}",
+  "Added {{count}} books in your language_one": "Lade till {{count}} bok på ditt språk",
+  "Added {{count}} books in your language_other": "Lade till {{count}} böcker på ditt språk"
 }

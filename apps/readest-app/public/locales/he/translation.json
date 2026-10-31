@@ -2736,5 +2736,7 @@
   "Search books...": "חיפוש ספרים...",
   "Find your next book": "מצאו את הספר הבא שלכם",
   "Thousands of classics, free to read in your language.": "אלפי יצירות קלאסיות, חינם לקריאה בשפה שלכם.",
-  "Sign in to {{app}}": "התחברות אל {{app}}"
+  "Sign in to {{app}}": "התחברות אל {{app}}",
+  "Added {{count}} books in your language_one": "נוסף {{count}} ספר בשפה שלך",
+  "Added {{count}} books in your language_other": "נוספו {{count}} ספרים בשפה שלך"
 }

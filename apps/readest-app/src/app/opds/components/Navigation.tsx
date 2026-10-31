@@ -72,7 +72,9 @@ export function Navigation({
   }, [searchTerm]);
 
   useEffect(() => {
-    if (hasSearch && inputRef.current) {
+    // Focus the search box for mouse users only: on a touch screen focusing it opens the
+    // on-screen keyboard over the catalog on every page.
+    if (hasSearch && inputRef.current && window.matchMedia('(pointer: fine)').matches) {
       inputRef.current.focus();
     }
   }, [hasSearch]);

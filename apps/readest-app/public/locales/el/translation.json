@@ -2668,5 +2668,7 @@
   "Search books...": "Αναζήτηση βιβλίων...",
   "Find your next book": "Βρείτε το επόμενο βιβλίο σας",
   "Thousands of classics, free to read in your language.": "Χιλιάδες κλασικά έργα, δωρεάν για ανάγνωση στη γλώσσα σας.",
-  "Sign in to {{app}}": "Συνδεθείτε στο {{app}}"
+  "Sign in to {{app}}": "Συνδεθείτε στο {{app}}",
+  "Added {{count}} books in your language_one": "Προστέθηκε {{count}} βιβλίο στη γλώσσα σας",
+  "Added {{count}} books in your language_other": "Προστέθηκαν {{count}} βιβλία στη γλώσσα σας"
 }

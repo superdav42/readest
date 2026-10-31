@@ -2668,5 +2668,7 @@
   "Search books...": "Zoek naar boeken...",
   "Find your next book": "Vind je volgende boek",
   "Thousands of classics, free to read in your language.": "Duizenden klassiekers, gratis te lezen in jouw taal.",
-  "Sign in to {{app}}": "Aanmelden bij {{app}}"
+  "Sign in to {{app}}": "Aanmelden bij {{app}}",
+  "Added {{count}} books in your language_one": "{{count}} boek in jouw taal toegevoegd",
+  "Added {{count}} books in your language_other": "{{count}} boeken in jouw taal toegevoegd"
 }

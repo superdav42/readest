@@ -131,5 +131,7 @@
   "{{count}} book(s) omitted (file not available locally)_one": "{{count}} book omitted (file not available locally)",
   "{{count}} book(s) omitted (file not available locally)_other": "{{count}} books omitted (files not available locally)",
   "Restored collection \"{{name}}\" ({{count}} books)_one": "Restored collection \"{{name}}\" ({{count}} book)",
-  "Restored collection \"{{name}}\" ({{count}} books)_other": "Restored collection \"{{name}}\" ({{count}} books)"
+  "Restored collection \"{{name}}\" ({{count}} books)_other": "Restored collection \"{{name}}\" ({{count}} books)",
+  "Added {{count}} books in your language_one": "Added {{count}} book in your language",
+  "Added {{count}} books in your language_other": "Added {{count}} books in your language"
 }

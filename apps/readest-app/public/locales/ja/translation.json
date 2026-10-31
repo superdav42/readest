@@ -2600,5 +2600,6 @@
   "Search books...": "本を検索…",
   "Find your next book": "次に読む本を見つけよう",
   "Thousands of classics, free to read in your language.": "何千冊もの名作を、あなたの言語で無料で読めます。",
-  "Sign in to {{app}}": "{{app}}にサインイン"
+  "Sign in to {{app}}": "{{app}}にサインイン",
+  "Added {{count}} books in your language_other": "お使いの言語の本を{{count}}冊追加しました"
 }

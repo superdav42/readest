@@ -2804,5 +2804,9 @@
   "Search books...": "Szukaj książek...",
   "Find your next book": "Znajdź swoją następną książkę",
   "Thousands of classics, free to read in your language.": "Tysiące klasyków, które możesz czytać bezpłatnie w swoim języku.",
-  "Sign in to {{app}}": "Zaloguj się do {{app}}"
+  "Sign in to {{app}}": "Zaloguj się do {{app}}",
+  "Added {{count}} books in your language_one": "Dodano {{count}} książkę w Twoim języku",
+  "Added {{count}} books in your language_few": "Dodano {{count}} książki w Twoim języku",
+  "Added {{count}} books in your language_many": "Dodano {{count}} książek w Twoim języku",
+  "Added {{count}} books in your language_other": "Dodano {{count}} książki w Twoim języku"
 }

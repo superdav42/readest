@@ -2668,5 +2668,7 @@
   "Search books...": "किताबें खोजें...",
   "Find your next book": "अपनी अगली किताब खोजें",
   "Thousands of classics, free to read in your language.": "हज़ारों क्लासिक किताबें, आपकी भाषा में पढ़ने के लिए मुफ़्त।",
-  "Sign in to {{app}}": "{{app}} में साइन इन करें"
+  "Sign in to {{app}}": "{{app}} में साइन इन करें",
+  "Added {{count}} books in your language_one": "आपकी भाषा में {{count}} पुस्तक जोड़ी गई",
+  "Added {{count}} books in your language_other": "आपकी भाषा में {{count}} पुस्तकें जोड़ी गईं"
 }

@@ -2668,5 +2668,7 @@
   "Search books...": "புத்தகங்களைத் தேடுங்கள்...",
   "Find your next book": "உங்கள் அடுத்த புத்தகத்தைக் கண்டறியுங்கள்",
   "Thousands of classics, free to read in your language.": "ஆயிரக்கணக்கான செவ்வியல் நூல்கள், உங்கள் மொழியில் இலவசமாகப் படிக்கலாம்.",
-  "Sign in to {{app}}": "{{app}}-இல் உள்நுழைக"
+  "Sign in to {{app}}": "{{app}}-இல் உள்நுழைக",
+  "Added {{count}} books in your language_one": "உங்கள் மொழியில் {{count}} புத்தகம் சேர்க்கப்பட்டது",
+  "Added {{count}} books in your language_other": "உங்கள் மொழியில் {{count}} புத்தகங்கள் சேர்க்கப்பட்டன"
 }

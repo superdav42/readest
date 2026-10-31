@@ -45,5 +45,6 @@ deploy commits that are pushed to that repository.
 | 2026-10-29 | Native config | `src/app/layout.tsx`, `src/pages/_document.tsx` | Non-web builds with `NEXT_PUBLIC_EMBEDDED_RUNTIME_CONFIG` (a JSON object) embed it as `window.__READEST_RUNTIME_CONFIG` in a plain inline `<script>` in `<head>` (the app router runs an inline `next/script` only after hydration starts, too late), because native builds are not served `/runtime-config.js` |
 | 2026-10-29 | Updates | `src/helpers/updater.ts` | With runtime `selfHosted`, the app never fetches Readest's update feeds or release notes |
 | 2026-10-29 | Android | `src-tauri/tauri.librebooks.conf.json` (new), `.gitignore` | Override config merged with `--config` for the Librebooks Android app: product name and application id, one `librebooks` deep-link scheme, no updater endpoints, a CSP without Readest, Sentry, PostHog or Stripe hosts, no updater artifacts |
+| 2026-10-31 | Mobile catalog | `src/app/opds/components/Navigation.tsx`, `public/locales/*/translation.json` | The catalog search box takes focus only with a fine pointer (mouse), so phones no longer open the keyboard on every catalog page; plural forms (`_one`, `_few`, ...) for the "Added {{count}} books in your language" toast. |
 
 "Readest" is a name of the upstream project; this fork is not endorsed by Bilingify LLC.

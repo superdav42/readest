@@ -2804,5 +2804,9 @@
   "Search books...": "Шукати книжки…",
   "Find your next book": "Знайдіть свою наступну книжку",
   "Thousands of classics, free to read in your language.": "Тисячі класичних творів, які можна безкоштовно читати вашою мовою.",
-  "Sign in to {{app}}": "Увійти до {{app}}"
+  "Sign in to {{app}}": "Увійти до {{app}}",
+  "Added {{count}} books in your language_one": "Додано {{count}} книгу вашою мовою",
+  "Added {{count}} books in your language_few": "Додано {{count}} книги вашою мовою",
+  "Added {{count}} books in your language_many": "Додано {{count}} книг вашою мовою",
+  "Added {{count}} books in your language_other": "Додано {{count}} книг вашою мовою"
 }

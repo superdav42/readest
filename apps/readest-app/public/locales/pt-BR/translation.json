@@ -2736,5 +2736,7 @@
   "Search books...": "Pesquisar livros...",
   "Find your next book": "Encontre seu próximo livro",
   "Thousands of classics, free to read in your language.": "Milhares de clássicos, grátis para ler no seu idioma.",
-  "Sign in to {{app}}": "Entrar no {{app}}"
+  "Sign in to {{app}}": "Entrar no {{app}}",
+  "Added {{count}} books in your language_one": "{{count}} livro adicionado no seu idioma",
+  "Added {{count}} books in your language_other": "{{count}} livros adicionados no seu idioma"
 }

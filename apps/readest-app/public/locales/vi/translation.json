@@ -2600,5 +2600,6 @@
   "Search books...": "Tìm sách...",
   "Find your next book": "Tìm cuốn sách tiếp theo của bạn",
   "Thousands of classics, free to read in your language.": "Hàng nghìn tác phẩm kinh điển, miễn phí đọc bằng ngôn ngữ của bạn.",
-  "Sign in to {{app}}": "Đăng nhập vào {{app}}"
+  "Sign in to {{app}}": "Đăng nhập vào {{app}}",
+  "Added {{count}} books in your language_other": "Đã thêm {{count}} sách bằng ngôn ngữ của bạn"
 }
