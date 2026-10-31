@@ -157,10 +157,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       className={process.env['NEXT_PUBLIC_APP_PLATFORM'] === 'tauri' ? 'edge-to-edge' : ''}
     >
       <head>
+        {/* A plain inline script runs while the HTML is parsed, before any app chunk. An
+            inline next/script would only run from the RSC payload, after modules have
+            already read the (empty) config. */}
         {embeddedRuntimeConfigScript ? (
-          <Script id='embedded-runtime-config' strategy='beforeInteractive'>
-            {embeddedRuntimeConfigScript}
-          </Script>
+          <script
+            id='embedded-runtime-config'
+            dangerouslySetInnerHTML={{ __html: embeddedRuntimeConfigScript }}
+          />
         ) : null}
         {shouldInjectRuntimeConfig ? (
           <Script src='/runtime-config.js' strategy='beforeInteractive' />
