@@ -1,3 +1,4 @@
+// Modified 2026-10-31 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { FoliateView } from '@/types/view';
 import { UseTranslatorOptions } from '@/services/translators';
@@ -550,19 +551,26 @@ export function useTextTranslation(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bookKey, viewSettings, provider, targetLang, promptId]);
 
+  // Listen for section loads even while translation is off: turning it on later (from
+  // the toggle or an instant-translation book) must also cover the sections that load
+  // afterwards. Both handlers do nothing while translation is off.
+  const hintIfEnabled = () => {
+    if (enabled.current) hintInitialTranslating();
+  };
+
   useEffect(() => {
-    if (!view || !enabled.current) return;
+    if (!view) return;
 
     if ('renderer' in view) {
       view.addEventListener('load', observeTextNodes);
-      view.addEventListener('load', hintInitialTranslating);
+      view.addEventListener('load', hintIfEnabled);
     } else {
       observeTextNodes();
     }
     return () => {
       if ('renderer' in view) {
         view.removeEventListener('load', observeTextNodes);
-        view.removeEventListener('load', hintInitialTranslating);
+        view.removeEventListener('load', hintIfEnabled);
       }
       observerRefs.current.forEach((observer) => observer.disconnect());
       observerRefs.current = [];

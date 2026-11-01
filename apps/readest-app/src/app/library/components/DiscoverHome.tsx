@@ -1,66 +1,64 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 // Added 2026-10-31 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
 //
-// Discover: the first screen of a shared-library deployment (Librebooks). Rows of
-// covers in the reader's language — continue reading, books related to the last one
-// read, popular, read-along and genre rows — and one tap opens a book in the reader.
+// Discover: the first screen of a shared-library deployment (Librebooks). Rows of covers in
+// the reader's language — continue reading, translations they asked for, books related to the
+// last one read, popular, read-along and genre rows — and one tap opens a book in the reader.
+// A book not yet in the reader's language offers instant (on-device) machine translation or the
+// original, and either way asks for a high-quality translation, whose progress the
+// "Requested" row (and the reader) shows.
 'use client';
 
 import clsx from 'clsx';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { PiHeadphones } from 'react-icons/pi';
-import { MdChevronRight } from 'react-icons/md';
+import { MdBolt, MdCheckCircle, MdChevronRight, MdClose } from 'react-icons/md';
 import type { Book } from '@/types/book';
 import BookCover from '@/components/BookCover';
 import { useEnv } from '@/context/EnvContext';
 import { useAppRouter } from '@/hooks/useAppRouter';
 import { useTranslation } from '@/hooks/useTranslation';
-import { useLibraryStore } from '@/store/libraryStore';
 import { eventDispatcher } from '@/utils/event';
 import { navigateToReader } from '@/utils/nav';
-import { downloadFile } from '@/libs/storage';
-import { isTauriAppPlatform } from '@/services/environment';
+import { openCatalogBook } from '@/services/openCatalogBook';
+import { isInstantSupported } from '@/services/translators/providers/instant';
+import { formatEta } from '@/app/reader/components/InstantTranslationBanner';
 import {
   CONTENT_LANGUAGE_EVENT,
+  REQUESTS_EVENT,
   type DiscoverCard,
   type DiscoverHome as DiscoverHomeData,
+  type LibraryWork,
+  type RequestedBook,
   fetchDiscoverHome,
   fetchRelatedBooks,
-  findLibraryEdition,
+  fetchWork,
+  forgetRequestedBook,
   getBookWorkId,
   getCachedDiscoverHome,
   getContentLanguage,
   getLibraryFeedPath,
+  getRequestedBooks,
+  requestTranslation,
+  setInstantTranslation,
 } from '@/services/gutenbergLibrary';
 
 interface DiscoverHomeProps {
   libraryBooks: Book[];
 }
 
-/** Download a catalog EPUB with progress, as a File the importer accepts. */
-const downloadEpub = async (url: string, onProgress: (fraction: number) => void): Promise<File> => {
-  const res = await fetch(url);
-  if (!res.ok || !res.body) throw new Error(`download_${res.status}`);
-  const total = Number(res.headers.get('content-length')) || 0;
-  const reader = res.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let received = 0;
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    chunks.push(value);
-    received += value.length;
-    if (total) onProgress(received / total);
-  }
-  const name = url.split('/').pop() || 'book.epub';
-  return new File(chunks as BlobPart[], name, { type: 'application/epub+zip' });
-};
-
-/** Web only: books larger than this open while they download; smaller ones download first. */
-const STREAM_MIN_BYTES = 3 * 1024 * 1024;
+const POLL_MS = 30_000;
 
 const isInProgress = (book: Book) =>
   !book.deletedAt && !!book.progress && book.progress[0] < book.progress[1];
+
+const languageName = (code: string, uiLang: string) => {
+  try {
+    return new Intl.DisplayNames([uiLang], { type: 'language' }).of(code) ?? code;
+  } catch {
+    return code;
+  }
+};
 
 const Row: React.FC<{
   title: string;
@@ -89,12 +87,28 @@ const Row: React.FC<{
   );
 };
 
+const Cover: React.FC<{
+  src: string;
+  children?: React.ReactNode;
+}> = ({ src, children }) => (
+  <div className='bg-base-300 relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md'>
+    {/* eslint-disable-next-line @next/next/no-img-element */}
+    <img
+      src={src}
+      alt=''
+      loading='lazy'
+      decoding='async'
+      className='h-full w-full object-cover transition-transform group-hover:scale-[1.03]'
+    />
+    {children}
+  </div>
+);
+
 const Card: React.FC<{
   card: DiscoverCard;
   contentLang: string;
-  progress?: number | null;
   onOpen: (card: DiscoverCard) => void;
-}> = ({ card, contentLang, progress, onOpen }) => {
+}> = ({ card, contentLang, onOpen }) => {
   const _ = useTranslation();
   return (
     <button
@@ -103,15 +117,7 @@ const Card: React.FC<{
       onClick={() => onOpen(card)}
       aria-label={card.author ? `${card.title}, ${card.author}` : card.title}
     >
-      <div className='bg-base-300 relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md'>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={card.cover}
-          alt=''
-          loading='lazy'
-          decoding='async'
-          className='h-full w-full object-cover transition-transform group-hover:scale-[1.03]'
-        />
+      <Cover src={card.cover}>
         <div className='absolute bottom-1 left-1 flex gap-1'>
           {card.kind === 'readalong' && (
             <span
@@ -122,22 +128,154 @@ const Card: React.FC<{
             </span>
           )}
           {card.lang !== contentLang && (
-            <span className='bg-base-100/90 text-base-content rounded px-1 text-[10px] font-semibold uppercase leading-5'>
+            <span
+              className='bg-base-100/90 text-base-content rounded px-1 text-[10px] font-semibold uppercase leading-5'
+              title={_('Not yet translated')}
+            >
               {card.lang}
             </span>
           )}
         </div>
-        {progress != null && (
-          <div className='bg-base-100/60 absolute bottom-0 left-0 right-0 h-1'>
-            <div className='bg-primary h-1' style={{ width: `${Math.round(progress * 100)}%` }} />
-          </div>
-        )}
-      </div>
+      </Cover>
       <p className='text-base-content line-clamp-2 text-sm font-medium leading-tight'>
         {card.title}
       </p>
       {card.author && <p className='text-base-content/60 truncate text-xs'>{card.author}</p>}
     </button>
+  );
+};
+
+/** A requested translation: its cover, title and where the high-quality translation stands. */
+const RequestedCard: React.FC<{
+  request: RequestedBook;
+  work: LibraryWork | undefined;
+  onOpen: (request: RequestedBook, work: LibraryWork | undefined) => void;
+  onForget: (request: RequestedBook) => void;
+}> = ({ request, work, onOpen, onForget }) => {
+  const _ = useTranslation();
+  const ready = !!work?.best && work.best.lang === request.lang && work.best.kind !== 'original';
+  const job = work?.jobs.find((j) => j.kind === 'translation');
+  const percent = job?.status === 'running' ? (job.estimate?.percent ?? 0) : 0;
+  const label = ready
+    ? _('Ready')
+    : job?.status === 'running'
+      ? _('{{percent}}% · {{eta}}', { percent, eta: formatEta(job.estimate?.eta_seconds, _) })
+      : job?.status === 'queued' || job?.status === 'blocked'
+        ? _('In line #{{position}}', { position: job.position ?? 1 })
+        : job?.status === 'failed'
+          ? _('Retrying soon')
+          : _('Requested');
+  return (
+    <div className='relative flex w-[7.25rem] shrink-0 flex-col gap-1.5 sm:w-32'>
+      <button
+        type='button'
+        className='group flex flex-col gap-1.5 text-left'
+        onClick={() => onOpen(request, work)}
+        aria-label={`${request.title}: ${label}`}
+      >
+        <Cover src={request.cover}>
+          <div
+            className={clsx(
+              'absolute inset-x-0 bottom-0 flex flex-col gap-1 px-1.5 pb-1.5 pt-4 text-[11px] font-semibold',
+              ready
+                ? 'bg-gradient-to-t from-green-700/90 to-transparent text-white'
+                : 'bg-gradient-to-t from-black/80 to-transparent text-white',
+            )}
+          >
+            <span className='flex items-center gap-1'>
+              {ready && <MdCheckCircle className='h-3.5 w-3.5' />}
+              {label}
+            </span>
+            {!ready && (
+              <div className='h-1 w-full overflow-hidden rounded-full bg-white/30'>
+                <div
+                  className={clsx('h-1 bg-white', percent === 0 && 'animate-pulse')}
+                  style={{ width: `${Math.max(percent, 4)}%` }}
+                />
+              </div>
+            )}
+          </div>
+        </Cover>
+        <p className='text-base-content line-clamp-2 text-sm font-medium leading-tight'>
+          {request.title}
+        </p>
+      </button>
+      <button
+        type='button'
+        className='bg-base-100/90 text-base-content absolute right-1 top-1 flex h-6 w-6 items-center justify-center rounded-full'
+        aria-label={_('Remove')}
+        onClick={() => onForget(request)}
+      >
+        <MdClose className='h-4 w-4' />
+      </button>
+    </div>
+  );
+};
+
+/** Choices for a book that isn't in the reader's language yet. */
+const RequestSheet: React.FC<{
+  card: DiscoverCard;
+  lang: string;
+  instantAvailable: boolean;
+  onReadInstant: () => void;
+  onReadOriginal: () => void;
+  onClose: () => void;
+}> = ({ card, lang, instantAvailable, onReadInstant, onReadOriginal, onClose }) => {
+  const _ = useTranslation();
+  const language = languageName(lang, lang);
+  const original = languageName(card.lang, lang);
+  return (
+    <div
+      className='fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center'
+      role='dialog'
+      aria-modal='true'
+      aria-label={card.title}
+      onClick={onClose}
+    >
+      <div
+        className='bg-base-100 text-base-content flex w-full max-w-md flex-col gap-4 rounded-t-2xl p-5 pb-8 sm:rounded-2xl'
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2rem)' }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className='flex gap-4'>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={card.cover} alt='' className='aspect-[2/3] w-20 rounded object-cover shadow' />
+          <div className='flex min-w-0 flex-col gap-1'>
+            <p className='text-lg font-semibold leading-tight'>{card.title}</p>
+            {card.author && <p className='text-base-content/60 text-sm'>{card.author}</p>}
+            <p className='text-base-content/80 mt-1 text-sm'>
+              {_('Not yet translated into {{language}}.', { language })}
+            </p>
+          </div>
+        </div>
+        <p className='text-base-content/70 text-sm'>
+          {_(
+            'We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.',
+            { language },
+          )}
+        </p>
+        {instantAvailable && (
+          <button type='button' className='btn btn-primary' onClick={onReadInstant}>
+            <MdBolt className='h-5 w-5' />
+            {_('Read now with instant translation')}
+          </button>
+        )}
+        <button
+          type='button'
+          className={clsx('btn', instantAvailable ? 'btn-ghost' : 'btn-primary')}
+          onClick={onReadOriginal}
+        >
+          {_('Read the original ({{language}})', { language: original })}
+        </button>
+        {instantAvailable && (
+          <p className='text-base-content/60 text-xs'>
+            {_(
+              'Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.',
+            )}
+          </p>
+        )}
+      </div>
+    </div>
   );
 };
 
@@ -149,12 +287,22 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
   const [home, setHome] = useState<DiscoverHomeData | null>(() => getCachedDiscoverHome(lang));
   const [failed, setFailed] = useState(false);
   const [related, setRelated] = useState<DiscoverCard[]>([]);
-  const [opening, setOpening] = useState<{ card: DiscoverCard; progress: number } | null>(null);
+  const [opening, setOpening] = useState<{ title: string; cover: string; progress: number } | null>(
+    null,
+  );
+  const [sheet, setSheet] = useState<{ card: DiscoverCard; instant: boolean } | null>(null);
+  const [requests, setRequests] = useState<RequestedBook[]>(getRequestedBooks);
+  const [requestStatus, setRequestStatus] = useState<Record<string, LibraryWork>>({});
 
   useEffect(() => {
     const onLanguage = (event: CustomEvent) => setLang((event.detail as { lang: string }).lang);
+    const onRequests = () => setRequests(getRequestedBooks());
     eventDispatcher.on(CONTENT_LANGUAGE_EVENT, onLanguage);
-    return () => eventDispatcher.off(CONTENT_LANGUAGE_EVENT, onLanguage);
+    eventDispatcher.on(REQUESTS_EVENT, onRequests);
+    return () => {
+      eventDispatcher.off(CONTENT_LANGUAGE_EVENT, onLanguage);
+      eventDispatcher.off(REQUESTS_EVENT, onRequests);
+    };
   }, []);
 
   // Cached rows show at once; the fresh copy replaces them when it arrives.
@@ -169,6 +317,50 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
       cancelled = true;
     };
   }, [lang]);
+
+  // Requested translations in this language: poll their status while Discover is open.
+  const requested = useMemo(() => requests.filter((r) => r.lang === lang), [requests, lang]);
+  useEffect(() => {
+    if (!requested.length) return;
+    let cancelled = false;
+    const poll = async () => {
+      const results = await Promise.all(
+        requested.slice(0, 12).map((r) =>
+          fetchWork(r.work_id, r.lang)
+            .then((work) => [`${r.work_id}:${r.lang}`, work] as const)
+            .catch(() => null),
+        ),
+      );
+      if (cancelled) return;
+      setRequestStatus((previous) => {
+        const next = { ...previous };
+        for (const result of results) {
+          if (!result) continue;
+          const [key, work] = result;
+          const wasReady =
+            previous[key]?.best?.lang === work.lang && previous[key]?.best?.kind !== 'original';
+          const isReady = work.best?.lang === work.lang && work.best?.kind !== 'original';
+          if (isReady && previous[key] && !wasReady) {
+            eventDispatcher.dispatch('toast', {
+              message: _('The {{language}} translation of "{{title}}" is ready.', {
+                language: languageName(work.lang, work.lang),
+                title: work.title,
+              }),
+              type: 'success',
+            });
+          }
+          next[key] = work;
+        }
+        return next;
+      });
+    };
+    void poll();
+    const timer = setInterval(poll, POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
+  }, [requested, _]);
 
   const continueReading = useMemo(
     () =>
@@ -202,71 +394,23 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
     };
   }, [lastReadWorkId, lang]);
 
-  const openCard = useCallback(
-    async (card: DiscoverCard) => {
+  /** Download (or reuse) an edition and open it; optionally read it with instant translation. */
+  const openEdition = useCallback(
+    async (
+      edition: { work_id: number; lang: string; url: string; size?: number | null },
+      display: { title: string; cover: string },
+      instantLang?: string,
+    ) => {
       if (!appService || opening) return;
-      const existing = findLibraryEdition(useLibraryStore.getState().library, card);
-      if (existing) {
-        navigateToReader(router, [existing.hash]);
-        return;
-      }
-      setOpening({ card, progress: 0 });
+      setOpening({ ...display, progress: 0 });
       try {
-        const { library, setLibrary } = useLibraryStore.getState();
-        const onProgress = (progress: number) =>
-          setOpening((current) => (current ? { ...current, progress } : current));
-        let book: Book | null = null;
-        let streaming = false;
-        if (isTauriAppPlatform()) {
-          // Apps: the native downloader saves the file at full speed and the native
-          // EPUB parser opens it from disk. Streaming would send every small range
-          // read through the HTTP bridge (11 s for a 290 KB book on Android).
-          const path = await appService.resolveFilePath(
-            `discover-${card.work_id}-${card.lang}.epub`,
-            'Cache',
-          );
-          await downloadFile({
-            appService,
-            dst: path,
-            cfp: '',
-            url: card.url,
-            onProgress: ({ progress, total }) => total > 0 && onProgress(progress / total),
-          });
-          book = await appService.importBook(path, library);
-          await appService.deleteFile(path, 'None').catch(() => undefined);
-        } else if ((card.size ?? 0) > STREAM_MIN_BYTES) {
-          // Web, large books: read while it downloads. Importing from the URL without
-          // copying the file lets the reader fetch only the parts it shows (range
-          // requests); the whole book then downloads in the background.
-          book = await appService
-            .importBook(card.url, library, { saveBook: false })
-            .catch(() => null);
-          streaming = !!book;
-        }
-        if (!book) {
-          // Small books on the web (most of them are under 1 MB), or a host without
-          // range support: download, then open.
-          const file = await downloadEpub(card.url, onProgress);
-          book = await appService.importBook(file, library);
-          streaming = false;
-        }
-        if (!book) throw new Error('import_failed');
-        setLibrary([...library]);
-        await appService.saveLibraryBooks(library);
+        const book = await openCatalogBook(appService, edition, (progress) =>
+          setOpening((current) => (current ? { ...current, progress } : current)),
+        );
+        setInstantTranslation(book.hash, edition.work_id, instantLang ?? null);
         navigateToReader(router, [book.hash]);
-        if (streaming) {
-          const downloaded = book;
-          appService
-            .downloadBook(downloaded)
-            .then(async () => {
-              const current = useLibraryStore.getState().library;
-              useLibraryStore.getState().setLibrary([...current]);
-              await appService.saveLibraryBooks(current);
-            })
-            .catch((error) => console.warn('Discover: background download failed', error));
-        }
       } catch (error) {
-        console.warn('Discover: could not open', card.url, error);
+        console.warn('Discover: could not open', edition.url, error);
         eventDispatcher.dispatch('toast', {
           message: _('Could not open this book. Check your connection and try again.'),
           type: 'error',
@@ -276,6 +420,53 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
       }
     },
     [appService, opening, router, _],
+  );
+
+  const openCard = useCallback(
+    async (card: DiscoverCard) => {
+      if (card.lang === lang) {
+        await openEdition(card, card);
+        return;
+      }
+      setSheet({ card, instant: await isInstantSupported(card.lang, lang) });
+    },
+    [lang, openEdition],
+  );
+
+  const chooseFromSheet = useCallback(
+    async (instant: boolean) => {
+      if (!sheet) return;
+      const { card } = sheet;
+      setSheet(null);
+      requestTranslation(card, lang).catch((error) =>
+        console.warn('Discover: translation request failed', error),
+      );
+      await openEdition(card, card, instant ? lang : undefined);
+    },
+    [sheet, lang, openEdition],
+  );
+
+  const openRequested = useCallback(
+    async (request: RequestedBook, work: LibraryWork | undefined) => {
+      const ready =
+        !!work?.best && work.best.lang === request.lang && work.best.kind !== 'original';
+      if (ready && work?.best) {
+        await openEdition(
+          { work_id: request.work_id, lang: request.lang, url: work.best.url },
+          request,
+        );
+        forgetRequestedBook(request.work_id, request.lang);
+        return;
+      }
+      // Not ready yet: keep reading the interim edition, with instant translation when possible.
+      const instant = await isInstantSupported(request.original.lang, request.lang);
+      await openEdition(
+        { work_id: request.work_id, ...request.original },
+        request,
+        instant ? request.lang : undefined,
+      );
+    },
+    [openEdition],
   );
 
   const sectionTitle = (kind: string, title?: string) =>
@@ -311,6 +502,20 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
                   {book.title}
                 </p>
               </button>
+            ))}
+          </Row>
+        )}
+
+        {requested.length > 0 && (
+          <Row title={_('Your requested translations')}>
+            {requested.map((request) => (
+              <RequestedCard
+                key={`${request.work_id}:${request.lang}`}
+                request={request}
+                work={requestStatus[`${request.work_id}:${request.lang}`]}
+                onOpen={openRequested}
+                onForget={(r) => forgetRequestedBook(r.work_id, r.lang)}
+              />
             ))}
           </Row>
         )}
@@ -378,6 +583,17 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
         )}
       </div>
 
+      {sheet && (
+        <RequestSheet
+          card={sheet.card}
+          lang={lang}
+          instantAvailable={sheet.instant}
+          onReadInstant={() => chooseFromSheet(true)}
+          onReadOriginal={() => chooseFromSheet(false)}
+          onClose={() => setSheet(null)}
+        />
+      )}
+
       {opening && (
         <div
           className='bg-base-200/95 fixed inset-0 z-50 flex flex-col items-center justify-center gap-4 px-8'
@@ -386,13 +602,11 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={opening.card.cover}
+            src={opening.cover}
             alt=''
             className='aspect-[2/3] w-40 rounded-md object-cover shadow-xl'
           />
-          <p className='text-base-content text-center text-lg font-semibold'>
-            {opening.card.title}
-          </p>
+          <p className='text-base-content text-center text-lg font-semibold'>{opening.title}</p>
           <div className='bg-base-300 h-1.5 w-48 overflow-hidden rounded-full'>
             <div
               className={clsx(

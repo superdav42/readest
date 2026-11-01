@@ -28,8 +28,10 @@ export interface LibraryLanguage {
 export interface LibraryJob {
   id: string;
   kind: 'translation' | 'readalong';
-  status: 'queued' | 'running' | 'done' | 'failed';
+  status: 'blocked' | 'queued' | 'running' | 'done' | 'failed';
   position?: number;
+  /** Server estimate: `measured` when the worker reports its own percentage. */
+  estimate?: { percent?: number; eta_seconds?: number; measured?: boolean };
 }
 
 export interface LibraryWork {
@@ -275,7 +277,10 @@ export const fetchRelatedBooks = (workId: number, lang = getContentLanguage(), l
   );
 
 /** The library's copy of a Discover card (same work in the same language), if imported. */
-export const findLibraryEdition = (books: Book[], card: DiscoverCard): Book | undefined =>
+export const findLibraryEdition = (
+  books: Book[],
+  card: Pick<DiscoverCard, 'work_id' | 'lang'>,
+): Book | undefined =>
   books.find(
     (book) =>
       !book.deletedAt &&
@@ -295,3 +300,91 @@ export const getLibraryFeedPath = (
   if (shelf) params.set('shelf', shelf);
   return `/opds/?url=${encodeURIComponent(`${base}/opds?${params}`)}`;
 };
+
+// ---------- Translations the reader asked for (kept on this device) ----------
+
+export interface RequestedBook {
+  work_id: number;
+  /** The language asked for. */
+  lang: string;
+  title: string;
+  author?: string | null;
+  cover: string;
+  requested_at: number;
+  /** The edition available meanwhile (usually the English original). */
+  original: { url: string; lang: string; size?: number | null };
+}
+
+const REQUESTS_KEY = 'librebooks-requested-translations';
+export const REQUESTS_EVENT = 'librebooks-requests-changed';
+
+export const getRequestedBooks = (): RequestedBook[] => {
+  try {
+    return JSON.parse(localStorage.getItem(REQUESTS_KEY) || '[]') as RequestedBook[];
+  } catch {
+    return [];
+  }
+};
+
+const saveRequestedBooks = (books: RequestedBook[]) => {
+  try {
+    localStorage.setItem(REQUESTS_KEY, JSON.stringify(books));
+  } catch {
+    // Storage unavailable: the request still reached the server.
+  }
+  eventDispatcher.dispatch(REQUESTS_EVENT, {});
+};
+
+/** Ask for a high-quality translation of a card and remember it on this device. */
+export const requestTranslation = async (
+  card: DiscoverCard,
+  lang: string,
+): Promise<RequestResult> => {
+  const result = await requestEdition(card.work_id, lang, 'translation');
+  const others = getRequestedBooks().filter(
+    (b) => !(b.work_id === card.work_id && b.lang === lang),
+  );
+  saveRequestedBooks([
+    {
+      work_id: card.work_id,
+      lang,
+      title: card.title,
+      author: card.author,
+      cover: card.cover,
+      requested_at: Date.now(),
+      original: { url: card.url, lang: card.lang, size: card.size },
+    },
+    ...others,
+  ]);
+  return result;
+};
+
+export const forgetRequestedBook = (workId: number, lang: string) =>
+  saveRequestedBooks(getRequestedBooks().filter((b) => !(b.work_id === workId && b.lang === lang)));
+
+// ---------- Books opened with instant (on-device) machine translation ----------
+
+const INSTANT_KEY = 'librebooks-instant-books';
+
+const readInstantBooks = (): Record<string, { lang: string; work_id: number }> => {
+  try {
+    return JSON.parse(localStorage.getItem(INSTANT_KEY) || '{}');
+  } catch {
+    return {};
+  }
+};
+
+/** Mark a library book (by hash) as read with instant translation into `lang`. */
+export const setInstantTranslation = (hash: string, workId: number, lang: string | null) => {
+  const books = readInstantBooks();
+  if (lang) books[hash] = { lang, work_id: workId };
+  else delete books[hash];
+  try {
+    localStorage.setItem(INSTANT_KEY, JSON.stringify(books));
+  } catch {
+    // Storage unavailable: the book opens untranslated.
+  }
+};
+
+export const getInstantTranslation = (hash: string): { lang: string; work_id: number } | null =>
+  readInstantBooks()[hash] ?? null;

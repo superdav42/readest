@@ -1,3 +1,4 @@
+// Modified 2026-10-31 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -23,6 +24,7 @@ import FoliateViewer from './FoliateViewer';
 import HandwritingOverlay from './handwriting/HandwritingOverlay';
 import SectionInfo from './SectionInfo';
 import HeaderBar from './HeaderBar';
+import InstantTranslationBanner from './InstantTranslationBanner';
 import PageNavigationButtons from './PageNavigationButtons';
 import FooterBar from './footerbar/FooterBar';
 import ProgressBar from './ProgressBar';
@@ -199,6 +201,7 @@ const BookCellInner: React.FC<BookCellProps> = ({
         appServiceHasRoundedWindow && 'rounded-window',
       )}
     >
+      <InstantTranslationBanner bookKey={bookKey} />
       <HeaderBar
         bookKey={bookKey}
         gridInsets={chromeGridInsets}
