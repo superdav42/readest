@@ -4,9 +4,9 @@
 // Narration that is still being made. After Speak asks for narration (useTTSControl), the
 // library narrates from the reader's chapter and publishes a read-along edition within
 // seconds, then larger ones as it goes. This banner follows that: it says how far along the
-// narration is, opens the first narrated edition at the same sentence and starts playing,
-// and moves to each larger edition when the reader isn't listening or when playback runs
-// out at the end of what is narrated so far.
+// narration is, opens the first narrated edition at the same place and starts playing, and
+// when playback reaches the end of what is narrated so far, opens the larger edition there
+// and carries on playing.
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -68,7 +68,8 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   const [work, setWork] = useState<LibraryWork | null>(null);
   const [wanted, setWanted] = useState<Wanted | null>(readWanted);
   const [switching, setSwitching] = useState(false);
-  const playing = useRef(false);
+  /** Last playback state: 'playing', 'paused' (by the listener) or 'stopped' (ended). */
+  const playback = useRef<string | null>(null);
   const switchedTo = useRef<string | null>(null);
 
   const book = bookData?.book;
@@ -102,7 +103,8 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
     let tries = 0;
     const timer = setInterval(async () => {
       const view = getView(bookKey);
-      if (!view?.book && ++tries < 40) return;
+      // Big illustrated books take a while to open on a phone: wait up to a minute.
+      if (!view?.book && ++tries < 240) return;
       clearInterval(timer);
       sessionStorage.removeItem(LANDING_KEY);
       if (!view) return;
@@ -152,7 +154,7 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
     const onPlayback = (event: CustomEvent) => {
       const detail = event.detail as { bookKey?: string; state?: string };
       if (detail.bookKey && detail.bookKey !== bookKey) return;
-      playing.current = detail.state === 'playing';
+      playback.current = detail.state ?? null;
     };
     eventDispatcher.on(NARRATION_REQUESTED_EVENT, onRequested);
     eventDispatcher.on('tts-playback-state', onPlayback);
@@ -241,15 +243,18 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         await switchTo(latest, wanted!.autoplay);
         return;
       }
-      if (!playing.current) {
-        // Not listening right now: move to the larger edition quietly, at the same place. If
-        // playback just ran out at the end of the narrated part, carry on playing.
-        const view = getView(bookKey);
-        const index = getProgress(bookKey)?.index ?? 0;
-        const ranOut =
-          !!view?.book && narrated && findNarratedSection(view.book, index + 1, 1) === -1;
-        await switchTo(latest, ranOut && isWanted);
-      }
+      // Playback ran out at the end of the narrated part: open the larger edition there and
+      // carry on playing. Nothing else switches editions (on a phone each switch is a full
+      // download and reload, which would interrupt someone reading); a listener in an older
+      // edition simply moves on when they reach its end.
+      const view = getView(bookKey);
+      const index = getProgress(bookKey)?.index ?? 0;
+      const ranOut =
+        playback.current === 'stopped' &&
+        !!view?.book &&
+        narrated &&
+        findNarratedSection(view.book, index + 1, 1) === -1;
+      if (ranOut) await switchTo(latest, true);
     };
     void poll();
     timer = setInterval(poll, !narrated ? FAST_POLL_MS : isWanted ? LISTEN_POLL_MS : SLOW_POLL_MS);
@@ -261,7 +266,7 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   }, [workId, lang, book?.hash, following, narrated, isWanted]);
 
   if (!active) return null;
-  const percent = Number((job?.progress ?? '').match(/(\d+)%/)?.[1] ?? 0);
+  const percent = Math.max(1, Number((job?.progress ?? '').match(/(\d+)%/)?.[1] ?? 0));
   const message = switching
     ? _('Opening the narration…')
     : !narrated
