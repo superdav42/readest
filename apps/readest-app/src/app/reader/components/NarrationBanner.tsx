@@ -15,7 +15,9 @@ import { useEnv } from '@/context/EnvContext';
 import { useAppRouter } from '@/hooks/useAppRouter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useBookDataStore } from '@/store/bookDataStore';
+import { useLibraryStore } from '@/store/libraryStore';
 import { useReaderStore } from '@/store/readerStore';
+import { markBookDeleted } from '@/utils/book';
 import { eventDispatcher } from '@/utils/event';
 import { navigateToReader } from '@/utils/nav';
 import { isWebAppPlatform } from '@/services/environment';
@@ -41,7 +43,14 @@ const FAST_POLL_MS = 1500;
 const SLOW_POLL_MS = 20_000;
 
 type Wanted = { workId: number; lang: string; autoplay: boolean; since: number };
-type Landing = { hash: string; index: number; anchor?: string; autoplay: boolean };
+type Landing = {
+  hash: string;
+  index: number;
+  anchor?: string;
+  autoplay: boolean;
+  /** The partial narration edition this one replaces: removed from the device after landing. */
+  replaces?: string;
+};
 
 const readWanted = (): Wanted | null => {
   try {
@@ -54,7 +63,7 @@ const readWanted = (): Wanted | null => {
 const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   const _ = useTranslation();
   const router = useAppRouter();
-  const { appService } = useEnv();
+  const { appService, envConfig } = useEnv();
   const bookData = useBookDataStore((s) => s.getBookData(bookKey));
   const getView = useReaderStore((s) => s.getView);
   const getProgress = useReaderStore((s) => s.getProgress);
@@ -106,9 +115,29 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       if (landing!.autoplay) {
         setTimeout(() => eventDispatcher.dispatch('tts-speak', { bookKey }), 600);
       }
+      if (landing!.replaces) void removeSuperseded(landing!.replaces);
     }, 250);
     return () => clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [book, bookKey, getView]);
+
+  /**
+   * A growing narration is published as a series of editions; each one opened is a new file
+   * (on Android a full download). Once the reader is in the newer one, the older partial copy
+   * is removed from the device so the library keeps one copy of the book.
+   */
+  const removeSuperseded = async (hash: string) => {
+    if (!appService || hash === book?.hash) return;
+    const old = useLibraryStore.getState().library.find((b) => b.hash === hash && !b.deletedAt);
+    if (!old) return;
+    try {
+      await appService.deleteBook(old, 'local');
+      markBookDeleted(old, Date.now(), false);
+      await useLibraryStore.getState().updateBook(envConfig, old);
+    } catch (error) {
+      console.warn('Narration: could not remove the older edition', error);
+    }
+  };
 
   useEffect(() => {
     const onRequested = () => setWanted(readWanted());
@@ -158,7 +187,14 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         const place = currentPlace();
         sessionStorage.setItem(
           LANDING_KEY,
-          JSON.stringify({ hash: opened.hash, ...place, autoplay } satisfies Landing),
+          JSON.stringify({
+            hash: opened.hash,
+            ...place,
+            autoplay,
+            // Only a partial narration edition is replaced; the plain book the listener
+            // started from stays in the library.
+            replaces: narrated && book ? book.hash : undefined,
+          } satisfies Landing),
         );
         if (isWebAppPlatform())
           window.location.assign(
@@ -174,7 +210,7 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         setSwitching(false);
       }
     },
-    [appService, workId, switching, currentPlace, router],
+    [appService, workId, switching, currentPlace, router, narrated, book],
   );
 
   // Follow the narration while it is being made.
