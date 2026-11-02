@@ -2709,5 +2709,14 @@
   "Instant machine translation": "Sofortige maschinelle Übersetzung",
   "Hide details": "Details ausblenden",
   "Show details": "Details anzeigen",
-  "Switch to the high-quality translation": "Zur hochwertigen Übersetzung wechseln"
+  "Switch to the high-quality translation": "Zur hochwertigen Übersetzung wechseln",
+  "Listen now · {{percent}}% narrated": "Jetzt anhören · {{percent}} % vorgelesen",
+  "Ready to listen": "Bereit zum Anhören",
+  "\"{{title}}\" is ready to listen to.": "„{{title}}“ kann jetzt angehört werden.",
+  "Your requests": "Deine Anfragen",
+  "Opening the narration…": "Vorlesen wird geöffnet …",
+  "Narration starts in a moment (#{{position}} in line)…": "Das Vorlesen startet gleich (Warteschlangenposition {{position}}) …",
+  "Preparing narration… it starts in a few seconds": "Vorlesen wird vorbereitet … Es startet in wenigen Sekunden.",
+  "Narration in progress: {{percent}}% of the book narrated": "Wird vorgelesen: {{percent}} % des Buchs vorgelesen",
+  "Preparing narration — it starts in a few seconds.": "Vorlesen wird vorbereitet — es startet in wenigen Sekunden."
 }

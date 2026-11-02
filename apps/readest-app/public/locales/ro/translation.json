@@ -2778,5 +2778,14 @@
   "Instant machine translation": "Traducere instantanee automată",
   "Hide details": "Ascunde detaliile",
   "Show details": "Afișează detaliile",
-  "Switch to the high-quality translation": "Treci la traducerea de înaltă calitate"
+  "Switch to the high-quality translation": "Treci la traducerea de înaltă calitate",
+  "Listen now · {{percent}}% narrated": "Ascultă acum · {{percent}}% narat",
+  "Ready to listen": "Gata de ascultat",
+  "\"{{title}}\" is ready to listen to.": "„{{title}}” este gata de ascultat.",
+  "Your requests": "Solicitările tale",
+  "Opening the narration…": "Se deschide narațiunea…",
+  "Narration starts in a moment (#{{position}} in line)…": "Narațiunea începe imediat (#{{position}} la rând)…",
+  "Preparing narration… it starts in a few seconds": "Se pregătește narațiunea… începe în câteva secunde",
+  "Narration in progress: {{percent}}% of the book narrated": "Narațiune în curs: {{percent}}% din carte a fost narată",
+  "Preparing narration — it starts in a few seconds.": "Se pregătește narațiunea — începe în câteva secunde."
 }

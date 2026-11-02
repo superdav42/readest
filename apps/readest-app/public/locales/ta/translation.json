@@ -2709,5 +2709,14 @@
   "Instant machine translation": "உடனடி இயந்திர மொழிபெயர்ப்பு",
   "Hide details": "விவரங்களை மறை",
   "Show details": "விவரங்களைக் காட்டு",
-  "Switch to the high-quality translation": "தரமான மொழிபெயர்ப்புக்கு மாறு"
+  "Switch to the high-quality translation": "தரமான மொழிபெயர்ப்புக்கு மாறு",
+  "Listen now · {{percent}}% narrated": "இப்போதே கேளுங்கள் · {{percent}}% கேட்டு முடிக்கப்பட்டது",
+  "Ready to listen": "கேட்கத் தயார்",
+  "\"{{title}}\" is ready to listen to.": "\"{{title}}\" கேட்கத் தயாராக உள்ளது.",
+  "Your requests": "உங்கள் கோரிக்கைகள்",
+  "Opening the narration…": "கதைசொல்லலைத் திறக்கிறது…",
+  "Narration starts in a moment (#{{position}} in line)…": "கதைசொல்லல் இன்னும் சிறிது நேரத்தில் தொடங்கும் (வரிசையில் #{{position}})…",
+  "Preparing narration… it starts in a few seconds": "கதைசொல்லலைத் தயாராக்குகிறது… சில நொடிகளில் தொடங்கும்",
+  "Narration in progress: {{percent}}% of the book narrated": "கதைசொல்லல் நடைபெறுகிறது: புத்தகத்தின் {{percent}}% கேட்டு முடிக்கப்பட்டது",
+  "Preparing narration — it starts in a few seconds.": "கதைசொல்லலைத் தயாராக்குகிறது — சில நொடிகளில் தொடங்கும்."
 }

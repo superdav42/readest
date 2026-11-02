@@ -2847,5 +2847,14 @@
   "Instant machine translation": "Takojšnji strojni prevod",
   "Hide details": "Skrij podrobnosti",
   "Show details": "Prikaži podrobnosti",
-  "Switch to the high-quality translation": "Preklopi na kakovosten prevod"
+  "Switch to the high-quality translation": "Preklopi na kakovosten prevod",
+  "Listen now · {{percent}}% narrated": "Poslušaj zdaj · {{percent}} % zvočno prebrane knjige",
+  "Ready to listen": "Pripravljeno za poslušanje",
+  "\"{{title}}\" is ready to listen to.": "»{{title}}« je pripravljena za poslušanje.",
+  "Your requests": "Vaše zahteve",
+  "Opening the narration…": "Odpiranje zvočne različice …",
+  "Narration starts in a moment (#{{position}} in line)…": "Zvočna različica se začne predvajati čez trenutek ({{position}}. v vrsti) …",
+  "Preparing narration… it starts in a few seconds": "Pripravljanje zvočne različice … predvajanje se začne čez nekaj sekund",
+  "Narration in progress: {{percent}}% of the book narrated": "Zvočna različica se predvaja: {{percent}} % knjige je že zvočno prebrane",
+  "Preparing narration — it starts in a few seconds.": "Pripravljanje zvočne različice — predvajanje se začne čez nekaj sekund."
 }

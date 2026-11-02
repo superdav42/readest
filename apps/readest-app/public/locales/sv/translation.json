@@ -2709,5 +2709,14 @@
   "Instant machine translation": "Direktöversättning med maskin",
   "Hide details": "Dölj information",
   "Show details": "Visa information",
-  "Switch to the high-quality translation": "Byt till den högkvalitativa översättningen"
+  "Switch to the high-quality translation": "Byt till den högkvalitativa översättningen",
+  "Listen now · {{percent}}% narrated": "Lyssna nu · {{percent}} % uppläst",
+  "Ready to listen": "Redo att lyssna",
+  "\"{{title}}\" is ready to listen to.": "”{{title}}” är redo att lyssnas på.",
+  "Your requests": "Dina förfrågningar",
+  "Opening the narration…": "Öppnar uppläsningen…",
+  "Narration starts in a moment (#{{position}} in line)…": "Uppläsningen startar strax (plats {{position}} i kön)…",
+  "Preparing narration… it starts in a few seconds": "Förbereder uppläsningen… den startar om några sekunder",
+  "Narration in progress: {{percent}}% of the book narrated": "Uppläsning pågår: {{percent}} % av boken uppläst",
+  "Preparing narration — it starts in a few seconds.": "Förbereder uppläsningen — den startar om några sekunder."
 }

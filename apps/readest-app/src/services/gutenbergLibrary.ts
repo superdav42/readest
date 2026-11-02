@@ -30,6 +30,8 @@ export interface LibraryJob {
   kind: 'translation' | 'readalong';
   status: 'blocked' | 'queued' | 'running' | 'done' | 'failed';
   position?: number;
+  /** Worker's status text, e.g. "narrating 42%". */
+  progress?: string | null;
   /** Server estimate: `measured` when the worker reports its own percentage. */
   estimate?: { percent?: number; eta_seconds?: number; measured?: boolean };
 }
@@ -42,6 +44,8 @@ export interface LibraryWork {
     kind: 'original' | 'translation' | 'readalong';
     lang: string;
     url: string;
+    /** Content hash: the library's book.hash once imported. */
+    hash?: string;
     updated: number;
   } | null;
   narration_available: boolean;
@@ -125,12 +129,25 @@ export type RequestResult =
   | (LibraryJob & { status: LibraryJob['status'] })
   | { status: 'available' | 'unsupported'; kind?: string };
 
-export const requestEdition = (workId: number, lang: string, kind: 'translation' | 'readalong') =>
+/** Ask for an edition; a narration request may say which text section to narrate first. */
+export const requestEdition = (
+  workId: number,
+  lang: string,
+  kind: 'translation' | 'readalong',
+  startSection?: number,
+) =>
   rpcBase()
     ? api<RequestResult>('/request_edition', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ p_work_id: workId, p_lang: lang, p_kind: kind }),
+        body: JSON.stringify({
+          p_work_id: workId,
+          p_lang: lang,
+          p_kind: kind,
+          ...(kind === 'readalong' && startSection != null
+            ? { p_start_section: startSection }
+            : {}),
+        }),
       })
     : api<RequestResult>('/requests', {
         method: 'POST',
@@ -277,15 +294,21 @@ export const fetchRelatedBooks = (workId: number, lang = getContentLanguage(), l
   );
 
 /** The library's copy of a Discover card (same work in the same language), if imported. */
+/**
+ * The library's copy of an edition: by exact content hash when given (narration editions of
+ * one work and language replace each other as they grow), else any copy of that work in
+ * that language.
+ */
 export const findLibraryEdition = (
   books: Book[],
-  card: Pick<DiscoverCard, 'work_id' | 'lang'>,
+  card: Pick<DiscoverCard, 'work_id' | 'lang'> & { hash?: string },
 ): Book | undefined =>
   books.find(
     (book) =>
       !book.deletedAt &&
-      getBookWorkId(book) === card.work_id &&
-      getBookLanguage(book) === card.lang,
+      (card.hash
+        ? book.hash === card.hash
+        : getBookWorkId(book) === card.work_id && getBookLanguage(book) === card.lang),
   );
 
 /** App route for a full catalog feed (`popular`, `readalong` or a genre shelf), or null. */
@@ -307,6 +330,8 @@ export interface RequestedBook {
   work_id: number;
   /** The language asked for. */
   lang: string;
+  /** What was asked for (older entries are translations). */
+  kind?: 'translation' | 'readalong';
   title: string;
   author?: string | null;
   cover: string;
@@ -342,12 +367,18 @@ export const requestTranslation = async (
 ): Promise<RequestResult> => {
   const result = await requestEdition(card.work_id, lang, 'translation');
   const others = getRequestedBooks().filter(
-    (b) => !(b.work_id === card.work_id && b.lang === lang),
+    (b) =>
+      !(
+        b.work_id === card.work_id &&
+        b.lang === lang &&
+        (b.kind ?? 'translation') === 'translation'
+      ),
   );
   saveRequestedBooks([
     {
       work_id: card.work_id,
       lang,
+      kind: 'translation',
       title: card.title,
       author: card.author,
       cover: card.cover,
@@ -359,8 +390,37 @@ export const requestTranslation = async (
   return result;
 };
 
-export const forgetRequestedBook = (workId: number, lang: string) =>
-  saveRequestedBooks(getRequestedBooks().filter((b) => !(b.work_id === workId && b.lang === lang)));
+export const forgetRequestedBook = (
+  workId: number,
+  lang: string,
+  kind: 'translation' | 'readalong' = 'translation',
+) =>
+  saveRequestedBooks(
+    getRequestedBooks().filter(
+      (b) => !(b.work_id === workId && b.lang === lang && (b.kind ?? 'translation') === kind),
+    ),
+  );
+
+/** Remember a narration request (made from the reader) so Discover can show its progress. */
+export const rememberNarrationRequest = (
+  book: Pick<RequestedBook, 'work_id' | 'lang' | 'title' | 'cover'> & { url: string },
+) => {
+  const others = getRequestedBooks().filter(
+    (b) => !(b.work_id === book.work_id && b.lang === book.lang && b.kind === 'readalong'),
+  );
+  saveRequestedBooks([
+    {
+      work_id: book.work_id,
+      lang: book.lang,
+      kind: 'readalong',
+      title: book.title,
+      cover: book.cover,
+      requested_at: Date.now(),
+      original: { url: book.url, lang: book.lang },
+    },
+    ...others,
+  ]);
+};
 
 // ---------- Books opened with instant (on-device) machine translation ----------
 

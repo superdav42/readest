@@ -2709,5 +2709,14 @@
   "Instant machine translation": "ترجمهٔ ماشینی فوری",
   "Hide details": "پنهان کردن جزئیات",
   "Show details": "نمایش جزئیات",
-  "Switch to the high-quality translation": "رفتن به ترجمهٔ باکیفیت"
+  "Switch to the high-quality translation": "رفتن به ترجمهٔ باکیفیت",
+  "Listen now · {{percent}}% narrated": "همین حالا گوش کنید · {{percent}}٪ روایت‌شده",
+  "Ready to listen": "آمادهٔ پخش",
+  "\"{{title}}\" is ready to listen to.": "«{{title}}» آمادهٔ پخش است.",
+  "Your requests": "درخواست‌های شما",
+  "Opening the narration…": "در حال باز کردن روایت…",
+  "Narration starts in a moment (#{{position}} in line)…": "روایت تا لحظاتی دیگر شروع می‌شود (شمارهٔ {{position}} در صف)…",
+  "Preparing narration… it starts in a few seconds": "در حال آماده‌سازی روایت… تا چند ثانیهٔ دیگر شروع می‌شود",
+  "Narration in progress: {{percent}}% of the book narrated": "روایت در حال پخش است: {{percent}}٪ از کتاب روایت شده",
+  "Preparing narration — it starts in a few seconds.": "در حال آماده‌سازی روایت — تا چند ثانیهٔ دیگر شروع می‌شود."
 }

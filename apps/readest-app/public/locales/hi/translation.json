@@ -2709,5 +2709,14 @@
   "Instant machine translation": "मशीन द्वारा तुरंत अनुवाद",
   "Hide details": "विवरण छिपाएँ",
   "Show details": "विवरण दिखाएँ",
-  "Switch to the high-quality translation": "उच्च-गुणवत्ता वाले अनुवाद पर जाएँ"
+  "Switch to the high-quality translation": "उच्च-गुणवत्ता वाले अनुवाद पर जाएँ",
+  "Listen now · {{percent}}% narrated": "अभी सुनें · {{percent}}% सुनाया गया",
+  "Ready to listen": "सुनने के लिए तैयार",
+  "\"{{title}}\" is ready to listen to.": "\"{{title}}\" सुनने के लिए तैयार है।",
+  "Your requests": "आपके अनुरोध",
+  "Opening the narration…": "नैरेशन खोला जा रहा है…",
+  "Narration starts in a moment (#{{position}} in line)…": "नैरेशन बस शुरू होने वाला है (पंक्ति में #{{position}})…",
+  "Preparing narration… it starts in a few seconds": "नैरेशन तैयार किया जा रहा है… यह कुछ ही सेकंड में शुरू होगा",
+  "Narration in progress: {{percent}}% of the book narrated": "नैरेशन जारी है: किताब का {{percent}}% सुनाया जा चुका है",
+  "Preparing narration — it starts in a few seconds.": "नैरेशन तैयार किया जा रहा है — यह कुछ ही सेकंड में शुरू होगा।"
 }

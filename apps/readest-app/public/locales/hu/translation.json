@@ -2709,5 +2709,14 @@
   "Instant machine translation": "Azonnali gépi fordítás",
   "Hide details": "Részletek elrejtése",
   "Show details": "Részletek megjelenítése",
-  "Switch to the high-quality translation": "Váltás a kiváló minőségű fordításra"
+  "Switch to the high-quality translation": "Váltás a kiváló minőségű fordításra",
+  "Listen now · {{percent}}% narrated": "Hallgatás most · {{percent}}% felolvasva",
+  "Ready to listen": "Hallgatható",
+  "\"{{title}}\" is ready to listen to.": "A(z) „{{title}}” hallgatható.",
+  "Your requests": "Kéréseid",
+  "Opening the narration…": "A felolvasás megnyitása…",
+  "Narration starts in a moment (#{{position}} in line)…": "A felolvasás hamarosan elkezdődik ({{position}}. a sorban)…",
+  "Preparing narration… it starts in a few seconds": "A felolvasás előkészítése… néhány másodperc múlva elkezdődik",
+  "Narration in progress: {{percent}}% of the book narrated": "A felolvasás folyamatban: a könyv {{percent}}%-a felolvasva",
+  "Preparing narration — it starts in a few seconds.": "A felolvasás előkészítése — néhány másodperc múlva elkezdődik."
 }

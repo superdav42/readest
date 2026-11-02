@@ -13,7 +13,11 @@ import { useLibraryStore } from '@/store/libraryStore';
 /** Web only: books larger than this open while they download; smaller ones download first. */
 const STREAM_MIN_BYTES = 3 * 1024 * 1024;
 
-type Edition = Pick<DiscoverCard, 'work_id' | 'lang' | 'url'> & { size?: number | null };
+type Edition = Pick<DiscoverCard, 'work_id' | 'lang' | 'url'> & {
+  size?: number | null;
+  /** Reuse only this exact file (a newer narration edition replaces an older one). */
+  hash?: string;
+};
 
 /** Download a catalog EPUB with progress, as a File the importer accepts. */
 const downloadEpub = async (url: string, onProgress: (fraction: number) => void): Promise<File> => {

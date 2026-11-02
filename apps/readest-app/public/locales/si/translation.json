@@ -2709,5 +2709,14 @@
   "Instant machine translation": "ක්ෂණික යන්ත්‍ර පරිවර්තනය",
   "Hide details": "විස්තර සඟවන්න",
   "Show details": "විස්තර පෙන්වන්න",
-  "Switch to the high-quality translation": "උසස් තත්ත්වයේ පරිවර්තනයට මාරු වන්න"
+  "Switch to the high-quality translation": "උසස් තත්ත්වයේ පරිවර්තනයට මාරු වන්න",
+  "Listen now · {{percent}}% narrated": "දැන් සවන් දෙන්න · {{percent}}%ක් ශ්‍රවණය කර ඇත",
+  "Ready to listen": "සවන් දීමට සූදානම්",
+  "\"{{title}}\" is ready to listen to.": "\"{{title}}\"ට සවන් දීමට සූදානම්.",
+  "Your requests": "ඔබේ ඉල්ලීම්",
+  "Opening the narration…": "ශ්‍රව්‍ය කථනය විවෘත කරමින්…",
+  "Narration starts in a moment (#{{position}} in line)…": "ශ්‍රව්‍ය කථනය මොහොතකින් ආරම්භ වේ (පෝලිමේ #{{position}} වැනි ස්ථානයේ)…",
+  "Preparing narration… it starts in a few seconds": "ශ්‍රව්‍ය කථනය සූදානම් කරමින්… තත්පර කිහිපයකින් ආරම්භ වේ",
+  "Narration in progress: {{percent}}% of the book narrated": "ශ්‍රව්‍ය කථනය සිදුවෙමින් පවතී: පොතෙන් {{percent}}%ක් ශ්‍රවණය කර ඇත",
+  "Preparing narration — it starts in a few seconds.": "ශ්‍රව්‍ය කථනය සූදානම් කරමින් — තත්පර කිහිපයකින් ආරම්භ වේ."
 }

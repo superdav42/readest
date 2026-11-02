@@ -2777,5 +2777,14 @@
   "Instant machine translation": "Traducción automática instantánea",
   "Hide details": "Ocultar detalles",
   "Show details": "Mostrar detalles",
-  "Switch to the high-quality translation": "Cambiar a la traducción de alta calidad"
+  "Switch to the high-quality translation": "Cambiar a la traducción de alta calidad",
+  "Listen now · {{percent}}% narrated": "Escuchar ahora · {{percent}}% narrado",
+  "Ready to listen": "Listo para escuchar",
+  "\"{{title}}\" is ready to listen to.": "Ya puedes escuchar «{{title}}».",
+  "Your requests": "Tus solicitudes",
+  "Opening the narration…": "Abriendo la narración…",
+  "Narration starts in a moment (#{{position}} in line)…": "La narración empezará en un momento (n.º {{position}} en la fila)…",
+  "Preparing narration… it starts in a few seconds": "Preparando la narración… empezará en unos segundos",
+  "Narration in progress: {{percent}}% of the book narrated": "Narración en curso: {{percent}}% del libro narrado",
+  "Preparing narration — it starts in a few seconds.": "Preparando la narración: empezará en unos segundos."
 }

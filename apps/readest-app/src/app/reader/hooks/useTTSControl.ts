@@ -1,4 +1,4 @@
-// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-01 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useEnv } from '@/context/EnvContext';
 import { useAuth } from '@/context/AuthContext';
@@ -24,7 +24,17 @@ import {
   NarrationUnavailableError,
   TTSLoopState,
 } from '@/services/tts/TTSController';
-import { parseWorkId, requestEdition, toContentLanguage } from '@/services/gutenbergLibrary';
+import {
+  getSharedBookUrl,
+  parseWorkId,
+  rememberNarrationRequest,
+  requestEdition,
+  toContentLanguage,
+} from '@/services/gutenbergLibrary';
+import {
+  NARRATION_REQUESTED_EVENT,
+  NARRATION_WANTED_KEY,
+} from '@/app/reader/components/NarrationBanner';
 import { scaleGapForRate } from '@/services/tts/gap';
 import { eventDispatcher } from '@/utils/event';
 import { genSSMLRaw, parseSSMLLang } from '@/utils/ssml';
@@ -1124,18 +1134,35 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
             (Array.isArray(metadata?.language) ? metadata.language[0] : metadata?.language) ||
               bookData.book.primaryLanguage,
           );
+          // Narrate from where the reader is; the reader switches to the narration as soon as
+          // its first part is published (NarrationBanner) and starts playing.
+          const startSection = getProgress(bookKey)?.index ?? undefined;
           const requested =
-            workId !== null && (await requestEdition(workId, lang, 'readalong').catch(() => null));
+            workId !== null &&
+            (await requestEdition(workId, lang, 'readalong', startSection).catch(() => null));
+          if (requested && requested.status !== 'unsupported' && workId !== null) {
+            sessionStorage.setItem(
+              NARRATION_WANTED_KEY,
+              JSON.stringify({ workId, lang, autoplay: true, since: Date.now() }),
+            );
+            const shared = getSharedBookUrl(bookData.book);
+            rememberNarrationRequest({
+              work_id: workId,
+              lang,
+              title: bookData.book.title,
+              cover: getSharedBookUrl(bookData.book, 'cover') ?? '',
+              url: shared ?? '',
+            });
+            eventDispatcher.dispatch(NARRATION_REQUESTED_EVENT, { bookKey });
+          }
           eventDispatcher.dispatch('toast', {
             message: requested
               ? requested.status === 'unsupported'
                 ? _('Narration is not available in this language yet.')
-                : _(
-                    'This book has no narration yet. It has been requested and will appear in your library when ready.',
-                  )
+                : _('Preparing narration — it starts in a few seconds.')
               : _('This book has no narration.'),
             type: 'info',
-            timeout: 6000,
+            timeout: 5000,
           });
           return;
         }

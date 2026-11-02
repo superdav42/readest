@@ -2709,5 +2709,14 @@
   "Instant machine translation": "Directe machinevertaling",
   "Hide details": "Details verbergen",
   "Show details": "Details weergeven",
-  "Switch to the high-quality translation": "Overschakelen naar de hoogwaardige vertaling"
+  "Switch to the high-quality translation": "Overschakelen naar de hoogwaardige vertaling",
+  "Listen now · {{percent}}% narrated": "Nu luisteren · {{percent}}% voorgelezen",
+  "Ready to listen": "Klaar om te luisteren",
+  "\"{{title}}\" is ready to listen to.": "Je kunt nu naar \"{{title}}\" luisteren.",
+  "Your requests": "Je verzoeken",
+  "Opening the narration…": "De voorlezing wordt geopend…",
+  "Narration starts in a moment (#{{position}} in line)…": "De voorlezing begint zo (#{{position}} in de wachtrij)…",
+  "Preparing narration… it starts in a few seconds": "De voorlezing wordt voorbereid… deze begint over enkele seconden",
+  "Narration in progress: {{percent}}% of the book narrated": "Voorlezing bezig: {{percent}}% van het boek voorgelezen",
+  "Preparing narration — it starts in a few seconds.": "De voorlezing wordt voorbereid — deze begint over enkele seconden."
 }

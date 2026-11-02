@@ -2847,5 +2847,14 @@
   "Instant machine translation": "Миттєвий машинний переклад",
   "Hide details": "Приховати деталі",
   "Show details": "Показати деталі",
-  "Switch to the high-quality translation": "Перейти до якісного перекладу"
+  "Switch to the high-quality translation": "Перейти до якісного перекладу",
+  "Listen now · {{percent}}% narrated": "Слухати зараз · озвучено {{percent}}%",
+  "Ready to listen": "Готово до прослуховування",
+  "\"{{title}}\" is ready to listen to.": "«{{title}}» можна слухати.",
+  "Your requests": "Ваші запити",
+  "Opening the narration…": "Відкриваємо озвучення…",
+  "Narration starts in a moment (#{{position}} in line)…": "Озвучення почнеться за мить (№{{position}} у черзі)…",
+  "Preparing narration… it starts in a few seconds": "Готуємо озвучення… воно почнеться за кілька секунд",
+  "Narration in progress: {{percent}}% of the book narrated": "Триває озвучення: озвучено {{percent}}% книжки",
+  "Preparing narration — it starts in a few seconds.": "Готуємо озвучення — воно почнеться за кілька секунд."
 }

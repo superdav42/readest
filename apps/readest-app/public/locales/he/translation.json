@@ -2777,5 +2777,14 @@
   "Instant machine translation": "תרגום מכונה מיידי",
   "Hide details": "הסתרת פרטים",
   "Show details": "הצגת פרטים",
-  "Switch to the high-quality translation": "מעבר לתרגום האיכותי"
+  "Switch to the high-quality translation": "מעבר לתרגום האיכותי",
+  "Listen now · {{percent}}% narrated": "האזינו עכשיו · {{percent}}% הוקראו",
+  "Ready to listen": "מוכן להאזנה",
+  "\"{{title}}\" is ready to listen to.": "\"{{title}}\" מוכן להאזנה.",
+  "Your requests": "הבקשות שלך",
+  "Opening the narration…": "פותחים את הקריינות…",
+  "Narration starts in a moment (#{{position}} in line)…": "הקריינות תתחיל בעוד רגע (מקום {{position}} בתור)…",
+  "Preparing narration… it starts in a few seconds": "מכינים את הקריינות… היא תתחיל בעוד כמה שניות",
+  "Narration in progress: {{percent}}% of the book narrated": "הקריינות מתבצעת: {{percent}}% מהספר הוקראו",
+  "Preparing narration — it starts in a few seconds.": "מכינים את הקריינות — היא תתחיל בעוד כמה שניות."
 }

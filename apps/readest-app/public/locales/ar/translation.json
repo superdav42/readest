@@ -2985,5 +2985,14 @@
   "Instant machine translation": "ترجمة آلية فورية",
   "Hide details": "إخفاء التفاصيل",
   "Show details": "عرض التفاصيل",
-  "Switch to the high-quality translation": "التبديل إلى الترجمة عالية الجودة"
+  "Switch to the high-quality translation": "التبديل إلى الترجمة عالية الجودة",
+  "Listen now · {{percent}}% narrated": "استمع الآن · تم سرد {{percent}}٪",
+  "Ready to listen": "جاهز للاستماع",
+  "\"{{title}}\" is ready to listen to.": "أصبح «{{title}}» جاهزًا للاستماع.",
+  "Your requests": "طلباتك",
+  "Opening the narration…": "جارٍ فتح السرد الصوتي…",
+  "Narration starts in a moment (#{{position}} in line)…": "سيبدأ السرد الصوتي بعد قليل (رقم {{position}} في قائمة الانتظار)…",
+  "Preparing narration… it starts in a few seconds": "جارٍ تحضير السرد الصوتي… سيبدأ بعد بضع ثوانٍ",
+  "Narration in progress: {{percent}}% of the book narrated": "السرد الصوتي جارٍ: تم سرد {{percent}}٪ من الكتاب",
+  "Preparing narration — it starts in a few seconds.": "جارٍ تحضير السرد الصوتي — سيبدأ بعد بضع ثوانٍ."
 }

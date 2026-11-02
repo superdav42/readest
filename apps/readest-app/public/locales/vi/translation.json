@@ -2640,5 +2640,14 @@
   "Instant machine translation": "Bản dịch máy tức thì",
   "Hide details": "Ẩn chi tiết",
   "Show details": "Hiện chi tiết",
-  "Switch to the high-quality translation": "Chuyển sang bản dịch chất lượng cao"
+  "Switch to the high-quality translation": "Chuyển sang bản dịch chất lượng cao",
+  "Listen now · {{percent}}% narrated": "Nghe ngay · đã đọc {{percent}}%",
+  "Ready to listen": "Sẵn sàng nghe",
+  "\"{{title}}\" is ready to listen to.": "Bạn có thể nghe \"{{title}}\" ngay.",
+  "Your requests": "Yêu cầu của bạn",
+  "Opening the narration…": "Đang mở bản đọc…",
+  "Narration starts in a moment (#{{position}} in line)…": "Bản đọc sẽ bắt đầu sau giây lát (#{{position}} trong hàng)…",
+  "Preparing narration… it starts in a few seconds": "Đang chuẩn bị bản đọc… sẽ bắt đầu sau vài giây",
+  "Narration in progress: {{percent}}% of the book narrated": "Đang đọc: đã đọc {{percent}}% cuốn sách",
+  "Preparing narration — it starts in a few seconds.": "Đang chuẩn bị bản đọc — sẽ bắt đầu sau vài giây."
 }

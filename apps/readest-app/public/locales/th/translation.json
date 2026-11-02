@@ -2640,5 +2640,14 @@
   "Instant machine translation": "คำแปลทันทีจากเครื่อง",
   "Hide details": "ซ่อนรายละเอียด",
   "Show details": "แสดงรายละเอียด",
-  "Switch to the high-quality translation": "เปลี่ยนไปใช้คำแปลคุณภาพสูง"
+  "Switch to the high-quality translation": "เปลี่ยนไปใช้คำแปลคุณภาพสูง",
+  "Listen now · {{percent}}% narrated": "ฟังเลย · บรรยายแล้ว {{percent}}%",
+  "Ready to listen": "พร้อมฟังแล้ว",
+  "\"{{title}}\" is ready to listen to.": "พร้อมฟังเรื่อง \"{{title}}\" แล้ว",
+  "Your requests": "คำขอของคุณ",
+  "Opening the narration…": "กำลังเปิดเสียงบรรยาย…",
+  "Narration starts in a moment (#{{position}} in line)…": "เสียงบรรยายจะเริ่มในอีกสักครู่ (ลำดับที่ {{position}} ในคิว)…",
+  "Preparing narration… it starts in a few seconds": "กำลังเตรียมเสียงบรรยาย… จะเริ่มในอีกไม่กี่วินาที",
+  "Narration in progress: {{percent}}% of the book narrated": "กำลังบรรยาย: บรรยายเนื้อหาไปแล้ว {{percent}}% ของหนังสือ",
+  "Preparing narration — it starts in a few seconds.": "กำลังเตรียมเสียงบรรยาย — จะเริ่มในอีกไม่กี่วินาที"
 }

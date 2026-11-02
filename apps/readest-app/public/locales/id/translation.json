@@ -2640,5 +2640,14 @@
   "Instant machine translation": "Terjemahan mesin instan",
   "Hide details": "Sembunyikan detail",
   "Show details": "Tampilkan detail",
-  "Switch to the high-quality translation": "Beralih ke terjemahan berkualitas tinggi"
+  "Switch to the high-quality translation": "Beralih ke terjemahan berkualitas tinggi",
+  "Listen now · {{percent}}% narrated": "Dengarkan sekarang · {{percent}}% telah dibacakan",
+  "Ready to listen": "Siap didengarkan",
+  "\"{{title}}\" is ready to listen to.": "\"{{title}}\" siap didengarkan.",
+  "Your requests": "Permintaan Anda",
+  "Opening the narration…": "Membuka narasi…",
+  "Narration starts in a moment (#{{position}} in line)…": "Narasi akan segera dimulai (urutan ke-{{position}} dalam antrean)…",
+  "Preparing narration… it starts in a few seconds": "Menyiapkan narasi… akan dimulai dalam beberapa detik",
+  "Narration in progress: {{percent}}% of the book narrated": "Narasi sedang berlangsung: {{percent}}% buku telah dibacakan",
+  "Preparing narration — it starts in a few seconds.": "Menyiapkan narasi — akan dimulai dalam beberapa detik."
 }

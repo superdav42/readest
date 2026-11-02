@@ -2709,5 +2709,14 @@
   "Instant machine translation": "Tezkor mashina tarjimasi",
   "Hide details": "Tafsilotlarni yashirish",
   "Show details": "Tafsilotlarni ko‘rsatish",
-  "Switch to the high-quality translation": "Yuqori sifatli tarjimaga o‘tish"
+  "Switch to the high-quality translation": "Yuqori sifatli tarjimaga o‘tish",
+  "Listen now · {{percent}}% narrated": "Hozir tinglang · {{percent}}% ovozli o‘qildi",
+  "Ready to listen": "Tinglashga tayyor",
+  "\"{{title}}\" is ready to listen to.": "\"{{title}}\"ni tinglashga tayyor.",
+  "Your requests": "So‘rovlaringiz",
+  "Opening the narration…": "Ovozli o‘qish ochilmoqda…",
+  "Narration starts in a moment (#{{position}} in line)…": "Ovozli o‘qish hozir boshlanadi (navbatda #{{position}})…",
+  "Preparing narration… it starts in a few seconds": "Ovozli o‘qish tayyorlanmoqda… u bir necha soniyadan keyin boshlanadi",
+  "Narration in progress: {{percent}}% of the book narrated": "Ovozli o‘qish davom etmoqda: kitobning {{percent}}% i o‘qildi",
+  "Preparing narration — it starts in a few seconds.": "Ovozli o‘qish tayyorlanmoqda — u bir necha soniyadan keyin boshlanadi."
 }

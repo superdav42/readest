@@ -2709,5 +2709,14 @@
   "Instant machine translation": "მყისიერი მანქანური თარგმანი",
   "Hide details": "დეტალების დამალვა",
   "Show details": "დეტალების ჩვენება",
-  "Switch to the high-quality translation": "მაღალი ხარისხის თარგმანზე გადასვლა"
+  "Switch to the high-quality translation": "მაღალი ხარისხის თარგმანზე გადასვლა",
+  "Listen now · {{percent}}% narrated": "მოუსმინეთ ახლავე · წაკითხულია {{percent}}%",
+  "Ready to listen": "მოსასმენად მზადაა",
+  "\"{{title}}\" is ready to listen to.": "„{{title}}“ მოსასმენად მზადაა.",
+  "Your requests": "თქვენი მოთხოვნები",
+  "Opening the narration…": "თხრობა იხსნება…",
+  "Narration starts in a moment (#{{position}} in line)…": "თხრობა მალე დაიწყება (რიგში #{{position}})…",
+  "Preparing narration… it starts in a few seconds": "თხრობა მზადდება… რამდენიმე წამში დაიწყება",
+  "Narration in progress: {{percent}}% of the book narrated": "თხრობა მიმდინარეობს: წიგნის {{percent}}% წაკითხულია",
+  "Preparing narration — it starts in a few seconds.": "თხრობა მზადდება — რამდენიმე წამში დაიწყება."
 }

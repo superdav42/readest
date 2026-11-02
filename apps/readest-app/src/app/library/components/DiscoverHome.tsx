@@ -23,6 +23,7 @@ import { navigateToReader } from '@/utils/nav';
 import { openCatalogBook } from '@/services/openCatalogBook';
 import { isInstantSupported } from '@/services/translators/providers/instant';
 import { formatEta } from '@/app/reader/components/InstantTranslationBanner';
+import { NARRATION_WANTED_KEY } from '@/app/reader/components/NarrationBanner';
 import {
   CONTENT_LANGUAGE_EVENT,
   REQUESTS_EVENT,
@@ -146,6 +147,13 @@ const Card: React.FC<{
 };
 
 /** A requested translation: its cover, title and where the high-quality translation stands. */
+const isRequestReady = (request: RequestedBook, work: LibraryWork | undefined) =>
+  request.kind === 'readalong'
+    ? work?.best?.kind === 'readalong'
+    : !!work?.best && work.best.lang === request.lang && work.best.kind !== 'original';
+
+const requestKey = (r: RequestedBook) => `${r.work_id}:${r.lang}:${r.kind ?? 'translation'}`;
+
 const RequestedCard: React.FC<{
   request: RequestedBook;
   work: LibraryWork | undefined;
@@ -153,11 +161,16 @@ const RequestedCard: React.FC<{
   onForget: (request: RequestedBook) => void;
 }> = ({ request, work, onOpen, onForget }) => {
   const _ = useTranslation();
-  const ready = !!work?.best && work.best.lang === request.lang && work.best.kind !== 'original';
-  const job = work?.jobs.find((j) => j.kind === 'translation');
+  const narration = request.kind === 'readalong';
+  const ready = isRequestReady(request, work);
+  const job = work?.jobs.find((j) => j.kind === (request.kind ?? 'translation'));
   const percent = job?.status === 'running' ? (job.estimate?.percent ?? 0) : 0;
   const label = ready
-    ? _('Ready')
+    ? narration && job
+      ? _('Listen now · {{percent}}% narrated', { percent })
+      : narration
+        ? _('Ready to listen')
+        : _('Ready')
     : job?.status === 'running'
       ? _('{{percent}}% · {{eta}}', { percent, eta: formatEta(job.estimate?.eta_seconds, _) })
       : job?.status === 'queued' || job?.status === 'blocked'
@@ -327,7 +340,7 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
       const results = await Promise.all(
         requested.slice(0, 12).map((r) =>
           fetchWork(r.work_id, r.lang)
-            .then((work) => [`${r.work_id}:${r.lang}`, work] as const)
+            .then((work) => [requestKey(r), work, r] as const)
             .catch(() => null),
         ),
       );
@@ -336,16 +349,18 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
         const next = { ...previous };
         for (const result of results) {
           if (!result) continue;
-          const [key, work] = result;
-          const wasReady =
-            previous[key]?.best?.lang === work.lang && previous[key]?.best?.kind !== 'original';
-          const isReady = work.best?.lang === work.lang && work.best?.kind !== 'original';
+          const [key, work, request] = result;
+          const wasReady = isRequestReady(request, previous[key]);
+          const isReady = isRequestReady(request, work);
           if (isReady && previous[key] && !wasReady) {
             eventDispatcher.dispatch('toast', {
-              message: _('The {{language}} translation of "{{title}}" is ready.', {
-                language: languageName(work.lang, work.lang),
-                title: work.title,
-              }),
+              message:
+                request.kind === 'readalong'
+                  ? _('"{{title}}" is ready to listen to.', { title: work.title })
+                  : _('The {{language}} translation of "{{title}}" is ready.', {
+                      language: languageName(work.lang, work.lang),
+                      title: work.title,
+                    }),
               type: 'success',
             });
           }
@@ -397,7 +412,7 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
   /** Download (or reuse) an edition and open it; optionally read it with instant translation. */
   const openEdition = useCallback(
     async (
-      edition: { work_id: number; lang: string; url: string; size?: number | null },
+      edition: { work_id: number; lang: string; url: string; size?: number | null; hash?: string },
       display: { title: string; cover: string },
       instantLang?: string,
     ) => {
@@ -448,8 +463,28 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
 
   const openRequested = useCallback(
     async (request: RequestedBook, work: LibraryWork | undefined) => {
-      const ready =
-        !!work?.best && work.best.lang === request.lang && work.best.kind !== 'original';
+      if (request.kind === 'readalong') {
+        // Open the narration as far as it goes (the reader moves on to larger editions and
+        // starts playing), or the book itself while the first part is being made.
+        sessionStorage.setItem(
+          NARRATION_WANTED_KEY,
+          JSON.stringify({
+            workId: request.work_id,
+            lang: request.lang,
+            autoplay: true,
+            since: Date.now(),
+          }),
+        );
+        const best = work?.best;
+        await openEdition(
+          best?.kind === 'readalong'
+            ? { work_id: request.work_id, lang: request.lang, url: best.url, hash: best.hash }
+            : { work_id: request.work_id, ...request.original },
+          request,
+        );
+        return;
+      }
+      const ready = isRequestReady(request, work);
       if (ready && work?.best) {
         await openEdition(
           { work_id: request.work_id, lang: request.lang, url: work.best.url },
@@ -507,14 +542,14 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
         )}
 
         {requested.length > 0 && (
-          <Row title={_('Your requested translations')}>
+          <Row title={_('Your requests')}>
             {requested.map((request) => (
               <RequestedCard
-                key={`${request.work_id}:${request.lang}`}
+                key={requestKey(request)}
                 request={request}
-                work={requestStatus[`${request.work_id}:${request.lang}`]}
+                work={requestStatus[requestKey(request)]}
                 onOpen={openRequested}
-                onForget={(r) => forgetRequestedBook(r.work_id, r.lang)}
+                onForget={(r) => forgetRequestedBook(r.work_id, r.lang, r.kind ?? 'translation')}
               />
             ))}
           </Row>
