@@ -164,7 +164,13 @@ const RequestedCard: React.FC<{
   const narration = request.kind === 'readalong';
   const ready = isRequestReady(request, work);
   const job = work?.jobs.find((j) => j.kind === (request.kind ?? 'translation'));
-  const percent = job?.status === 'running' ? (job.estimate?.percent ?? 0) : 0;
+  // Narration reports its own measured percentage, which stays on the job between turns.
+  const narratedPercent = Number(job?.progress?.match(/(\d+)%/)?.[1] ?? 0);
+  const percent = narration
+    ? narratedPercent
+    : job?.status === 'running'
+      ? (job.estimate?.percent ?? 0)
+      : 0;
   const label = ready
     ? narration && job
       ? _('Listen now · {{percent}}% narrated', { percent })

@@ -37,6 +37,8 @@ const LANDING_KEY = 'gai:narrationLanding';
 export const NARRATION_REQUESTED_EVENT = 'narration-requested';
 
 const FAST_POLL_MS = 1500;
+/** While a listener follows a growing narration: a part that runs out is followed quickly. */
+const LISTEN_POLL_MS = 4000;
 const SLOW_POLL_MS = 20_000;
 
 type Wanted = { workId: number; lang: string; autoplay: boolean; since: number };
@@ -81,7 +83,11 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   const narrated = hasMediaOverlays(bookData?.bookDoc);
   const isWanted = !!wanted && wanted.workId === workId && wanted.lang === lang;
   const job = work?.jobs.find((j) => j.kind === 'readalong');
+  // Shown while narration is wanted or still being made for this book.
   const active = workId !== null && (isWanted || (narrated && !!job));
+  // Followed (polled) whenever it may still grow: a narrated book is checked until the server
+  // reports no narration job, which also covers a reload into a newer edition.
+  const following = workId !== null && (isWanted || narrated);
 
   // Land at the sentence the listener was at, and keep playing, after a switch.
   useEffect(() => {
@@ -211,8 +217,9 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
 
   // Follow the narration while it is being made.
   useEffect(() => {
-    if (workId === null || !book || !active) return;
+    if (workId === null || !book || !following) return;
     let cancelled = false;
+    let timer: ReturnType<typeof setInterval> | undefined;
     const poll = async () => {
       const latest = await fetchWork(workId, lang).catch(() => null);
       if (cancelled || !latest) return;
@@ -221,12 +228,16 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       const newer = best?.kind === 'readalong' && !!best.hash && best.hash !== book.hash;
       const jobActive = latest.jobs.some((j) => j.kind === 'readalong');
       if (!jobActive && best?.kind === 'readalong' && !newer) {
+        // The whole book is narrated and open: nothing more to follow.
         forgetRequestedBook(workId, lang, 'readalong');
+        sessionStorage.removeItem(NARRATION_WANTED_KEY);
+        clearInterval(timer);
+        return;
       }
       if (!newer) return;
       if (isWanted && !narrated) {
-        // The first narration exists: open it here and start listening.
-        sessionStorage.removeItem(NARRATION_WANTED_KEY);
+        // The first narration exists: open it here and start listening. The wish stays in
+        // session storage, so each later part also carries on playing when one runs out.
         await switchTo(latest, wanted!.autoplay);
         return;
       }
@@ -241,13 +252,13 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       }
     };
     void poll();
-    const timer = setInterval(poll, narrated ? SLOW_POLL_MS : FAST_POLL_MS);
+    timer = setInterval(poll, !narrated ? FAST_POLL_MS : isWanted ? LISTEN_POLL_MS : SLOW_POLL_MS);
     return () => {
       cancelled = true;
       clearInterval(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [workId, lang, book?.hash, active, narrated, isWanted]);
+  }, [workId, lang, book?.hash, following, narrated, isWanted]);
 
   if (!active) return null;
   const percent = Number((job?.progress ?? '').match(/(\d+)%/)?.[1] ?? 0);
