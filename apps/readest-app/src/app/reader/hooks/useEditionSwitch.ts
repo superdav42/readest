@@ -5,7 +5,6 @@
 // exist yet. Chapter order is stable across editions (translations keep the
 // spine), so the section index carries the position across.
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useEnv } from '@/context/EnvContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useLibraryStore } from '@/store/libraryStore';
@@ -17,10 +16,8 @@ import {
   requestEdition,
   toContentLanguage,
 } from '@/services/gutenbergLibrary';
-import { isWebAppPlatform } from '@/services/environment';
-import { getRuntimeConfig } from '@/services/runtimeConfig';
 import { eventDispatcher } from '@/utils/event';
-import { navigateToReader } from '@/utils/nav';
+import { reloadReaderWith } from '@/utils/nav';
 
 const PENDING_KEY = 'gai:pendingSection';
 
@@ -28,7 +25,6 @@ type BookMetadata = { identifier?: string; language?: string | string[] };
 
 export const useEditionSwitch = (bookKey: string) => {
   const _ = useTranslation();
-  const router = useRouter();
   const { envConfig } = useEnv();
   const { getView, getProgress } = useReaderStore();
 
@@ -85,13 +81,8 @@ export const useEditionSwitch = (bookKey: string) => {
         await appService.saveLibraryBooks(library);
         const index = getProgress(bookKey)?.index ?? 0;
         sessionStorage.setItem(PENDING_KEY, JSON.stringify({ hash: book.hash, index }));
-        // The reader initialises its book from the URL once; a full navigation
-        // swaps the open book on web, the router does on native.
-        if (isWebAppPlatform())
-          window.location.assign(
-            getRuntimeConfig()?.serverless ? `/reader/?ids=${book.hash}` : `/reader/${book.hash}`,
-          );
-        else navigateToReader(router, [book.hash]);
+        // The reader initialises its book from the URL once: a full page load swaps it.
+        reloadReaderWith(book.hash);
       } catch (error) {
         console.error('Edition switch failed', error);
       }

@@ -129,6 +129,21 @@ export const navigateToReader = (
   }
 };
 
+/**
+ * Gutenberg AI fork: open the reader on a different book with a full page load. The reader
+ * initialises its books from the URL once, so a client-side route change keeps showing the
+ * old book (on Android too). Used when switching to another edition of the open book.
+ */
+export const reloadReaderWith = (bookHash: string) => {
+  const url =
+    isWebAppPlatform() && !isPWA() && !getRuntimeConfig()?.serverless
+      ? `/reader/${bookHash}`
+      : isWebAppPlatform()
+        ? `/reader/?ids=${bookHash}`
+        : `/reader?ids=${bookHash}`;
+  window.location.assign(url);
+};
+
 export const navigateToLogin = (router: ReturnType<typeof useRouter>) => {
   const pathname = window.location.pathname;
   const search = window.location.search;

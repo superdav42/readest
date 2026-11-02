@@ -12,16 +12,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { PiHeadphones } from 'react-icons/pi';
 import { useEnv } from '@/context/EnvContext';
-import { useAppRouter } from '@/hooks/useAppRouter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useBookDataStore } from '@/store/bookDataStore';
 import { useLibraryStore } from '@/store/libraryStore';
 import { useReaderStore } from '@/store/readerStore';
 import { markBookDeleted } from '@/utils/book';
 import { eventDispatcher } from '@/utils/event';
-import { navigateToReader } from '@/utils/nav';
-import { isWebAppPlatform } from '@/services/environment';
-import { getRuntimeConfig } from '@/services/runtimeConfig';
+import { reloadReaderWith } from '@/utils/nav';
 import { findNarratedSection, hasMediaOverlays } from '@/services/tts/mediaOverlay';
 import {
   fetchWork,
@@ -62,7 +59,6 @@ const readWanted = (): Wanted | null => {
 
 const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   const _ = useTranslation();
-  const router = useAppRouter();
   const { appService, envConfig } = useEnv();
   const bookData = useBookDataStore((s) => s.getBookData(bookKey));
   const getView = useReaderStore((s) => s.getView);
@@ -113,6 +109,12 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         await view.goTo(landing!.index);
       }
       if (landing!.autoplay) {
+        // Landed on a page without narration (a cover or contents page): show the first
+        // narrated section, where playback starts, so the text follows the voice.
+        if (!section?.mediaOverlay?.href) {
+          const narratedIndex = findNarratedSection(view.book, landing!.index, 1);
+          if (narratedIndex >= 0) await view.goTo(narratedIndex);
+        }
         setTimeout(() => eventDispatcher.dispatch('tts-speak', { bookKey }), 600);
       }
       if (landing!.replaces) void removeSuperseded(landing!.replaces);
@@ -196,13 +198,7 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
             replaces: narrated && book ? book.hash : undefined,
           } satisfies Landing),
         );
-        if (isWebAppPlatform())
-          window.location.assign(
-            getRuntimeConfig()?.serverless
-              ? `/reader/?ids=${opened.hash}`
-              : `/reader/${opened.hash}`,
-          );
-        else navigateToReader(router, [opened.hash]);
+        reloadReaderWith(opened.hash);
       } catch (error) {
         console.warn('Narration: could not open the newer edition', error);
         switchedTo.current = null;
@@ -210,7 +206,7 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         setSwitching(false);
       }
     },
-    [appService, workId, switching, currentPlace, router, narrated, book],
+    [appService, workId, switching, currentPlace, narrated, book],
   );
 
   // Follow the narration while it is being made.
