@@ -93,17 +93,42 @@ const Cover: React.FC<{
   children?: React.ReactNode;
 }> = ({ src, children }) => (
   <div className='bg-base-300 relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md'>
-    {/* eslint-disable-next-line @next/next/no-img-element */}
-    <img
+    <CoverImg
       src={src}
-      alt=''
       loading='lazy'
-      decoding='async'
       className='h-full w-full object-cover transition-transform group-hover:scale-[1.03]'
     />
     {children}
   </div>
 );
+
+/** The library's covers also exist as WebP (`covers/<hash>.webp`, usually much smaller). */
+const LIBRARY_COVER_JPEG = /\/covers\/[0-9a-f]{32}\.jpg$/;
+
+/**
+ * A library cover as WebP, falling back to the JPEG once if the WebP is missing (a cover
+ * published by a worker that doesn't make WebP yet). Other images are shown as given.
+ */
+const CoverImg: React.FC<{ src: string; className: string; loading?: 'lazy' | 'eager' }> = ({
+  src,
+  className,
+  loading,
+}) => {
+  const webp = LIBRARY_COVER_JPEG.test(src) ? src.replace(/\.jpg$/, '.webp') : src;
+  const [current, setCurrent] = useState(webp);
+  useEffect(() => setCurrent(webp), [webp]);
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={current}
+      alt=''
+      loading={loading}
+      decoding='async'
+      onError={() => current !== src && setCurrent(src)}
+      className={className}
+    />
+  );
+};
 
 const Card: React.FC<{
   card: DiscoverCard;
@@ -259,7 +284,7 @@ const RequestSheet: React.FC<{
       >
         <div className='flex gap-4'>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={card.cover} alt='' className='aspect-[2/3] w-20 rounded object-cover shadow' />
+          <CoverImg src={card.cover} className='aspect-[2/3] w-20 rounded object-cover shadow' />
           <div className='flex min-w-0 flex-col gap-1'>
             <p className='text-lg font-semibold leading-tight'>{card.title}</p>
             {card.author && <p className='text-base-content/60 text-sm'>{card.author}</p>}
@@ -655,10 +680,8 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
           role='status'
           aria-live='polite'
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <CoverImg
             src={opening.cover}
-            alt=''
             className='aspect-[2/3] w-40 rounded-md object-cover shadow-xl'
           />
           <p className='text-base-content text-center text-lg font-semibold'>{opening.title}</p>
