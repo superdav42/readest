@@ -1,4 +1,4 @@
-// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-02 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { FoliateView, ViewTTS } from '@/types/view';
 import { AppService } from '@/types/system';
 import type { PageInfo, PairedAudiobook } from '@/types/book';
@@ -387,6 +387,11 @@ export class TTSController extends EventTarget {
   #terminate(reason: 'ended' | 'error') {
     if (this.#terminated) return;
     this.#terminated = true;
+    // Gutenberg AI fork: say why a session ends (narration that stops at once is otherwise silent).
+    console.info(
+      `[TTS] session ended: ${reason}`,
+      new Error().stack?.split('\n').slice(2, 5).join(' <- '),
+    );
     stopAudioKeepAlive();
     queueMicrotask(() => {
       this.dispatchEvent(new CustomEvent('tts-session-ended', { detail: { reason } }));

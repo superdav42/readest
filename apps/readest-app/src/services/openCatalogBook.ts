@@ -17,6 +17,9 @@ type Edition = Pick<DiscoverCard, 'work_id' | 'lang' | 'url'> & {
   size?: number | null;
   /** Reuse only this exact file (a newer narration edition replaces an older one). */
   hash?: string;
+  /** Read-along editions are never streamed: narration reads whole audio files out of the
+   * EPUB, which over range requests took ~25 s to start; the CDN sends the file in seconds. */
+  kind?: DiscoverCard['kind'];
 };
 
 /** Download a catalog EPUB with progress, as a File the importer accepts. */
@@ -65,7 +68,7 @@ export const openCatalogBook = async (
     });
     book = await appService.importBook(path, library);
     await appService.deleteFile(path, 'None').catch(() => undefined);
-  } else if ((edition.size ?? 0) > STREAM_MIN_BYTES) {
+  } else if ((edition.size ?? 0) > STREAM_MIN_BYTES && edition.kind !== 'readalong') {
     // Web, large books: read while it downloads. Importing from the URL without copying
     // lets the reader fetch only the parts it shows (range requests); the whole book
     // then downloads in the background.

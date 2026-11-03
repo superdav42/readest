@@ -204,6 +204,7 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       try {
         const opened = await openCatalogBook(appService, {
           work_id: workId,
+          kind: 'readalong',
           lang: latest.best.lang,
           url: latest.best.url,
           hash,

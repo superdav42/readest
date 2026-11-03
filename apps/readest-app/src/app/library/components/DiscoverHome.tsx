@@ -419,7 +419,14 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
   /** Download (or reuse) an edition and open it; optionally read it with instant translation. */
   const openEdition = useCallback(
     async (
-      edition: { work_id: number; lang: string; url: string; size?: number | null; hash?: string },
+      edition: {
+        work_id: number;
+        lang: string;
+        url: string;
+        size?: number | null;
+        hash?: string;
+        kind?: DiscoverCard['kind'];
+      },
       display: { title: string; cover: string },
       instantLang?: string,
     ) => {
@@ -485,7 +492,13 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
         const best = work?.best;
         await openEdition(
           best?.kind === 'readalong'
-            ? { work_id: request.work_id, lang: request.lang, url: best.url, hash: best.hash }
+            ? {
+                work_id: request.work_id,
+                lang: request.lang,
+                url: best.url,
+                hash: best.hash,
+                kind: 'readalong' as const,
+              }
             : { work_id: request.work_id, ...request.original },
           request,
         );
