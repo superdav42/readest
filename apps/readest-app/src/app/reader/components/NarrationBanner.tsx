@@ -19,6 +19,7 @@ import { useReaderStore } from '@/store/readerStore';
 import { markBookDeleted } from '@/utils/book';
 import { eventDispatcher } from '@/utils/event';
 import { reloadReaderWith } from '@/utils/nav';
+import { isTauriAppPlatform } from '@/services/environment';
 import { findNarratedSection, hasMediaOverlays } from '@/services/tts/mediaOverlay';
 import {
   fetchWork,
@@ -68,8 +69,12 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   const [work, setWork] = useState<LibraryWork | null>(null);
   const [wanted, setWanted] = useState<Wanted | null>(readWanted);
   const [switching, setSwitching] = useState(false);
+  /** Autoplay was refused (a fresh page load in a browser): the listener has to tap. */
+  const [needsTap, setNeedsTap] = useState(false);
   /** Last playback state: 'playing', 'paused' (by the listener) or 'stopped' (ended). */
   const playback = useRef<string | null>(null);
+  /** Whether audio has actually played for this book on this page (autoplay can be refused). */
+  const played = useRef(false);
   const switchedTo = useRef<string | null>(null);
 
   const book = bookData?.book;
@@ -104,7 +109,11 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
     const timer = setInterval(async () => {
       const view = getView(bookKey);
       // Big illustrated books take a while to open on a phone: wait up to a minute.
-      if (!view?.book && ++tries < 240) return;
+      // Ready when the view is initialised and has a reading position (what speech needs; the
+      // same readiness Readest's own autoplay waits for in useBooksManager).
+      const state = useReaderStore.getState().viewStates[bookKey];
+      const ready = !!view?.book && !!state?.inited && !!getProgress(bookKey);
+      if (!ready && ++tries < 240) return;
       clearInterval(timer);
       sessionStorage.removeItem(LANDING_KEY);
       if (!view) return;
@@ -124,12 +133,13 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
           if (narratedIndex >= 0) await view.goTo(narratedIndex);
         }
         setTimeout(() => eventDispatcher.dispatch('tts-speak', { bookKey }), 600);
+        setTimeout(() => !played.current && setNeedsTap(true), 5000);
       }
       if (landing!.replaces) void removeSuperseded(landing!.replaces);
     }, 250);
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [book, bookKey, getView]);
+  }, [book, bookKey, getView, getProgress]);
 
   /**
    * A growing narration is published as a series of editions; each one opened is a new file
@@ -155,6 +165,10 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       const detail = event.detail as { bookKey?: string; state?: string };
       if (detail.bookKey && detail.bookKey !== bookKey) return;
       playback.current = detail.state ?? null;
+      if (detail.state === 'playing') {
+        played.current = true;
+        setNeedsTap(false);
+      }
     };
     eventDispatcher.on(NARRATION_REQUESTED_EVENT, onRequested);
     eventDispatcher.on('tts-playback-state', onPlayback);
@@ -206,7 +220,14 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
             replaces: narrated && book ? book.hash : undefined,
           } satisfies Landing),
         );
-        reloadReaderWith(opened.hash);
+        if (isTauriAppPlatform()) {
+          // Apps: a full load (the native narration player needs no user gesture).
+          reloadReaderWith(opened.hash);
+        } else {
+          // Web: swap the book in place. A new page load would lose the listener's tap, and
+          // browsers (Firefox by default) then refuse to start audio on their own.
+          eventDispatcher.dispatch('open-book-in-reader', { bookHash: opened.hash });
+        }
       } catch (error) {
         console.warn('Narration: could not open the newer edition', error);
         switchedTo.current = null;
@@ -250,6 +271,9 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       const view = getView(bookKey);
       const index = getProgress(bookKey)?.index ?? 0;
       const ranOut =
+        // Only after audio has really played here: a refused autoplay also ends as
+        // 'stopped', and switching then would reload in a loop without a sound.
+        played.current &&
         playback.current === 'stopped' &&
         !!view?.book &&
         narrated &&
@@ -278,6 +302,26 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       : job
         ? _('Narration in progress: {{percent}}% of the book narrated', { percent })
         : null;
+  if (needsTap && narrated) {
+    return (
+      <div
+        className='pointer-events-none absolute inset-x-0 z-20 flex justify-center px-3'
+        style={{ top: 'calc(env(safe-area-inset-top, 0px) + 3.25rem)' }}
+      >
+        <button
+          type='button'
+          onClick={() => {
+            setNeedsTap(false);
+            eventDispatcher.dispatch('tts-speak', { bookKey });
+          }}
+          className='bg-primary text-primary-content pointer-events-auto flex items-center gap-2 rounded-full px-4 py-2 text-sm shadow-md'
+        >
+          <PiHeadphones className='h-4 w-4' />
+          <span>{_('Ready to listen')}</span>
+        </button>
+      </div>
+    );
+  }
   if (!message) return null;
 
   return (
