@@ -1,3 +1,4 @@
+// Modified 2026-11-03 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { act, cleanup, renderHook } from '@testing-library/react';
 
@@ -5,6 +6,7 @@ const h = vi.hoisted(() => ({
   viewSettings: { scrolled: false } as Record<string, unknown>,
   bookData: {} as Record<string, unknown>,
   setHoveredBookKey: vi.fn(),
+  hoveredBookKey: null as string | null,
 }));
 
 vi.mock('@/utils/bridge', () => ({
@@ -23,10 +25,10 @@ vi.mock('@/store/readerStore', () => ({
     () => ({
       getViewSettings: () => h.viewSettings,
       getViewState: () => ({ inited: true }),
-      hoveredBookKey: null,
+      hoveredBookKey: h.hoveredBookKey,
       setHoveredBookKey: h.setHoveredBookKey,
     }),
-    { getState: () => ({ hoveredBookKey: null }) },
+    { getState: () => ({ hoveredBookKey: h.hoveredBookKey }) },
   ),
 }));
 vi.mock('@/store/bookDataStore', () => ({
@@ -93,6 +95,7 @@ beforeEach(() => {
   h.viewSettings = { scrolled: false };
   h.bookData = {};
   h.setHoveredBookKey.mockClear();
+  h.hoveredBookKey = null;
   postSpy = vi.spyOn(window, 'postMessage').mockImplementation(() => {});
 });
 
@@ -109,7 +112,18 @@ describe('usePagination tap on a page-filling image (#6424)', () => {
     expect(postSpy).not.toHaveBeenCalled();
   });
 
+  // Gutenberg AI fork: in reflowable books the first center tap shows the toolbar (most books
+  // open on a full-page cover); with the toolbar showing, the center opens the viewer.
+  test('with the toolbar hidden, a tap in the center zone shows the toolbar', async () => {
+    const { view, tap } = setup();
+    await tap(500);
+    expect(h.setHoveredBookKey).toHaveBeenCalledWith(BOOK_KEY);
+    expect(postSpy).not.toHaveBeenCalled();
+    expect(view.next).not.toHaveBeenCalled();
+  });
+
   test('a tap in the center zone opens the viewer instead of toggling the toolbar', async () => {
+    h.hoveredBookKey = BOOK_KEY;
     const { view, tap } = setup();
     await tap(500);
     expect(postSpy).toHaveBeenCalledWith(
@@ -131,6 +145,7 @@ describe('usePagination tap on a page-filling image (#6424)', () => {
 
   test('with tap-to-turn disabled, a tap anywhere opens the viewer', async () => {
     h.viewSettings = { scrolled: false, disableClick: true };
+    h.hoveredBookKey = BOOK_KEY;
     const { view, tap } = setup();
     await tap(900);
     expect(postSpy).toHaveBeenCalledWith(
@@ -145,6 +160,7 @@ describe('usePagination tap on a page-filling image (#6424)', () => {
 // are measured on that column; the spread's own center is the gutter (#6745).
 describe('usePagination tap on a page-filling image in a two-column spread (#6745)', () => {
   test.each([250, 750])('a tap at the center of the column at %i opens the viewer', async (x) => {
+    h.hoveredBookKey = BOOK_KEY;
     const { view, tap } = setup(2);
     await tap(x);
     expect(postSpy).toHaveBeenCalledWith(

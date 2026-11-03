@@ -1,3 +1,4 @@
+// Modified 2026-11-03 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useEffect, useRef, useState } from 'react';
 import { useEnv } from '@/context/EnvContext';
 import { FoliateView } from '@/types/view';
@@ -371,7 +372,16 @@ export const usePagination = (
                   !viewSettings.vertical &&
                   !!viewRef.current &&
                   isPageOverflowing(viewRef.current.renderer);
-                if (msg.data.media && msg.source === window && !titleHidden) {
+                // Gutenberg AI fork: most books open on a full-page cover, and a reader's first
+                // tap there is meant to show the controls, as on any page. So in reflowable books
+                // the center shows the controls first; with them showing, it opens the image
+                // viewer. Fixed-layout pages (comics) are all images and keep opening it at once.
+                if (
+                  msg.data.media &&
+                  msg.source === window &&
+                  !titleHidden &&
+                  (hoveredBookKey || bookData.isFixedLayout)
+                ) {
                   window.postMessage(
                     { type: 'iframe-open-media', bookKey, ...msg.data.media },
                     '*',

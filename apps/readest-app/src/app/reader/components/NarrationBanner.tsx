@@ -10,7 +10,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { PiHeadphones } from 'react-icons/pi';
+import { PiHeadphones, PiX } from 'react-icons/pi';
 import { useEnv } from '@/context/EnvContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useBookDataStore } from '@/store/bookDataStore';
@@ -78,6 +78,10 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   const [switching, setSwitching] = useState(false);
   /** Autoplay was refused (a fresh page load in a browser): the listener has to tap. */
   const [needsTap, setNeedsTap] = useState(false);
+  /** Audio is playing (or was, and is paused) in this reader: the listener follows progress. */
+  const [listening, setListening] = useState(false);
+  /** Closed with ×: hidden for this book until the page is reloaded. */
+  const [dismissed, setDismissed] = useState(false);
   /** Last playback state: 'playing', 'paused' (by the listener) or 'stopped' (ended). */
   const playback = useRef<string | null>(null);
   /** Whether audio has actually played for this book on this page (autoplay can be refused). */
@@ -97,7 +101,9 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   const isWanted = !!wanted && wanted.workId === workId && wanted.lang === lang;
   const job = work?.jobs.find((j) => j.kind === 'readalong');
   // Shown while narration is wanted or still being made for this book.
-  const active = workId !== null && (isWanted || (narrated && !!job));
+  // Shown to someone who asked for narration (waiting for it, or following it as it grows) or is
+  // listening; a reader who only opened a book whose narration is being made doesn't see it.
+  const active = workId !== null && !dismissed && (isWanted || (narrated && !!job && listening));
   // Followed (polled) whenever it may still grow: a narrated book is checked until the server
   // reports no narration job, which also covers a reload into a newer edition.
   const following = workId !== null && (isWanted || narrated);
@@ -185,6 +191,7 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       playback.current = detail.state ?? null;
       if (detail.state === 'playing') {
         played.current = true;
+        setListening(true);
         setNeedsTap(false);
         // Narration reached the chapter the listener was waiting at.
         const current = readWanted();
@@ -369,13 +376,26 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       <div
         role='status'
         aria-live='polite'
-        className='bg-base-200/95 text-base-content pointer-events-auto flex max-w-md items-center gap-2 rounded-full px-3 py-1.5 text-xs shadow-md'
+        className='bg-base-200/95 text-base-content pointer-events-auto flex max-w-[min(28rem,100%)] items-center gap-2 rounded-full py-1 pe-1 ps-3 text-xs shadow-md'
       >
-        <PiHeadphones className={narrated ? 'h-4 w-4' : 'h-4 w-4 animate-pulse'} />
-        <span>{message}</span>
+        <PiHeadphones
+          className={narrated ? 'h-4 w-4 shrink-0' : 'h-4 w-4 shrink-0 animate-pulse'}
+        />
+        <span className='min-w-0 truncate'>{message}</span>
         {narrated && job?.estimate?.eta_seconds ? (
-          <span className='opacity-60'>· {formatEta(job.estimate.eta_seconds, _)}</span>
+          <span className='hidden shrink-0 opacity-60 sm:inline'>
+            · {formatEta(job.estimate.eta_seconds, _)}
+          </span>
         ) : null}
+        <button
+          type='button'
+          onClick={() => setDismissed(true)}
+          aria-label={_('Close')}
+          title={_('Close')}
+          className='btn btn-ghost btn-circle btn-xs shrink-0'
+        >
+          <PiX className='h-3.5 w-3.5' />
+        </button>
       </div>
     </div>
   );
