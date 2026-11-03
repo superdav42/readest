@@ -137,6 +137,12 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         // either plays or asks again). Otherwise, on a page without narration (a cover or
         // contents page), show the first narrated section, where playback starts.
         const waiting = readWanted()?.atSection != null;
+        if (waiting && !section?.mediaOverlay?.href) {
+          // This edition doesn't narrate the listener's chapter yet (it may have narrated a
+          // later one first): keep waiting here rather than start further on.
+          if (landing!.replaces) void removeSuperseded(landing!.replaces);
+          return;
+        }
         if (!waiting && !section?.mediaOverlay?.href) {
           const narratedIndex = findNarratedSection(view.book, landing!.index, 1);
           if (narratedIndex >= 0) await view.goTo(narratedIndex);
