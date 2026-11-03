@@ -2856,5 +2856,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "Zvočna različica se začne predvajati čez trenutek ({{position}}. v vrsti) …",
   "Preparing narration… it starts in a few seconds": "Pripravljanje zvočne različice … predvajanje se začne čez nekaj sekund",
   "Narration in progress: {{percent}}% of the book narrated": "Zvočna različica se predvaja: {{percent}} % knjige je že zvočno prebrane",
-  "Preparing narration — it starts in a few seconds.": "Pripravljanje zvočne različice — predvajanje se začne čez nekaj sekund."
+  "Preparing narration — it starts in a few seconds.": "Pripravljanje zvočne različice — predvajanje se začne čez nekaj sekund.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Zvočna pripoved še ni dosegla tega poglavja. Kmalu se bo začela tukaj."
 }

@@ -43,6 +43,15 @@ export class NarrationUnavailableError extends Error {
     this.name = 'NarrationUnavailableError';
   }
 }
+
+// Gutenberg AI fork: the book has narration, but none from the reader's place onwards yet
+// (a narration still being made). The reader asks for it from there instead of failing silently.
+export class NarrationNotReachedError extends Error {
+  constructor() {
+    super('narration_not_reached');
+    this.name = 'NarrationNotReachedError';
+  }
+}
 import { startAudioKeepAlive, stopAudioKeepAlive } from './WebAudioPlayer';
 import { isSameLang, isValidLang } from '@/utils/lang';
 import { normalizeLyricText } from '@/utils/ttsLyrics';
@@ -850,11 +859,13 @@ export class TTSController extends EventTarget {
     );
   }
 
-  async initViewTTS(index?: number) {
+  /** False when there is nothing to speak from there (e.g. no narration from that section on). */
+  async initViewTTS(index?: number): Promise<boolean> {
     if (this.#ttsSectionIndex === -1) {
       const fromSectionIndex = (index || this.#getPrimaryContent()?.index) ?? 0;
-      await this.#initTTSForSection(fromSectionIndex);
+      return this.#initTTSForSection(fromSectionIndex);
     }
+    return true;
   }
 
   // Position the text iterator and, for a chapter-only audiobook mapping,

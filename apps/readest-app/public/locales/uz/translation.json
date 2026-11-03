@@ -2718,5 +2718,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "Ovozli o‘qish hozir boshlanadi (navbatda #{{position}})…",
   "Preparing narration… it starts in a few seconds": "Ovozli o‘qish tayyorlanmoqda… u bir necha soniyadan keyin boshlanadi",
   "Narration in progress: {{percent}}% of the book narrated": "Ovozli o‘qish davom etmoqda: kitobning {{percent}}% i o‘qildi",
-  "Preparing narration — it starts in a few seconds.": "Ovozli o‘qish tayyorlanmoqda — u bir necha soniyadan keyin boshlanadi."
+  "Preparing narration — it starts in a few seconds.": "Ovozli o‘qish tayyorlanmoqda — u bir necha soniyadan keyin boshlanadi.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Ovozli o‘qish hali bu bobga yetib kelmadi. Tez orada shu yerdan boshlanadi."
 }

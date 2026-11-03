@@ -2786,5 +2786,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "הקריינות תתחיל בעוד רגע (מקום {{position}} בתור)…",
   "Preparing narration… it starts in a few seconds": "מכינים את הקריינות… היא תתחיל בעוד כמה שניות",
   "Narration in progress: {{percent}}% of the book narrated": "הקריינות מתבצעת: {{percent}}% מהספר הוקראו",
-  "Preparing narration — it starts in a few seconds.": "מכינים את הקריינות — היא תתחיל בעוד כמה שניות."
+  "Preparing narration — it starts in a few seconds.": "מכינים את הקריינות — היא תתחיל בעוד כמה שניות.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "הקריינות עדיין לא הגיעה לפרק הזה. היא תתחיל כאן בקרוב."
 }

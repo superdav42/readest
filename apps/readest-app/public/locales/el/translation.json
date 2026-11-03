@@ -2718,5 +2718,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "Η αφήγηση ξεκινά σε λίγο (θέση #{{position}} στη σειρά)…",
   "Preparing narration… it starts in a few seconds": "Προετοιμασία αφήγησης… ξεκινά σε λίγα δευτερόλεπτα",
   "Narration in progress: {{percent}}% of the book narrated": "Η αφήγηση είναι σε εξέλιξη: έχει αφηγηθεί το {{percent}}% του βιβλίου",
-  "Preparing narration — it starts in a few seconds.": "Προετοιμασία αφήγησης — ξεκινά σε λίγα δευτερόλεπτα."
+  "Preparing narration — it starts in a few seconds.": "Προετοιμασία αφήγησης — ξεκινά σε λίγα δευτερόλεπτα.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Η αφήγηση δεν έχει φτάσει ακόμη σε αυτό το κεφάλαιο. Θα ξεκινήσει εδώ σύντομα."
 }

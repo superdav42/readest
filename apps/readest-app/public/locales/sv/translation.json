@@ -2718,5 +2718,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "Uppläsningen startar strax (plats {{position}} i kön)…",
   "Preparing narration… it starts in a few seconds": "Förbereder uppläsningen… den startar om några sekunder",
   "Narration in progress: {{percent}}% of the book narrated": "Uppläsning pågår: {{percent}} % av boken uppläst",
-  "Preparing narration — it starts in a few seconds.": "Förbereder uppläsningen — den startar om några sekunder."
+  "Preparing narration — it starts in a few seconds.": "Förbereder uppläsningen — den startar om några sekunder.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Uppläsningen har inte nått det här kapitlet ännu. Den börjar här snart."
 }

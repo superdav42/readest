@@ -2718,5 +2718,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "Das Vorlesen startet gleich (Warteschlangenposition {{position}}) …",
   "Preparing narration… it starts in a few seconds": "Vorlesen wird vorbereitet … Es startet in wenigen Sekunden.",
   "Narration in progress: {{percent}}% of the book narrated": "Wird vorgelesen: {{percent}} % des Buchs vorgelesen",
-  "Preparing narration — it starts in a few seconds.": "Vorlesen wird vorbereitet — es startet in wenigen Sekunden."
+  "Preparing narration — it starts in a few seconds.": "Vorlesen wird vorbereitet — es startet in wenigen Sekunden.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Die Erzählung hat dieses Kapitel noch nicht erreicht. Sie beginnt hier in Kürze."
 }

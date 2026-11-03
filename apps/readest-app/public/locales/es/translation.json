@@ -2786,5 +2786,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "La narración empezará en un momento (n.º {{position}} en la fila)…",
   "Preparing narration… it starts in a few seconds": "Preparando la narración… empezará en unos segundos",
   "Narration in progress: {{percent}}% of the book narrated": "Narración en curso: {{percent}}% del libro narrado",
-  "Preparing narration — it starts in a few seconds.": "Preparando la narración: empezará en unos segundos."
+  "Preparing narration — it starts in a few seconds.": "Preparando la narración: empezará en unos segundos.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "La narración aún no ha llegado a este capítulo. Empezará aquí dentro de poco."
 }

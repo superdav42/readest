@@ -2718,5 +2718,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "A felolvasás hamarosan elkezdődik ({{position}}. a sorban)…",
   "Preparing narration… it starts in a few seconds": "A felolvasás előkészítése… néhány másodperc múlva elkezdődik",
   "Narration in progress: {{percent}}% of the book narrated": "A felolvasás folyamatban: a könyv {{percent}}%-a felolvasva",
-  "Preparing narration — it starts in a few seconds.": "A felolvasás előkészítése — néhány másodperc múlva elkezdődik."
+  "Preparing narration — it starts in a few seconds.": "A felolvasás előkészítése — néhány másodperc múlva elkezdődik.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "A felolvasás még nem érte el ezt a fejezetet. Hamarosan itt folytatódik."
 }

@@ -21,6 +21,7 @@ import {
 import { DEFAULT_SENTENCE_GAP_SEC } from '@/services/tts/EdgeTTSClient';
 import {
   DEFAULT_PARAGRAPH_GAP_SEC,
+  NarrationNotReachedError,
   NarrationUnavailableError,
   TTSLoopState,
 } from '@/services/tts/TTSController';
@@ -1058,11 +1059,12 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
           void ttsController.shutdown();
           return;
         }
-        await ttsController.initViewTTS(ttsFromIndex);
+        const ttsReady = await ttsController.initViewTTS(ttsFromIndex);
         if (startGenerationRef.current !== generation) {
           void ttsController.shutdown();
           return;
         }
+        if (!ttsReady && ttsController.narrationActive) throw new NarrationNotReachedError();
         const speechSection = view.renderer.getContents().find((x) => x.index === ttsFromIndex);
         const primaryLang =
           bookData.book.format === 'PDF'
@@ -1124,8 +1126,11 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
         onRequestHidePanel?.();
         setShowIndicator(false);
         setIsPlaying(false);
-        if (error instanceof NarrationUnavailableError) {
-          // Recorded-narration-only mode: ask our pipeline to narrate this book.
+        const notReached = error instanceof NarrationNotReachedError;
+        if (notReached) await handleStop(bookKey);
+        if (error instanceof NarrationUnavailableError || notReached) {
+          // Recorded-narration-only mode: ask our pipeline to narrate this book (or, when its
+          // narration hasn't reached the reader's chapter yet, to narrate from there next).
           const metadata = view.book?.metadata as {
             identifier?: string;
             language?: string | string[];
@@ -1144,7 +1149,14 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
           if (requested && requested.status !== 'unsupported' && workId !== null) {
             sessionStorage.setItem(
               NARRATION_WANTED_KEY,
-              JSON.stringify({ workId, lang, autoplay: true, since: Date.now() }),
+              JSON.stringify({
+                workId,
+                lang,
+                autoplay: true,
+                since: Date.now(),
+                // Waiting for narration to reach this chapter: open the next edition here.
+                ...(notReached ? { atSection: startSection } : {}),
+              }),
             );
             const shared = getSharedBookUrl(bookData.book);
             rememberNarrationRequest({
@@ -1160,7 +1172,9 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
             message: requested
               ? requested.status === 'unsupported'
                 ? _('Narration is not available in this language yet.')
-                : _('Preparing narration — it starts in a few seconds.')
+                : notReached
+                  ? _("Narration hasn't reached this chapter yet. It will start here shortly.")
+                  : _('Preparing narration — it starts in a few seconds.')
               : _('This book has no narration.'),
             type: 'info',
             timeout: 5000,

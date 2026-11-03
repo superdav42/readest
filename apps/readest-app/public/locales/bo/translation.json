@@ -2649,5 +2649,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "སྒྲ་བཀླགས་སྐར་མ་འགའ་ཞིག་ནང་འགོ་ཚུགས། (ཕྲེང་ནང་གི་#{{position}})…",
   "Preparing narration… it starts in a few seconds": "སྒྲ་བཀླགས་གྲ་སྒྲིག་བཞིན་པ… སྐར་ཆ་འགའ་ཞིག་ནང་འགོ་ཚུགས།",
   "Narration in progress: {{percent}}% of the book narrated": "སྒྲ་བཀླགས་བཞིན་པ། དཔེ་དེབ་ཀྱི་བརྒྱ་ཆ་{{percent}} སྒྲ་བཀླགས་ཟིན།",
-  "Preparing narration — it starts in a few seconds.": "སྒྲ་བཀླགས་གྲ་སྒྲིག་བཞིན་པ། སྐར་ཆ་འགའ་ཞིག་ནང་འགོ་ཚུགས།"
+  "Preparing narration — it starts in a few seconds.": "སྒྲ་བཀླགས་གྲ་སྒྲིག་བཞིན་པ། སྐར་ཆ་འགའ་ཞིག་ནང་འགོ་ཚུགས།",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "སྒྲ་འདོན་ད་དུང་ལེའུ་འདིར་སླེབས་མེད། མི་འགྱངས་པར་འདི་ནས་འགོ་ཚུགས་རྒྱུ་རེད།"
 }

@@ -42,7 +42,14 @@ const FAST_POLL_MS = 1500;
 const LISTEN_POLL_MS = 4000;
 const SLOW_POLL_MS = 20_000;
 
-type Wanted = { workId: number; lang: string; autoplay: boolean; since: number };
+type Wanted = {
+  workId: number;
+  lang: string;
+  autoplay: boolean;
+  since: number;
+  /** Speak found no narration from this section on yet: waiting for it to be narrated. */
+  atSection?: number;
+};
 type Landing = {
   hash: string;
   index: number;
@@ -126,14 +133,19 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         await view.goTo(landing!.index);
       }
       if (landing!.autoplay) {
-        // Landed on a page without narration (a cover or contents page): show the first
-        // narrated section, where playback starts, so the text follows the voice.
-        if (!section?.mediaOverlay?.href) {
+        // Waiting at a chapter the narration hadn't reached: stay there (speaking it again
+        // either plays or asks again). Otherwise, on a page without narration (a cover or
+        // contents page), show the first narrated section, where playback starts.
+        const waiting = readWanted()?.atSection != null;
+        if (!waiting && !section?.mediaOverlay?.href) {
           const narratedIndex = findNarratedSection(view.book, landing!.index, 1);
           if (narratedIndex >= 0) await view.goTo(narratedIndex);
         }
         setTimeout(() => eventDispatcher.dispatch('tts-speak', { bookKey }), 600);
-        setTimeout(() => !played.current && setNeedsTap(true), 5000);
+        setTimeout(
+          () => !played.current && readWanted()?.atSection == null && setNeedsTap(true),
+          5000,
+        );
       }
       if (landing!.replaces) void removeSuperseded(landing!.replaces);
     }, 250);
@@ -168,6 +180,13 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       if (detail.state === 'playing') {
         played.current = true;
         setNeedsTap(false);
+        // Narration reached the chapter the listener was waiting at.
+        const current = readWanted();
+        if (current?.atSection != null) {
+          const { atSection: _reached, ...rest } = current;
+          sessionStorage.setItem(NARRATION_WANTED_KEY, JSON.stringify(rest));
+          setWanted(rest);
+        }
       }
     };
     eventDispatcher.on(NARRATION_REQUESTED_EVENT, onRequested);
@@ -259,9 +278,11 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         return;
       }
       if (!newer) return;
-      if (isWanted && !narrated) {
-        // The first narration exists: open it here and start listening. The wish stays in
-        // session storage, so each later part also carries on playing when one runs out.
+      const latestWish = readWanted();
+      if (isWanted && (!narrated || latestWish?.atSection != null)) {
+        // The first narration exists, or a newer one may reach the chapter the listener is
+        // waiting at: open it here and start listening. The wish stays in session storage,
+        // so each later part also carries on playing when one runs out.
         await switchTo(latest, wanted!.autoplay);
         return;
       }
@@ -282,7 +303,14 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       if (ranOut) await switchTo(latest, true);
     };
     void poll();
-    timer = setInterval(poll, !narrated ? FAST_POLL_MS : isWanted ? LISTEN_POLL_MS : SLOW_POLL_MS);
+    timer = setInterval(
+      poll,
+      !narrated || readWanted()?.atSection != null
+        ? FAST_POLL_MS
+        : isWanted
+          ? LISTEN_POLL_MS
+          : SLOW_POLL_MS,
+    );
     return () => {
       cancelled = true;
       clearInterval(timer);
@@ -300,9 +328,11 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
             position: job.position ?? 1,
           })
         : _('Preparing narration… it starts in a few seconds')
-      : job
-        ? _('Narration in progress: {{percent}}% of the book narrated', { percent })
-        : null;
+      : wanted?.atSection != null && isWanted
+        ? _("Narration hasn't reached this chapter yet. It will start here shortly.")
+        : job
+          ? _('Narration in progress: {{percent}}% of the book narrated', { percent })
+          : null;
   if (needsTap && narrated) {
     return (
       <div

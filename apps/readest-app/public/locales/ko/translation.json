@@ -2649,5 +2649,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "잠시 후 낭독이 시작됩니다 (대기 순번 {{position}})…",
   "Preparing narration… it starts in a few seconds": "낭독을 준비 중입니다… 몇 초 후 시작됩니다",
   "Narration in progress: {{percent}}% of the book narrated": "낭독 진행 중: 책의 {{percent}}% 낭독됨",
-  "Preparing narration — it starts in a few seconds.": "낭독을 준비 중입니다 — 몇 초 후 시작됩니다."
+  "Preparing narration — it starts in a few seconds.": "낭독을 준비 중입니다 — 몇 초 후 시작됩니다.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "낭독이 아직 이 장에 도달하지 않았습니다. 곧 여기서 시작됩니다."
 }

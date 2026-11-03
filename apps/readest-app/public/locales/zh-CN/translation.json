@@ -2649,5 +2649,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "朗读即将开始（排队第 {{position}} 位）…",
   "Preparing narration… it starts in a few seconds": "正在准备朗读…几秒后开始",
   "Narration in progress: {{percent}}% of the book narrated": "正在朗读：已朗读本书的 {{percent}}%",
-  "Preparing narration — it starts in a few seconds.": "正在准备朗读——几秒后开始。"
+  "Preparing narration — it starts in a few seconds.": "正在准备朗读——几秒后开始。",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "朗读内容尚未到达本章，请稍候，即将从这里开始。"
 }

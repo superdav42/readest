@@ -2856,5 +2856,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "Озвучення почнеться за мить (№{{position}} у черзі)…",
   "Preparing narration… it starts in a few seconds": "Готуємо озвучення… воно почнеться за кілька секунд",
   "Narration in progress: {{percent}}% of the book narrated": "Триває озвучення: озвучено {{percent}}% книжки",
-  "Preparing narration — it starts in a few seconds.": "Готуємо озвучення — воно почнеться за кілька секунд."
+  "Preparing narration — it starts in a few seconds.": "Готуємо озвучення — воно почнеться за кілька секунд.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Озвучення ще не дійшло до цього розділу. Незабаром воно почнеться звідси."
 }

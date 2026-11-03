@@ -2649,5 +2649,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "Bản đọc sẽ bắt đầu sau giây lát (#{{position}} trong hàng)…",
   "Preparing narration… it starts in a few seconds": "Đang chuẩn bị bản đọc… sẽ bắt đầu sau vài giây",
   "Narration in progress: {{percent}}% of the book narrated": "Đang đọc: đã đọc {{percent}}% cuốn sách",
-  "Preparing narration — it starts in a few seconds.": "Đang chuẩn bị bản đọc — sẽ bắt đầu sau vài giây."
+  "Preparing narration — it starts in a few seconds.": "Đang chuẩn bị bản đọc — sẽ bắt đầu sau vài giây.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Lời tường thuật vẫn chưa đến chương này. Sẽ sớm bắt đầu từ đây."
 }

@@ -2718,5 +2718,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "თხრობა მალე დაიწყება (რიგში #{{position}})…",
   "Preparing narration… it starts in a few seconds": "თხრობა მზადდება… რამდენიმე წამში დაიწყება",
   "Narration in progress: {{percent}}% of the book narrated": "თხრობა მიმდინარეობს: წიგნის {{percent}}% წაკითხულია",
-  "Preparing narration — it starts in a few seconds.": "თხრობა მზადდება — რამდენიმე წამში დაიწყება."
+  "Preparing narration — it starts in a few seconds.": "თხრობა მზადდება — რამდენიმე წამში დაიწყება.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "ხმოვან თხრობას ამ თავამდე ჯერ არ მიუღწევია. ის მალე აქ დაიწყება."
 }

@@ -2994,5 +2994,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "سيبدأ السرد الصوتي بعد قليل (رقم {{position}} في قائمة الانتظار)…",
   "Preparing narration… it starts in a few seconds": "جارٍ تحضير السرد الصوتي… سيبدأ بعد بضع ثوانٍ",
   "Narration in progress: {{percent}}% of the book narrated": "السرد الصوتي جارٍ: تم سرد {{percent}}٪ من الكتاب",
-  "Preparing narration — it starts in a few seconds.": "جارٍ تحضير السرد الصوتي — سيبدأ بعد بضع ثوانٍ."
+  "Preparing narration — it starts in a few seconds.": "جارٍ تحضير السرد الصوتي — سيبدأ بعد بضع ثوانٍ.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "لم يصل السرد الصوتي إلى هذا الفصل بعد. سيبدأ من هنا قريبًا."
 }

@@ -2649,5 +2649,6 @@
   "Narration starts in a moment (#{{position}} in line)…": "Narasi akan segera dimulai (urutan ke-{{position}} dalam antrean)…",
   "Preparing narration… it starts in a few seconds": "Menyiapkan narasi… akan dimulai dalam beberapa detik",
   "Narration in progress: {{percent}}% of the book narrated": "Narasi sedang berlangsung: {{percent}}% buku telah dibacakan",
-  "Preparing narration — it starts in a few seconds.": "Menyiapkan narasi — akan dimulai dalam beberapa detik."
+  "Preparing narration — it starts in a few seconds.": "Menyiapkan narasi — akan dimulai dalam beberapa detik.",
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Narasi belum mencapai bab ini. Narasi akan segera dimulai dari sini."
 }
