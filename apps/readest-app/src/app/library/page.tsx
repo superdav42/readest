@@ -1,6 +1,7 @@
 // Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 'use client';
 
+import dynamic from 'next/dynamic';
 import BookshelvesDialog from './components/BookshelvesDialog';
 
 import clsx from 'clsx';
@@ -137,7 +138,11 @@ import useShortcuts from '@/hooks/useShortcuts';
 import { useReplicaPull } from '@/hooks/useReplicaPull';
 import { useCustomFonts } from '@/hooks/useCustomFonts';
 import DropIndicator from '@/components/DropIndicator';
-import SettingsDialog from '@/components/settings/SettingsDialog';
+// Loaded when opened: the settings dialog (and the AI, sync and dictionary panels it brings)
+// was a large part of this page's first load.
+const SettingsDialog = dynamic(() => import('@/components/settings/SettingsDialog'), {
+  ssr: false,
+});
 import ModalPortal from '@/components/ModalPortal';
 import TransferQueuePanel from './components/TransferQueuePanel';
 

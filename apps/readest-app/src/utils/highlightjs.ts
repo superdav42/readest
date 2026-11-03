@@ -1,5 +1,11 @@
+// Modified 2026-11-03 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { ViewSettings } from '@/types/book';
-import hljs from 'highlight.js/lib/common';
+
+// highlight.js (with its common languages) is loaded only when a page with code blocks is
+// highlighted: importing it statically put it in the library page's first load.
+type Hljs = typeof import('highlight.js/lib/common').default;
+let hljsLoading: Promise<Hljs> | null = null;
+const loadHljs = () => (hljsLoading ??= import('highlight.js/lib/common').then((m) => m.default));
 
 export const CODE_LANGUAGES = [
   'auto-detect',
@@ -71,21 +77,24 @@ export const manageSyntaxHighlighting = (doc: Document, viewSettings: ViewSettin
 
   // Find all <pre> elements in available content
   const codeBlocks = doc.querySelectorAll('pre');
+  if (!codeBlocks.length) return;
 
-  // https://github.com/highlightjs/highlight.js/wiki/security
-  // I believe this is valid in this use case to ignore this warning.
-  hljs.configure({ ignoreUnescapedHTML: true });
+  void loadHljs().then((hljs) => {
+    // https://github.com/highlightjs/highlight.js/wiki/security
+    // I believe this is valid in this use case to ignore this warning.
+    hljs.configure({ ignoreUnescapedHTML: true });
 
-  codeBlocks.forEach((block) => {
-    // remove any previously applied classes by hljs
-    block.textContent = block.textContent || '';
-    block.className = block.className.replace(/language-\S+/g, '');
-    block.classList.remove('hljs');
-    block.removeAttribute('data-highlighted');
-    if (codeLanguage && codeLanguage !== 'auto-detect') {
-      block.classList.add(`language-${codeLanguage}`);
-    }
-    hljs.highlightElement(block as HTMLElement);
+    codeBlocks.forEach((block) => {
+      // remove any previously applied classes by hljs
+      block.textContent = block.textContent || '';
+      block.className = block.className.replace(/language-\S+/g, '');
+      block.classList.remove('hljs');
+      block.removeAttribute('data-highlighted');
+      if (codeLanguage && codeLanguage !== 'auto-detect') {
+        block.classList.add(`language-${codeLanguage}`);
+      }
+      hljs.highlightElement(block as HTMLElement);
+    });
   });
 };
 

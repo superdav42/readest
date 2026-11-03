@@ -41,7 +41,16 @@ export const useDemoBooks = () => {
 
     const demoBooksFetchedFlag = localStorage.getItem('demoBooksFetched');
     if (isWebAppPlatform() && !demoBooksFetchedFlag) {
-      fetchDemoBooks();
+      // Starter books are fetched over the network: start after the page has loaded and the
+      // browser is idle, so they don't compete with the first screen.
+      const start = () => {
+        const idle = (window as Window & { requestIdleCallback?: (cb: () => void) => number })
+          .requestIdleCallback;
+        if (idle) idle(() => void fetchDemoBooks());
+        else setTimeout(() => void fetchDemoBooks(), 2000);
+      };
+      if (document.readyState === 'complete') start();
+      else window.addEventListener('load', start, { once: true });
       localStorage.setItem('demoBooksFetched', 'true');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

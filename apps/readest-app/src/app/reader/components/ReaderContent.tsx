@@ -1,5 +1,7 @@
+// Modified 2026-11-03 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 'use client';
 
+import dynamic from 'next/dynamic';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -50,7 +52,11 @@ import SideBar from './sidebar/SideBar';
 import Notebook from './notebook/Notebook';
 import LocalSendManager from '@/components/localsend/LocalSendManager';
 import BooksGrid from './BooksGrid';
-import SettingsDialog from '@/components/settings/SettingsDialog';
+// Loaded when opened: the settings dialog (and the AI, sync and dictionary panels it brings)
+// was a large part of this page's first load.
+const SettingsDialog = dynamic(() => import('@/components/settings/SettingsDialog'), {
+  ssr: false,
+});
 import AudiobookPairingDialog from './audiobook/AudiobookPairingDialog';
 import HardcoverLinkDialog from './hardcover/HardcoverLinkDialog';
 import PageboundLinkDialog from './pagebound/PageboundLinkDialog';

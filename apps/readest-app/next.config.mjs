@@ -18,6 +18,8 @@ if (isDev) {
 // hosting next to Supabase; /api routes run in the browser (src/libs/serverlessApi.ts).
 const staticWebExport =
   appPlatform === 'web' && !isDev && process.env['BUILD_STATIC_EXPORT'] === 'true';
+// Gutenberg AI fork: replace posthog-js with a no-op stand-in (self-hosted libraries).
+const disablePostHog = process.env['DISABLE_POSTHOG'] === 'true';
 const exportOutput = (appPlatform !== 'web' && !isDev) || staticWebExport;
 // Opt-in standalone output, set only by the Docker production build
 // (Dockerfile). Every other path keeps the original behavior: Tauri `export`,
@@ -91,6 +93,13 @@ const nextConfig = {
       // can't find fflate (only installed in this app's node_modules).
       fflate: path.resolve(__dirname, 'node_modules/fflate'),
       ...(appPlatform !== 'web' ? { '@readest/turso-database-wasm/webpack': false } : {}),
+      // Gutenberg AI fork: self-hosted builds send no analytics (DISABLE_POSTHOG=true).
+      ...(disablePostHog
+        ? {
+            'posthog-js/react$': path.resolve(__dirname, 'src/utils/posthog-stub.tsx'),
+            'posthog-js$': path.resolve(__dirname, 'src/utils/posthog-stub.tsx'),
+          }
+        : {}),
       // music-metadata only parses user-picked files in the browser; its
       // file-type dependency leaves a webpackIgnore'd `import('strtok3')` in
       // the server bundle that the OpenNext esbuild pass cannot resolve.
@@ -115,6 +124,14 @@ const nextConfig = {
       // ship it inside the app.
       ...(appPlatform !== 'web'
         ? { '@readest/turso-database-wasm/webpack': './src/utils/stub.ts' }
+        : {}),
+      // Gutenberg AI fork: self-hosted builds send no analytics and skip the SDK
+      // (about 180 KB of every page's first load); see src/utils/posthog-stub.tsx.
+      ...(disablePostHog
+        ? {
+            'posthog-js/react': './src/utils/posthog-stub.tsx',
+            'posthog-js': './src/utils/posthog-stub.tsx',
+          }
         : {}),
     },
   },
