@@ -1,5 +1,5 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { Readability } from '@mozilla/readability';
-import { detectLanguage } from '@/utils/lang';
 // `mammoth` (DOCX → HTML) and `TxtToEpubConverter` are dynamically imported
 // inside their respective `case` bodies in `convertToEpub`. They're heavy
 // (≈500 KB combined) and only needed for the docx/txt input kinds — the
@@ -128,6 +128,8 @@ async function htmlToBook(
   if (!text) {
     throw new ConversionError('Document has no readable content', 'empty_input');
   }
+  // Loaded on first use: franc-min is large and the library page should not carry it.
+  const { detectLanguage } = await import('@/utils/langDetect');
   const language = detectLanguage(text.slice(0, 2048)) || 'en';
   const chapter: EpubChapter = { title, html };
   const toc: TocEntry[] | undefined = headings.length > 0 ? headings : undefined;

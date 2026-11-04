@@ -1,3 +1,4 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 
@@ -51,7 +52,7 @@ const mockManager = vi.hoisted(() => {
   }
   return new MockSessionManager();
 });
-vi.mock('@/services/tts', () => ({
+vi.mock('@/services/tts/TTSSessionManager', () => ({
   ttsSessionManager: mockManager,
 }));
 

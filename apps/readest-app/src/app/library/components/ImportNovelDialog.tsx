@@ -1,3 +1,4 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -5,7 +6,6 @@ import { MdMenuBook } from 'react-icons/md';
 import Dialog from '@/components/Dialog';
 import { useTranslation } from '@/hooks/useTranslation';
 import { eventDispatcher } from '@/utils/event';
-import { downloadNovel, fetchNovelToc, isNovelImportCancelled } from '@/services/novel/novelImport';
 import { openWebBrowser } from '@/services/webBrowser/webBrowser';
 import { getWebBrowserOptions } from '@/services/webBrowser/webBrowserOptions';
 import type { WebBrowserPage } from '@/services/webBrowser/webBrowser';
@@ -19,6 +19,15 @@ interface ImportNovelDialogProps {
 }
 
 type Phase = 'url' | 'preview' | 'downloading';
+
+// The importer (Readability, the EPUB builder) loads when an import starts, not with the
+// library page.
+const loadNovelImport = () => import('@/services/novel/novelImport');
+
+// Same check as `isNovelImportCancelled` in the importer, kept here so the catch blocks
+// below do not depend on that module having loaded.
+const isNovelImportCancelled = (err: unknown): boolean =>
+  err instanceof DOMException && err.name === 'AbortError';
 
 /**
  * Modal for the Library import-menu's "From Web Novel" entry. Three phases:
@@ -122,6 +131,7 @@ const ImportNovelDialog: React.FC<ImportNovelDialogProps> = ({ isOpen, onClose, 
     setBusy(true);
     setError(null);
     try {
+      const { fetchNovelToc } = await loadNovelImport();
       const parsed = await fetchNovelToc(target, {
         signal: controller.signal,
         ...(page ? { page: { html: page.html, finalUrl: page.url } } : {}),
@@ -186,6 +196,7 @@ const ImportNovelDialog: React.FC<ImportNovelDialogProps> = ({ isOpen, onClose, 
     setError(null);
     setProgress({ done: 0, total: selectedChapters.length });
     try {
+      const { downloadNovel } = await loadNovelImport();
       const book = await downloadNovel(selectedToc, sourceUrl, {
         signal: controller.signal,
         identityKey,

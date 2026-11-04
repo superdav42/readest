@@ -1,4 +1,4 @@
-import { Readability } from '@mozilla/readability';
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { sanitizeHtml, sanitizeForParsing } from '@/utils/sanitize';
 import type { FileSystem } from '@/types/system';
 import type { RssFeedItem } from '@/types/rss';
@@ -21,7 +21,9 @@ export function resolveArticleHtml(item: RssFeedItem): { html: string } | { need
   return { needsPage: true };
 }
 
-export function extractArticle(pageHtml: string, url: string): string {
+export async function extractArticle(pageHtml: string, url: string): Promise<string> {
+  // Loaded on first use: Readability is large and the library page imports this module.
+  const { Readability } = await import('@mozilla/readability');
   const doc = new DOMParser().parseFromString(sanitizeForParsing(pageHtml), 'text/html');
   if (doc.head && !doc.querySelector('base')) {
     const base = doc.createElement('base');

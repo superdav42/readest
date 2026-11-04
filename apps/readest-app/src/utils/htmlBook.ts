@@ -1,6 +1,7 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import type { BookDoc, BookMetadata, SectionItem } from '@/libs/document';
 import { CFI } from '@/libs/document';
-import { detectLanguage } from './lang';
+import { detectLanguage } from './langDetect';
 import { buildChapterFootnotes, extractFootnoteDefs } from './mdFootnotes';
 
 // Turn sanitized HTML into an in-memory foliate-js book at runtime (no EPUB

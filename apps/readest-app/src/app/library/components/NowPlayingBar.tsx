@@ -1,8 +1,11 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { MdClose, MdPauseCircleFilled, MdPlayCircleFilled } from 'react-icons/md';
-import { ttsSessionManager, TTSSession } from '@/services/tts';
+// Not the `@/services/tts` barrel: it re-exports every TTS engine, which the library page
+// does not need just to show a playing session.
+import { ttsSessionManager, TTSSession } from '@/services/tts/TTSSessionManager';
 import { asAudiobookController } from '@/services/audiobook/AudiobookController';
 import { useResponsiveSize } from '@/hooks/useResponsiveSize';
 import { useBookDataStore } from '@/store/bookDataStore';

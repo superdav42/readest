@@ -31,7 +31,7 @@ import type { BookNav } from '@/services/nav';
 import { partialMD5, md5 } from '@/utils/md5';
 import { getBaseFilename, getFilename, stripDuplicateMarker } from '@/utils/path';
 import { BookDoc, DocumentLoader } from '@/libs/document';
-import { hasMediaOverlays } from '@/services/tts/mediaOverlay';
+import { hasMediaOverlays } from '@/services/tts/mediaOverlay/narratedSections';
 import { getAudiobookDirectory, isAudiobookFilePath } from '@/services/audiobook/storage';
 import { isAudiobook } from '@/utils/audiobook';
 import { tryNativeParseEpub } from '@/utils/tauriEpubBridge';
@@ -42,7 +42,6 @@ import { DEFAULT_BOOK_SEARCH_CONFIG, DEFAULT_FIXED_LAYOUT_VIEW_SETTINGS } from '
 import { isContentURI, isValidURL, makeSafeFilename } from '@/utils/misc';
 import { deserializeConfig, serializeConfig, serializeRawConfig } from '@/utils/serializer';
 import { ClosableFile } from '@/utils/file';
-import { TxtToEpubConverter } from '@/utils/txt';
 import { svg2png } from '@/utils/svg';
 import { normalizeMetadataIsbn } from '@/utils/isbn';
 import { BookFileNotFoundError } from './errors';
@@ -592,6 +591,8 @@ export async function importBook(
           openedSource = maybeClosable;
         }
         if (/\.txt$/i.test(filename)) {
+          // Loaded on first use: the TXT converter is large and most imports are not TXT.
+          const { TxtToEpubConverter } = await import('@/utils/txt');
           const txt2epub = new TxtToEpubConverter();
           try {
             ({ file: fileobj } = await txt2epub.convert({ file: fileobj }));

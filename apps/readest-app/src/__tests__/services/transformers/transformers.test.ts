@@ -1,3 +1,4 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { describe, test, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { ViewSettings } from '@/types/book';
 import type { TransformContext } from '@/services/transformers/types';
@@ -15,10 +16,13 @@ vi.mock('@/utils/simplecc', () => ({
   runSimpleCC: vi.fn((text: string, _variant: string) => text),
 }));
 
+vi.mock('@/utils/langDetect', () => ({
+  detectLanguage: vi.fn(() => 'en'),
+}));
+
 vi.mock('@/utils/lang', async (importOriginal) => {
   const original = await importOriginal<typeof import('@/utils/lang')>();
   return {
-    detectLanguage: vi.fn(() => 'en'),
     getLanguageInfo: vi.fn(() => ({ direction: 'ltr' })),
     isValidLang: vi.fn(() => true),
     normalizedLangCode: (lang?: string | null) => (lang ? lang.split('-')[0]!.toLowerCase() : ''),
@@ -812,7 +816,9 @@ describe('languageTransformer', () => {
   beforeEach(async () => {
     const langMod = await import('@/utils/lang');
     isValidLang = langMod.isValidLang as ReturnType<typeof vi.fn>;
-    detectLanguage = langMod.detectLanguage as ReturnType<typeof vi.fn>;
+    detectLanguage = (await import('@/utils/langDetect')).detectLanguage as ReturnType<
+      typeof vi.fn
+    >;
     isValidLang.mockClear();
     detectLanguage.mockClear();
     isValidLang.mockReturnValue(true);

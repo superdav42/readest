@@ -1,3 +1,4 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { describe, expect, it } from 'vitest';
 import { resolveArticleHtml, extractArticle } from '@/services/rss/feedArticleContent';
 import type { RssFeedItem } from '@/types/rss';
@@ -21,15 +22,15 @@ describe('resolveArticleHtml', () => {
 });
 
 describe('extractArticle', () => {
-  it('extracts readable content and strips scripts', () => {
+  it('extracts readable content and strips scripts', async () => {
     const page = `<html><body><article><h1>Hi</h1>${'<p>Readable paragraph here.</p>'.repeat(10)}<script>evil()</script></article></body></html>`;
-    const out = extractArticle(page, 'https://x/a');
+    const out = await extractArticle(page, 'https://x/a');
     expect(out).toContain('Readable paragraph');
     expect(out).not.toContain('<script');
   });
-  it('resolves relative img src to absolute URL via base injection', () => {
+  it('resolves relative img src to absolute URL via base injection', async () => {
     const page = `<html><body><article><h1>Img</h1>${'<p>Words here for readability.</p>'.repeat(10)}<img src="/photo.jpg"/></article></body></html>`;
-    const out = extractArticle(page, 'https://example.com/article');
+    const out = await extractArticle(page, 'https://example.com/article');
     expect(out).toContain('https://example.com/photo.jpg');
   });
 });

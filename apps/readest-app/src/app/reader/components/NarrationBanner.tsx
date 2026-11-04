@@ -20,7 +20,10 @@ import { markBookDeleted } from '@/utils/book';
 import { eventDispatcher } from '@/utils/event';
 import { reloadReaderWith } from '@/utils/nav';
 import { isTauriAppPlatform } from '@/services/environment';
-import { findNarratedSection, hasMediaOverlays } from '@/services/tts/mediaOverlay';
+import {
+  findNarratedSection,
+  hasMediaOverlays,
+} from '@/services/tts/mediaOverlay/narratedSections';
 import {
   fetchWork,
   forgetRequestedBook,
