@@ -1,3 +1,4 @@
+# Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 pnpm -C apps/readest-app format:check
 pnpm -C apps/readest-app lint
-pnpm -C apps/readest-app test
+bash apps/readest-app/scripts/test-prepush.sh
