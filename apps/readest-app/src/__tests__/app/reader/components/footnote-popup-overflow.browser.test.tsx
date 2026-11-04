@@ -1,3 +1,4 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 /**
  * Layout of the footnote/note popup box, measured with real CSS.
  *
@@ -190,7 +191,7 @@ describe('footnote popup box (#5999)', () => {
     const fontFace = document.createElement('style');
     fontFace.textContent = `@font-face {
       font-family: FootnoteReaderFont;
-      src: url(/fonts/InterVariable.woff2) format('woff2');
+      src: url(/fonts/Inter-latin.woff2) format('woff2');
     }`;
     document.head.appendChild(fontFace);
     // Monospace is far wider than Inter, so the two wrap to different heights.
