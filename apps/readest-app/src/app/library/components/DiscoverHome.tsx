@@ -10,7 +10,15 @@
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { PiHeadphones } from 'react-icons/pi';
 import { MdBolt, MdCheckCircle, MdChevronRight, MdClose } from 'react-icons/md';
 import type { Book } from '@/types/book';
@@ -61,6 +69,46 @@ const languageName = (code: string, uiLang: string) => {
   }
 };
 
+/** What a row tells its covers: whether the row is near the viewport, and its scroller. */
+const RowContext = createContext<{
+  near: boolean;
+  scroller: HTMLElement | null;
+}>({
+  near: true,
+  scroller: null,
+});
+
+/** Rows within this distance (px) above/below the scrolling page load their covers. */
+const ROW_MARGIN_Y = 300;
+/** Covers within this distance (px) left/right of a row's visible part load. */
+const COVER_MARGIN_X = 400;
+
+/** True once `ref` has come within `margin` of `root` (null = viewport); stays true after. */
+const useNearOnce = (
+  ref: React.RefObject<HTMLElement | null>,
+  root: Element | null,
+  margin: string,
+  enabled: boolean,
+) => {
+  const [near, setNear] = useState(() => typeof IntersectionObserver === 'undefined');
+  useEffect(() => {
+    const el = ref.current;
+    if (near || !enabled || !el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setNear(true);
+          observer.disconnect();
+        }
+      },
+      { root, rootMargin: margin },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, root, margin, enabled, near]);
+  return near;
+};
+
 const Row: React.FC<{
   title: string;
   seeAll?: string | null;
@@ -68,8 +116,22 @@ const Row: React.FC<{
 }> = ({ title, seeAll, children }) => {
   const _ = useTranslation();
   const router = useAppRouter();
+  const sectionRef = useRef<HTMLElement>(null);
+  const [scroller, setScroller] = useState<HTMLElement | null>(null);
+  const [pageRoot, setPageRoot] = useState<HTMLElement | null | undefined>(undefined);
+  // The page scrolls inside an overflow container, which clips what the viewport sees.
+  useEffect(() => {
+    setPageRoot(sectionRef.current?.closest<HTMLElement>('.overflow-y-auto') ?? null);
+  }, []);
+  const near = useNearOnce(
+    sectionRef,
+    pageRoot ?? null,
+    `${ROW_MARGIN_Y}px 0px`,
+    pageRoot !== undefined,
+  );
+  const context = useMemo(() => ({ near, scroller }), [near, scroller]);
   return (
-    <section className='flex flex-col gap-2' aria-label={title}>
+    <section ref={sectionRef} className='flex flex-col gap-2' aria-label={title}>
       <div className='flex items-center justify-between px-4 sm:px-6'>
         <h2 className='text-base-content text-lg font-semibold'>{title}</h2>
         {seeAll && (
@@ -83,7 +145,9 @@ const Row: React.FC<{
           </button>
         )}
       </div>
-      <div className='no-scrollbar flex gap-3 overflow-x-auto px-4 pb-1 sm:px-6'>{children}</div>
+      <div ref={setScroller} className='no-scrollbar flex gap-3 overflow-x-auto px-4 pb-1 sm:px-6'>
+        <RowContext.Provider value={context}>{children}</RowContext.Provider>
+      </div>
     </section>
   );
 };
@@ -91,16 +155,27 @@ const Row: React.FC<{
 const Cover: React.FC<{
   src: string;
   children?: React.ReactNode;
-}> = ({ src, children }) => (
-  <div className='bg-base-300 relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md'>
-    <CoverImg
-      src={src}
-      loading='lazy'
-      className='h-full w-full object-cover transition-transform group-hover:scale-[1.03]'
-    />
-    {children}
-  </div>
-);
+}> = ({ src, children }) => {
+  const { near, scroller } = useContext(RowContext);
+  const ref = useRef<HTMLDivElement>(null);
+  // Load only once the row is near the page viewport and this card near the row's visible part.
+  const visible = useNearOnce(ref, scroller, `0px ${COVER_MARGIN_X}px`, near && !!scroller);
+  return (
+    <div
+      ref={ref}
+      className='bg-base-300 relative aspect-[2/3] w-full overflow-hidden rounded-md shadow-md'
+    >
+      {visible && (
+        <CoverImg
+          src={src}
+          loading='lazy'
+          className='h-full w-full object-cover transition-transform group-hover:scale-[1.03]'
+        />
+      )}
+      {children}
+    </div>
+  );
+};
 
 /** The library's covers also exist as WebP (`covers/<hash>.webp`, usually much smaller). */
 const LIBRARY_COVER_JPEG = /\/covers\/[0-9a-f]{32}\.jpg$/;
@@ -109,11 +184,11 @@ const LIBRARY_COVER_JPEG = /\/covers\/[0-9a-f]{32}\.jpg$/;
  * A library cover as WebP, falling back to the JPEG once if the WebP is missing (a cover
  * published by a worker that doesn't make WebP yet). Other images are shown as given.
  */
-const CoverImg: React.FC<{ src: string; className: string; loading?: 'lazy' | 'eager' }> = ({
-  src,
-  className,
-  loading,
-}) => {
+const CoverImg: React.FC<{
+  src: string;
+  className: string;
+  loading?: 'lazy' | 'eager';
+}> = ({ src, className, loading }) => {
   const webp = LIBRARY_COVER_JPEG.test(src) ? src.replace(/\.jpg$/, '.webp') : src;
   const [current, setCurrent] = useState(webp);
   useEffect(() => setCurrent(webp), [webp]);
@@ -204,7 +279,10 @@ const RequestedCard: React.FC<{
         ? _('Ready to listen')
         : _('Ready')
     : job?.status === 'running'
-      ? _('{{percent}}% · {{eta}}', { percent, eta: formatEta(job.estimate?.eta_seconds, _) })
+      ? _('{{percent}}% · {{eta}}', {
+          percent,
+          eta: formatEta(job.estimate?.eta_seconds, _),
+        })
       : job?.status === 'queued' || job?.status === 'blocked'
         ? _('In line #{{position}}', { position: job.position ?? 1 })
         : job?.status === 'failed'
@@ -279,7 +357,9 @@ const RequestSheet: React.FC<{
     >
       <div
         className='bg-base-100 text-base-content flex w-full max-w-md flex-col gap-4 rounded-t-2xl p-5 pb-8 sm:rounded-2xl'
-        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2rem)' }}
+        style={{
+          paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 2rem)',
+        }}
         onClick={(e) => e.stopPropagation()}
       >
         <div className='flex gap-4'>
@@ -332,10 +412,15 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
   const [home, setHome] = useState<DiscoverHomeData | null>(() => getCachedDiscoverHome(lang));
   const [failed, setFailed] = useState(false);
   const [related, setRelated] = useState<DiscoverCard[]>([]);
-  const [opening, setOpening] = useState<{ title: string; cover: string; progress: number } | null>(
-    null,
-  );
-  const [sheet, setSheet] = useState<{ card: DiscoverCard; instant: boolean } | null>(null);
+  const [opening, setOpening] = useState<{
+    title: string;
+    cover: string;
+    progress: number;
+  } | null>(null);
+  const [sheet, setSheet] = useState<{
+    card: DiscoverCard;
+    instant: boolean;
+  } | null>(null);
   const [requests, setRequests] = useState<RequestedBook[]>(getRequestedBooks);
   const [requestStatus, setRequestStatus] = useState<Record<string, LibraryWork>>({});
 
@@ -388,7 +473,9 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
             eventDispatcher.dispatch('toast', {
               message:
                 request.kind === 'readalong'
-                  ? _('"{{title}}" is ready to listen to.', { title: work.title })
+                  ? _('"{{title}}" is ready to listen to.', {
+                      title: work.title,
+                    })
                   : _('The {{language}} translation of "{{title}}" is ready.', {
                       language: languageName(work.lang, work.lang),
                       title: work.title,
@@ -691,7 +778,9 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
                 'bg-primary h-1.5 transition-[width]',
                 !opening.progress && 'animate-pulse',
               )}
-              style={{ width: `${Math.max(8, Math.round(opening.progress * 100))}%` }}
+              style={{
+                width: `${Math.max(8, Math.round(opening.progress * 100))}%`,
+              }}
             />
           </div>
           <p className='text-base-content/60 text-sm'>{_('Opening book…')}</p>
