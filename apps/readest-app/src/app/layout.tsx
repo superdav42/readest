@@ -1,4 +1,4 @@
-// Modified 2026-10-26 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-03 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import * as React from 'react';
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
@@ -67,9 +67,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  minimumScale: 1,
-  maximumScale: 1,
-  userScalable: false,
+  // Zoom stays enabled (WCAG 1.4.4); the reader route opts out in reader/layout.tsx.
   viewportFit: 'cover',
   // `interactive-widget=resizes-content` is appended client-side on
   // Android only — see Providers.tsx. Other browsers warn about the

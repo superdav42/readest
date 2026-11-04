@@ -1,3 +1,4 @@
+// Modified 2026-11-03 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React, {
   useState,
@@ -184,7 +185,6 @@ const Dropdown: React.FC<DropdownProps> = ({
         <details
           ref={detailsRef}
           open={isOpen}
-          role='none'
           className={clsx('dropdown flex items-center justify-center', className)}
         >
           <summary aria-hidden='true' tabIndex={-1} className='list-none' />

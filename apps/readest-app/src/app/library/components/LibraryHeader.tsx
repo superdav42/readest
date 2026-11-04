@@ -1,4 +1,4 @@
-// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-03 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React, { useRef } from 'react';
 import { FaChevronDown, FaSearch } from 'react-icons/fa';
@@ -199,7 +199,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({
               <button
                 type='button'
                 onClick={() => onSearchQueryChange('')}
-                className='text-base-content/40 hover:text-base-content/60 pe-1'
+                className='text-base-content/40 hover:text-base-content/75 pe-1'
                 aria-label={_('Clear Search')}
               >
                 <IoMdCloseCircle className='h-4 w-4' />
@@ -234,9 +234,9 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({
                     className='h-6'
                   >
                     {isSelectMode ? (
-                      <PiSelectionAllFill role='button' className='text-base-content/60 h-6 w-6' />
+                      <PiSelectionAllFill role='button' className='text-base-content/75 h-6 w-6' />
                     ) : (
-                      <PiSelectionAll role='button' className='text-base-content/60 h-6 w-6' />
+                      <PiSelectionAll role='button' className='text-base-content/75 h-6 w-6' />
                     )}
                   </button>
                 )}
