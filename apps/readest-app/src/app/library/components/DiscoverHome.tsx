@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Added 2026-10-31 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
+// Added 2026-10-31, modified 2026-11-03 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
 //
 // Discover: the first screen of a shared-library deployment (Librebooks). Rows of covers in
 // the reader's language — continue reading, translations they asked for, books related to the
@@ -137,7 +137,7 @@ const Row: React.FC<{
         {seeAll && (
           <button
             type='button'
-            className='text-base-content/60 hover:text-base-content flex items-center text-sm'
+            className='text-base-content/75 hover:text-base-content flex items-center text-sm'
             onClick={() => router.push(seeAll)}
           >
             {_('See all')}
@@ -232,6 +232,7 @@ const Card: React.FC<{
             <span
               className='bg-base-100/90 text-base-content rounded px-1 text-[10px] font-semibold uppercase leading-5'
               title={_('Not yet translated')}
+              aria-label={`${_('Language')}: ${card.lang.toUpperCase()}`}
             >
               {card.lang}
             </span>
@@ -241,7 +242,7 @@ const Card: React.FC<{
       <p className='text-base-content line-clamp-2 text-sm font-medium leading-tight'>
         {card.title}
       </p>
-      {card.author && <p className='text-base-content/60 truncate text-xs'>{card.author}</p>}
+      {card.author && <p className='text-base-content/75 truncate text-xs'>{card.author}</p>}
     </button>
   );
 };
@@ -367,7 +368,7 @@ const RequestSheet: React.FC<{
           <CoverImg src={card.cover} className='aspect-[2/3] w-20 rounded object-cover shadow' />
           <div className='flex min-w-0 flex-col gap-1'>
             <p className='text-lg font-semibold leading-tight'>{card.title}</p>
-            {card.author && <p className='text-base-content/60 text-sm'>{card.author}</p>}
+            {card.author && <p className='text-base-content/75 text-sm'>{card.author}</p>}
             <p className='text-base-content/80 mt-1 text-sm'>
               {_('Not yet translated into {{language}}.', { language })}
             </p>
@@ -393,7 +394,7 @@ const RequestSheet: React.FC<{
           {_('Read the original ({{language}})', { language: original })}
         </button>
         {instantAvailable && (
-          <p className='text-base-content/60 text-xs'>
+          <p className='text-base-content/75 text-xs'>
             {_(
               'Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.',
             )}
@@ -783,7 +784,7 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
               }}
             />
           </div>
-          <p className='text-base-content/60 text-sm'>{_('Opening book…')}</p>
+          <p className='text-base-content/75 text-sm'>{_('Opening book…')}</p>
         </div>
       )}
     </div>
