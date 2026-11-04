@@ -93,6 +93,8 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({
   if (!insets) return null;
 
   const isMobile = appService?.isMobile || window.innerWidth <= 640;
+  // Phones: the long "Search in N Book(s)..." placeholder is cut off, so use the short one.
+  const isNarrow = window.innerWidth <= 640;
 
   return (
     <div
@@ -146,7 +148,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({
               placeholder={
                 searchTarget === 'text'
                   ? _('Search contents in {{count}} Book(s)...', { count: currentBooksCount })
-                  : currentBooksCount > 1
+                  : currentBooksCount > 1 && !isNarrow
                     ? _('Search in {{count}} Book(s)...', {
                         count: currentBooksCount,
                       })
@@ -155,7 +157,7 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({
               onChange={handleSearchChange}
               spellCheck='false'
               className={clsx(
-                'window-drag-input search-input input h-9 w-full rounded-full pe-[30%] ps-10 sm:h-7',
+                'window-drag-input search-input input h-9 w-full rounded-full pe-12 ps-10 sm:h-7 sm:pe-[30%]',
                 'bg-base-300/45 border-0',
                 'font-sans text-sm font-light',
                 'placeholder:text-base-content/50 truncate',
