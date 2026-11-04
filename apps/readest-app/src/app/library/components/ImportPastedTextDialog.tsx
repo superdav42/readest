@@ -1,3 +1,4 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -5,7 +6,7 @@ import { MdContentPaste } from 'react-icons/md';
 import Dialog from '@/components/Dialog';
 import { useTranslation } from '@/hooks/useTranslation';
 import { readTextFromClipboard } from '@/utils/clipboard';
-import { createTextBookFile, getTextTitle } from '@/utils/txt';
+import { createTextBookFile, getTextTitle } from '@/utils/textBookFile';
 
 interface ImportPastedTextDialogProps {
   isOpen: boolean;

@@ -1,8 +1,8 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { assertNovelUrlAllowed, renderNovelPage } from './renderNovelPage';
 import { bundleAssets, MAX_TOTAL_ASSET_BYTES } from '@/services/send/conversion/assetBundler';
 import { Readability } from '@mozilla/readability';
 import { sanitizeHtml } from '@/utils/sanitize';
-import { detectLanguage } from '@/utils/lang';
 import { stubTranslation as _ } from '@/utils/misc';
 import { buildEpub } from '@/services/send/conversion/buildEpub';
 import { generateCoverSvg } from '@/services/send/conversion/coverGenerator';
@@ -516,6 +516,8 @@ export async function downloadNovel(
       sample += ` ${stripTags(chapter.html)}`;
       if (sample.length >= 2048) break;
     }
+    // Loaded on first use: franc-min is large and the library page should not carry it.
+    const { detectLanguage } = await import('@/utils/langDetect');
     const language = detectLanguage(`${toc.title} ${sample}`.slice(0, 2048)) || 'en';
 
     signal.throwIfAborted();

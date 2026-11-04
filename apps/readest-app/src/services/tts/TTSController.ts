@@ -36,6 +36,7 @@ import { DownloadableSentence, SectionEnumerator, TTSDownloader } from './TTSDow
 import { TTSUtils } from './TTSUtils';
 import { TTSClient } from './TTSClient';
 import { getRuntimeConfig } from '@/services/runtimeConfig';
+import { DEFAULT_PARAGRAPH_GAP_SEC } from './gap';
 
 /** Recorded-narration-only mode and the book ships no recording. */
 export class NarrationUnavailableError extends Error {
@@ -185,7 +186,8 @@ export interface TTSViewBindings {
 // is engine-agnostic, handled entirely in #speak()/forward() below. There is
 // no natural pause here otherwise -- the transition is as fast as the async
 // stop/init overhead allows, which reads as no pause at all.
-export const DEFAULT_PARAGRAPH_GAP_SEC = 0.3;
+// The value lives in ./gap so the settings defaults need not import this module.
+export { DEFAULT_PARAGRAPH_GAP_SEC };
 
 const drawTint = (opacity: string) => (rects: DOMRectList, options: Record<string, unknown>) => {
   const g = Overlayer.highlight(rects, options);

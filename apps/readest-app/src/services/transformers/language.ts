@@ -1,5 +1,5 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import {
-  detectLanguage,
   getLanguageInfo,
   isCJKLang,
   isCJKStr,
@@ -7,6 +7,7 @@ import {
   isValidLang,
   normalizedLangCode,
 } from '@/utils/lang';
+import { detectLanguage } from '@/utils/langDetect';
 import type { Transformer } from './types';
 
 const TEXT_SAMPLE_LENGTH = 1000; // what `detectLanguage` reads

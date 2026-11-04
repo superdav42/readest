@@ -1,6 +1,7 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { describe, it, expect } from 'vitest';
 
-import { detectLanguage, getPDFSpeechLang } from '@/utils/lang';
+import { detectLanguage, getPDFSpeechLang } from '@/utils/langDetect';
 
 describe('detectLanguage - Result Tests', () => {
   describe('English text detection', () => {

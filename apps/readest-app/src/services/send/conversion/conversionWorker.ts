@@ -1,9 +1,15 @@
-import { convertToEpub, type ConvertInput } from './convertToEpub';
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+import type { ConvertInput } from './convertToEpub';
 import type { ConvertedBook } from './types';
 import type {
   ConversionWorkerRequest,
   ConversionWorkerResponse,
 } from './conversion-worker-protocol';
+
+// Loaded on first use: the converter (Readability, the EPUB builder) is only needed once a
+// file is converted, and this module is imported by the library page.
+const convertToEpub = async (input: ConvertInput): Promise<ConvertedBook> =>
+  (await import('./convertToEpub')).convertToEpub(input);
 
 const DEFAULT_TIMEOUT_MS = 120_000;
 

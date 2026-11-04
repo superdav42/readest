@@ -1,3 +1,4 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useCallback, useEffect, useRef } from 'react';
 import { invoke } from '@tauri-apps/api/core';
 import { useAuth } from '@/context/AuthContext';
@@ -10,7 +11,7 @@ import { convertToEpubWithWorker } from '@/services/send/conversion/conversionWo
 import { clipPageWithSignInFallback, isClipCancelled } from '@/services/send/clipSignIn';
 import type { ConvertedBook } from '@/services/send/conversion/types';
 import { eventDispatcher } from '@/utils/event';
-import { createTextBookFile } from '@/utils/txt';
+import { createTextBookFile } from '@/utils/textBookFile';
 import { parseAnnotationDeepLink, parseDeviceLinkDeepLink } from '@/utils/deeplink';
 import { parseShareDeepLink } from '@/utils/share';
 import { useTranslation } from './useTranslation';

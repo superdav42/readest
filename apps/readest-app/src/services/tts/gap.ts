@@ -1,3 +1,9 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Default pauses live here, not in the TTS clients, so the settings defaults in
+// services/constants.ts do not pull the whole TTS engine into the library page.
+export const DEFAULT_SENTENCE_GAP_SEC = 0.15;
+export const DEFAULT_PARAGRAPH_GAP_SEC = 0.3;
+
 // The one place a TTS pause is scaled for the playback rate.
 //
 // Pauses have to shrink as the voice speeds up or they dominate the reading,

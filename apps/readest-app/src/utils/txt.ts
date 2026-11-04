@@ -1,7 +1,11 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { partialMD5 } from './md5';
 import { getBaseFilename } from './path';
-import { detectLanguage } from './lang';
 import { configureZip } from './zip';
+
+// Loaded on first use: franc-min is large and only a TXT import needs it.
+const detectLanguage = async (content: string): Promise<string> =>
+  (await import('./langDetect')).detectLanguage(content);
 
 interface Metadata {
   bookTitle: string;
@@ -165,7 +169,7 @@ export class TxtToEpubConverter {
     } catch {}
     const headerAuthor = isPlausibleAuthorName(matchedAuthor) ? matchedAuthor : '';
     const author = headerAuthor || filenameMeta.author || providedAuthor || '';
-    const language = providedLanguage || detectLanguage(fileHeader);
+    const language = providedLanguage || (await detectLanguage(fileHeader));
     // console.log(`Detected language: ${language}`);
     const identifier = await partialMD5(txtFile);
     const metadata = { bookTitle, author, language, identifier };
@@ -218,7 +222,7 @@ export class TxtToEpubConverter {
       HEADER_TEXT_MAX_BYTES,
     );
 
-    const { author, language } = this.extractAuthorAndLanguage(
+    const { author, language } = await this.extractAuthorAndLanguage(
       fileHeader,
       filenameMeta.author ?? providedAuthor,
       providedLanguage,
@@ -551,11 +555,11 @@ export class TxtToEpubConverter {
     return { segments, pending };
   }
 
-  private extractAuthorAndLanguage(
+  private async extractAuthorAndLanguage(
     fileHeader: string,
     providedAuthor?: string,
     providedLanguage?: string,
-  ): { author: string; language: string } {
+  ): Promise<{ author: string; language: string }> {
     const authorMatch =
       fileHeader.match(/[【\[]?作者[】\]]?[:：\s]\s*(.+)\r?\n/) ||
       fileHeader.match(/[【\[]?\s*(.+)\s+著\s*[】\]]?\r?\n/);
@@ -565,7 +569,7 @@ export class TxtToEpubConverter {
     } catch {}
     const headerAuthor = isPlausibleAuthorName(matchedAuthor) ? matchedAuthor : '';
     const author = headerAuthor || providedAuthor || '';
-    const language = providedLanguage || detectLanguage(fileHeader);
+    const language = providedLanguage || (await detectLanguage(fileHeader));
     return { author, language };
   }
 
@@ -1107,19 +1111,5 @@ export class TxtToEpubConverter {
   }
 }
 
-// First non-empty line of pasted or shared text, as a book title.
-export const getTextTitle = (text: string): string =>
-  (text.split('\n').find((line) => line.trim()) ?? '').trim().slice(0, 80);
-
-// Wrap pasted or shared text as a .txt file for the normal import path. The
-// TXT importer titles the book after the file name, so a blank title falls
-// back to the text's first line, then to `fallbackTitle`.
-export const createTextBookFile = (text: string, title: string, fallbackTitle: string): File => {
-  // "Briefing: today" -> "Briefing - today"; trailing dots and spaces are
-  // not allowed in Windows file names.
-  const name = (title.trim() || getTextTitle(text))
-    .replace(/\s*[<>:"/\\|?*\x00-\x1f]+\s*/g, ' - ')
-    .slice(0, 80)
-    .replace(/^[\s-]+|[\s.-]+$/g, '');
-  return new File([text], `${name || fallbackTitle}.txt`, { type: 'text/plain' });
-};
+// Pasted-text helpers live in ./textBookFile so callers need not load this converter.
+export { createTextBookFile, getTextTitle } from './textBookFile';
