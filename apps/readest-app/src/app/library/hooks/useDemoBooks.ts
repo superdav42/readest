@@ -1,4 +1,4 @@
-// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-03 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useEffect, useRef, useState } from 'react';
 
 import { useEnv } from '@/context/EnvContext';
@@ -7,10 +7,73 @@ import { getUserLang } from '@/utils/misc';
 import { isWebAppPlatform } from '@/services/environment';
 import { demoLibraries as libraries } from '@/services/demoBooks';
 import { getRuntimeConfig } from '@/services/runtimeConfig';
+import { fetchEditionsByHash, type CatalogEdition } from '@/services/gutenbergLibrary';
+import { useLibraryStore } from '@/store/libraryStore';
 
 interface DemoBooks {
   library: string[];
 }
+
+/** Content-addressed catalog file URL: `<libraryFilesUrl>/<hash>.epub`. */
+const catalogFileHash = (url: string): string | null => {
+  const filesUrl = getRuntimeConfig()?.libraryFilesUrl;
+  if (!filesUrl || !url.startsWith(`${filesUrl}/`)) return null;
+  return url.match(/\/([0-9a-f]{32})\.epub$/)?.[1] ?? null;
+};
+
+/**
+ * Shelf entries for starter books that live in the catalog, built from the catalog's own
+ * metadata (title, author, language, cover) with no request for the EPUB. Opening one
+ * downloads it by hash, as for any shared-library book that is not on the device yet.
+ */
+const seedCatalogBooks = async (urls: string[]): Promise<{ books: Book[]; urls: Set<string> }> => {
+  const hashes = new Map<string, string>();
+  for (const url of urls) {
+    const hash = catalogFileHash(url);
+    if (hash) hashes.set(hash, url);
+  }
+  const seeded = { books: [] as Book[], urls: new Set<string>() };
+  if (!hashes.size) return seeded;
+  let editions: CatalogEdition[] = [];
+  try {
+    editions = await fetchEditionsByHash([...hashes.keys()]);
+  } catch (error) {
+    console.warn('Starter books: catalog lookup failed, importing from URL', error);
+    return seeded;
+  }
+  const existing = new Set(useLibraryStore.getState().library.map((book) => book.hash));
+  const now = Date.now();
+  const coversUrl = getRuntimeConfig()?.libraryCoversUrl;
+  for (const edition of editions) {
+    const url = hashes.get(edition.hash);
+    if (!url || edition.kind === 'audiobook') continue;
+    const author = edition.authors[0] ?? '';
+    seeded.urls.add(url);
+    if (existing.has(edition.hash)) continue;
+    seeded.books.push({
+      hash: edition.hash,
+      format: 'EPUB',
+      title: edition.title,
+      sourceTitle: edition.title,
+      author,
+      primaryLanguage: edition.lang,
+      hasNarration: edition.kind === 'readalong' || undefined,
+      metadata: {
+        title: edition.title,
+        author,
+        language: edition.lang,
+        identifier: `urn:gutenberg-ai:${edition.work_id}${edition.kind === 'translation' ? `:${edition.lang}` : ''}`,
+        ...(coversUrl ? { coverImageUrl: `${coversUrl}/${edition.hash}.jpg` } : {}),
+      },
+      createdAt: now,
+      updatedAt: now,
+      // In the shared catalog but not on this device: no `downloadedAt`, so opening fetches it.
+      uploadedAt: now,
+      deletedAt: null,
+    });
+  }
+  return seeded;
+};
 
 export const useDemoBooks = () => {
   const { envConfig } = useEnv();
@@ -30,10 +93,14 @@ export const useDemoBooks = () => {
         const demoBooks: DemoBooks = custom?.length
           ? { library: custom }
           : libraries[userLang] || (libraries.en as DemoBooks);
-        const books = await Promise.all(
-          demoBooks.library.map((url) => appService.importBook(url, [], { saveBook: false })),
+        // Catalog files become shelf entries from catalog metadata, without opening the EPUB;
+        // the file is fetched when the book is opened. Anything else is imported from its URL.
+        const seeded = await seedCatalogBooks(demoBooks.library);
+        const rest = demoBooks.library.filter((url) => !seeded.urls.has(url));
+        const imported = await Promise.all(
+          rest.map((url) => appService.importBook(url, [], { saveBook: false })),
         );
-        setBooks(books.filter((book) => book !== null) as Book[]);
+        setBooks([...seeded.books, ...imported.filter((book) => book !== null)] as Book[]);
       } catch (error) {
         console.error('Failed to import demo books:', error);
       }

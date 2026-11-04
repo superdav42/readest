@@ -125,6 +125,32 @@ export const fetchWork = (workId: number, lang = getContentLanguage()) =>
       : `/works/${workId}?lang=${encodeURIComponent(lang)}`,
   );
 
+/** Catalog metadata of one published edition file. */
+export interface CatalogEdition {
+  hash: string;
+  work_id: number;
+  kind: 'original' | 'translation' | 'readalong' | 'audiobook';
+  lang: string;
+  title: string;
+  authors: string[];
+  size?: number | null;
+}
+
+/**
+ * Catalog rows for edition files, by content hash (one small request, no book download).
+ * Supabase catalog only; resolves to [] for other backends.
+ */
+export const fetchEditionsByHash = async (hashes: string[]): Promise<CatalogEdition[]> => {
+  const base = getCatalogBase();
+  if (!base || !isRpcCatalog(base) || !hashes.length) return [];
+  const list = hashes.map((hash) => encodeURIComponent(hash)).join(',');
+  const res = await fetch(
+    `${base.replace(/\/rpc$/, '')}/editions?select=hash,work_id,kind,lang,title,authors,size&hash=in.(${list})`,
+  );
+  if (!res.ok) throw new Error(`library_api_${res.status}`);
+  return (await res.json()) as CatalogEdition[];
+};
+
 export type RequestResult =
   | (LibraryJob & { status: LibraryJob['status'] })
   | { status: 'available' | 'unsupported'; kind?: string };
