@@ -1,6 +1,7 @@
 // Modified 2026-11-03 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React, { useRef } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { FaChevronDown, FaSearch } from 'react-icons/fa';
 import { MdManageSearch } from 'react-icons/md';
 import { PiPlus } from 'react-icons/pi';
@@ -77,6 +78,8 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({
   const headerRef = useRef<HTMLDivElement>(null);
   const { isTrafficLightVisible } = useTrafficLight(headerRef);
   const iconSize18 = useResponsiveSize(18);
+  // Phones: the long "Search in N Book(s)..." placeholder is cut off, so use the short one.
+  const isNarrow = useMediaQuery({ maxWidth: 640 });
   const { safeAreaInsets: insets, isIPhoneDuo } = useThemeStore();
 
   useShortcuts({
@@ -93,8 +96,6 @@ const LibraryHeader: React.FC<LibraryHeaderProps> = ({
   if (!insets) return null;
 
   const isMobile = appService?.isMobile || window.innerWidth <= 640;
-  // Phones: the long "Search in N Book(s)..." placeholder is cut off, so use the short one.
-  const isNarrow = window.innerWidth <= 640;
 
   return (
     <div
