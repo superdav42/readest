@@ -82,6 +82,11 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   const [listening, setListening] = useState(false);
   /** Closed with ×: hidden for this book until the page is reloaded. */
   const [dismissed, setDismissed] = useState(false);
+  /** Speak is waiting for the book's background download (a big book opened by streaming). */
+  const [preparing, setPreparing] = useState(false);
+  const preparingRef = useRef(false);
+  /** A switch asked for playback to start on its own (it may still be waiting for the download). */
+  const autoplayWaiting = useRef(false);
   /** Last playback state: 'playing', 'paused' (by the listener) or 'stopped' (ended). */
   const playback = useRef<string | null>(null);
   /** Whether audio has actually played for this book on this page (autoplay can be refused). */
@@ -153,9 +158,14 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
           const narratedIndex = findNarratedSection(view.book, landing!.index, 1);
           if (narratedIndex >= 0) await view.goTo(narratedIndex);
         }
+        autoplayWaiting.current = true;
         setTimeout(() => eventDispatcher.dispatch('tts-speak', { bookKey }), 600);
         setTimeout(
-          () => !played.current && readWanted()?.atSection == null && setNeedsTap(true),
+          () =>
+            !played.current &&
+            !preparingRef.current &&
+            readWanted()?.atSection == null &&
+            setNeedsTap(true),
           5000,
         );
       }
@@ -202,11 +212,25 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         }
       }
     };
+    const onPreparing = (event: CustomEvent) => {
+      const detail = event.detail as { bookKey?: string; preparing?: boolean };
+      if (detail.bookKey && detail.bookKey !== bookKey) return;
+      preparingRef.current = !!detail.preparing;
+      setPreparing(!!detail.preparing);
+      // Playback was meant to start by itself; if the wait is over and it still hasn't
+      // (autoplay refused after the wait), offer the tap.
+      if (!detail.preparing && autoplayWaiting.current) {
+        autoplayWaiting.current = false;
+        setTimeout(() => !played.current && setNeedsTap(true), 4000);
+      }
+    };
     eventDispatcher.on(NARRATION_REQUESTED_EVENT, onRequested);
     eventDispatcher.on('tts-playback-state', onPlayback);
+    eventDispatcher.on('narration-preparing', onPreparing);
     return () => {
       eventDispatcher.off(NARRATION_REQUESTED_EVENT, onRequested);
       eventDispatcher.off('tts-playback-state', onPlayback);
+      eventDispatcher.off('narration-preparing', onPreparing);
     };
   }, [bookKey]);
 
@@ -331,22 +355,25 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [workId, lang, book?.hash, following, narrated, isWanted]);
 
-  if (!active) return null;
+  const waitingForDownload = preparing && !dismissed;
+  if (!active && !waitingForDownload) return null;
   const percent = Math.max(1, Number((job?.progress ?? '').match(/(\d+)%/)?.[1] ?? 0));
-  const message = switching
-    ? _('Opening the narration…')
-    : !narrated
-      ? job?.status === 'queued' || job?.status === 'blocked'
-        ? _('Narration starts in a moment (#{{position}} in line)…', {
-            position: job.position ?? 1,
-          })
-        : _('Preparing narration… it starts in a few seconds')
-      : wanted?.atSection != null && isWanted
-        ? _("Narration hasn't reached this chapter yet. It will start here shortly.")
-        : job
-          ? _('Narration in progress: {{percent}}% of the book narrated', { percent })
-          : null;
-  if (needsTap && narrated) {
+  const message = waitingForDownload
+    ? _('Preparing narration… it starts in a few seconds')
+    : switching
+      ? _('Opening the narration…')
+      : !narrated
+        ? job?.status === 'queued' || job?.status === 'blocked'
+          ? _('Narration starts in a moment (#{{position}} in line)…', {
+              position: job.position ?? 1,
+            })
+          : _('Preparing narration… it starts in a few seconds')
+        : wanted?.atSection != null && isWanted
+          ? _("Narration hasn't reached this chapter yet. It will start here shortly.")
+          : job
+            ? _('Narration in progress: {{percent}}% of the book narrated', { percent })
+            : null;
+  if (needsTap && narrated && !waitingForDownload) {
     return (
       <div
         className='pointer-events-none absolute inset-x-0 z-20 flex justify-center px-3'

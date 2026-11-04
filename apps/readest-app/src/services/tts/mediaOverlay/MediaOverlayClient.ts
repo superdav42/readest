@@ -1,3 +1,4 @@
+// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 // Plays the book's own recorded narration in place of synthesized speech.
 //
 // A TTSClient normally turns SSML into audio. This one turns SSML back into the
@@ -23,6 +24,7 @@
 import type { BookDoc, BookMediaSource } from '@/libs/document';
 import type { AppService } from '@/types/system';
 import { BlobAudioClock, HtmlAudioClock } from '@/services/audiobook/AudiobookClock';
+import { eventDispatcher } from '@/utils/event';
 import { stubTranslation as _ } from '@/utils/misc';
 import { parseSSMLMarks } from '@/utils/ssml';
 import type { TTSCapabilities, TTSClient, TTSMessageEvent } from '../TTSClient';
@@ -167,6 +169,9 @@ export class MediaOverlayClient implements TTSClient {
   #source: NarrationAudioSource | null = null;
   #section: MediaOverlaySection | null = null;
   #native: boolean;
+  #appService: AppService | null;
+  // Audio reads currently waiting for a streamed book's download (see #loadBookBlob).
+  #preparing = 0;
   #player: NativeNarrationPlayer | null = null;
   #audio: NarrationClock | null = null;
   #audioHref: string | null = null;
@@ -184,6 +189,7 @@ export class MediaOverlayClient implements TTSClient {
 
   constructor(controller?: TTSController, appService?: AppService | null) {
     this.controller = controller;
+    this.#appService = appService ?? null;
     this.#native = !!(appService?.isAndroidApp || appService?.isIOSApp);
   }
 
@@ -207,13 +213,37 @@ export class MediaOverlayClient implements TTSClient {
       book?.loadBlob
         ? {
             narrator: book.media?.narrator,
-            loadBlob: (href) => book.loadBlob!(href),
+            loadBlob: (href) => this.#loadBookBlob(book, href),
             ...(book.getMediaSource
               ? { getMediaSource: (href, type) => book.getMediaSource!(href, type) }
               : {}),
           }
         : null,
     );
+  }
+
+  // A book opened by streaming reads whole audio files through range requests (~25 s before
+  // narration started). Its background download is under way, so wait for it ("Preparing
+  // narration…" in the reader) and read the audio from the downloaded copy.
+  async #loadBookBlob(book: BookDoc, href: string): Promise<Blob> {
+    const hash = this.controller?.bookKey?.split('-')[0];
+    const appService = this.#appService;
+    if (hash && appService) {
+      const { isStreamedBook, readStreamedBookEntry } = await import('@/services/openCatalogBook');
+      if (isStreamedBook(hash)) {
+        const bookKey = this.controller?.bookKey;
+        if (this.#preparing++ === 0)
+          eventDispatcher.dispatch('narration-preparing', { bookKey, preparing: true });
+        try {
+          const blob = await readStreamedBookEntry(appService, hash, href, audioType(href));
+          if (blob) return blob;
+        } finally {
+          if (--this.#preparing === 0)
+            eventDispatcher.dispatch('narration-preparing', { bookKey, preparing: false });
+        }
+      }
+    }
+    return book.loadBlob!(href);
   }
 
   // External audiobook files use the same clock and clip machinery as EPUB
