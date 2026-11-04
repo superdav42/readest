@@ -26,12 +26,15 @@ import {
   TTSLoopState,
 } from '@/services/tts/TTSController';
 import {
+  fetchWorkVoices,
   getSharedBookUrl,
   parseWorkId,
   rememberNarrationRequest,
   requestEdition,
   toContentLanguage,
 } from '@/services/gutenbergLibrary';
+import { prepareLibraryVoices, setChosenLibraryVoice } from '@/services/tts/libraryVoice';
+import { hasMediaOverlays } from '@/services/tts/mediaOverlay';
 import {
   NARRATION_REQUESTED_EVENT,
   NARRATION_WANTED_KEY,
@@ -1046,6 +1049,37 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
           if (timer) {
             setTimeoutOption(timer.timeoutSec);
             setTimeoutTimestamp(timer.firesAt);
+          }
+        }
+
+        // Gutenberg AI fork: read-along voices of a library text edition (LibriVox, dramatized,
+        // AI). Like pairedAudiobook, set before init() so it decides what plays.
+        {
+          const metadata = view.book?.metadata as {
+            identifier?: string;
+            language?: string | string[];
+          };
+          const workId = parseWorkId(metadata?.identifier);
+          if (workId !== null) {
+            const lang = toContentLanguage(
+              (Array.isArray(metadata?.language) ? metadata.language[0] : metadata?.language) ||
+                bookData.book.primaryLanguage,
+            );
+            const { voices, active } = await prepareLibraryVoices(
+              await fetchWorkVoices(workId, lang),
+              bookData.book.hash,
+              hasMediaOverlays(view.book),
+            );
+            ttsController.setLibraryVoices(voices, active);
+            if (voices.length) {
+              ttsController.addEventListener('library-voice-change', (event) =>
+                setChosenLibraryVoice(
+                  workId,
+                  lang,
+                  (event as CustomEvent<{ key: string | null }>).detail.key,
+                ),
+              );
+            }
           }
         }
 

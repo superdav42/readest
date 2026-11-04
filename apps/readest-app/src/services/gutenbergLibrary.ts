@@ -13,6 +13,7 @@
 import i18n from '@/i18n/i18n';
 import type { Book } from '@/types/book';
 import { getRuntimeConfig } from '@/services/runtimeConfig';
+import type { LibraryVoices } from '@/services/tts/libraryVoice';
 import { eventDispatcher } from '@/utils/event';
 
 export const CONTENT_LANGUAGE_EVENT = 'content-language-changed';
@@ -124,6 +125,28 @@ export const fetchWork = (workId: number, lang = getContentLanguage()) =>
       ? `/catalog_work?p_work_id=${workId}&p_lang=${encodeURIComponent(lang)}`
       : `/works/${workId}?lang=${encodeURIComponent(lang)}`,
   );
+
+const voicesCache = new Map<string, Promise<LibraryVoices | null>>();
+
+/**
+ * Read-along voices of a work's text edition in a language (migration 0370), default first;
+ * null when it has none or the catalog is not the Supabase one. Cached per session.
+ */
+export const fetchWorkVoices = (workId: number, lang: string): Promise<LibraryVoices | null> => {
+  if (!rpcBase()) return Promise.resolve(null);
+  const key = `${workId}:${lang}`;
+  let pending = voicesCache.get(key);
+  if (!pending) {
+    pending = api<LibraryVoices | null>(
+      `/work_voices?p_work=${workId}&p_lang=${encodeURIComponent(lang)}`,
+    ).catch(() => {
+      voicesCache.delete(key);
+      return null;
+    });
+    voicesCache.set(key, pending);
+  }
+  return pending;
+};
 
 /** Catalog metadata of one published edition file. */
 export interface CatalogEdition {

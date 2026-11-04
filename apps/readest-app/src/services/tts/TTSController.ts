@@ -4,6 +4,7 @@ import { AppService } from '@/types/system';
 import type { PageInfo, PairedAudiobook } from '@/types/book';
 import { SectionItem } from '@/libs/document';
 import { convertFileSrc } from '@tauri-apps/api/core';
+import { stubTranslation as _ } from '@/utils/misc';
 import { transformTTSSectionDocument } from './transformDoc';
 import { filterSSMLWithLang, parseSSMLMarks, truncateSSMLAfterMark } from '@/utils/ssml';
 import * as CFI from 'foliate-js/epubcfi.js';
@@ -78,6 +79,12 @@ import {
   narratedAudioChapters,
   type NarratedAudioChapter,
 } from './pairedAudiobook';
+import {
+  isLibraryVoiceId,
+  libraryVoiceKey,
+  libraryVoiceName,
+  type LibraryVoice,
+} from './libraryVoice';
 import { SKIP_BACKWARD_SEC, SKIP_FORWARD_SEC } from '@/services/playback/playbackSource';
 import {
   stripInlineReadingAnnotations,
@@ -290,6 +297,10 @@ export class TTSController extends EventTarget {
   #mediaOverlaySection: MediaOverlaySection | null = null;
   #useNarration = true;
   #pairedAudiobook: PairedAudiobook | null = null;
+  // Gutenberg AI fork: library read-along voices of this text edition (libraryVoice.ts) and
+  // the one playing. They take precedence over the book's own media overlays.
+  #libraryVoices: LibraryVoice[] = [];
+  #libraryVoice: LibraryVoice | null = null;
 
   ttsLang: string = '';
   ttsRate: number = 1.0;
@@ -615,7 +626,34 @@ export class TTSController extends EventTarget {
   get narrationAvailable(): boolean {
     return (
       this.#attached &&
-      (this.#pairedAudiobookAvailable(this.view?.book) || hasMediaOverlays(this.view?.book))
+      (this.#libraryVoiceAvailable(this.view?.book) ||
+        this.#pairedAudiobookAvailable(this.view?.book) ||
+        hasMediaOverlays(this.view?.book))
+    );
+  }
+
+  /**
+   * Library voices of the open text edition, and the one to play (loaded already). Must be
+   * set before init(), like pairedAudiobook.
+   */
+  setLibraryVoices(voices: LibraryVoice[], active: LibraryVoice | null): void {
+    this.#libraryVoices = voices;
+    this.#libraryVoice = active?.loaded ? active : null;
+  }
+
+  get libraryVoices(): LibraryVoice[] {
+    return this.#libraryVoices;
+  }
+
+  get activeLibraryVoice(): LibraryVoice | null {
+    return this.#libraryVoice;
+  }
+
+  #libraryVoiceAvailable(book: FoliateView['book'] | null | undefined): boolean {
+    return !!(
+      book &&
+      this.#libraryVoice?.loaded &&
+      this.#libraryVoice.findSection(book, 0, 1) >= 0
     );
   }
 
@@ -655,6 +693,22 @@ export class TTSController extends EventTarget {
   }
 
   #attachNarrationSource(book: FoliateView['book']): void {
+    const voice = this.#libraryVoice;
+    if (voice && this.#libraryVoiceAvailable(book)) {
+      // Streamed from the library CDN, one track per file (CORS-enabled, range requests).
+      this.ttsMediaOverlayClient.attachSource({
+        narrator: libraryVoiceName(voice.info),
+        resolveTracks: async (href) => [
+          { url: href, startOffset: 0, duration: voice.trackSeconds(href) },
+        ],
+        loadBlob: async (href) => {
+          const res = await fetch(href);
+          if (!res.ok) throw new Error(`voice_track_${res.status}`);
+          return await res.blob();
+        },
+      });
+      return;
+    }
     if (this.#usesPairedAudiobook(book) && this.#pairedAudiobook && this.appService) {
       const narrator = this.#pairedAudiobook.narrator;
       const source = this.#pairedAudiobook.source;
@@ -716,6 +770,9 @@ export class TTSController extends EventTarget {
   }
 
   #findNarratedSection(book: FoliateView['book'], from: number, direction: 1 | -1): number {
+    if (this.#libraryVoice && this.#libraryVoiceAvailable(book)) {
+      return this.#libraryVoice.findSection(book, from, direction);
+    }
     if (this.#usesPairedAudiobook(book) && this.#pairedAudiobook) {
       return findPairedAudiobookSection(book, this.#pairedAudiobook, from, direction);
     }
@@ -728,6 +785,9 @@ export class TTSController extends EventTarget {
     doc: Document,
   ): Promise<MediaOverlaySection | null> | MediaOverlaySection | null {
     const lang = this.ttsLang || view.language?.canonical || 'en';
+    if (this.#libraryVoice && this.#libraryVoiceAvailable(view.book)) {
+      return this.#libraryVoice.loadSection(view.book, sectionIndex, doc, lang);
+    }
     if (this.#usesPairedAudiobook(view.book) && this.#pairedAudiobook) {
       return loadPairedAudiobookSection(view.book, this.#pairedAudiobook, sectionIndex, doc, lang);
     }
@@ -2327,9 +2387,28 @@ export class TTSController extends EventTarget {
     }
     // The book's own narrator leads the list when there is one: it is the best
     // voice available for that book by a wide margin.
-    const narrationVoices = this.narrationAvailable
-      ? await this.ttsMediaOverlayClient.getVoices(lang)
-      : [];
+    // Gutenberg AI fork: a library text edition lists every voice it has (human LibriVox
+    // readings, dramatized and AI narration), default first, plus the book's own recording.
+    const narrationVoices = this.#libraryVoices.length
+      ? [
+          {
+            id: 'library-voices',
+            name: _('Read-along voices'),
+            voices: [
+              ...this.#libraryVoices.map((voice) => ({
+                id: voice.id,
+                name: libraryVoiceName(voice.info),
+                lang,
+              })),
+              ...(hasMediaOverlays(this.view?.book)
+                ? [{ id: MEDIA_OVERLAY_VOICE_ID, name: _('Book narration'), lang }]
+                : []),
+            ],
+          },
+        ]
+      : this.narrationAvailable
+        ? await this.ttsMediaOverlayClient.getVoices(lang)
+        : [];
     // Services the user set up themselves come next, hidden when unavailable.
     const ttsCustomVoices = this.ttsCustomClient.initialized
       ? (await this.ttsCustomClient.getVoices(lang)).filter((group) => group.voices.length > 0)
@@ -2349,6 +2428,34 @@ export class TTSController extends EventTarget {
   async setVoice(voiceId: string, lang: string) {
     this.state = 'setvoice-paused';
     this.#withdrawPreloads();
+
+    // Gutenberg AI fork: switching between library voices (or from one to the book's own
+    // recording) changes the clips behind every sentence; the text source is rebuilt at the
+    // same sentence, so the new voice carries on where the old one was.
+    const libraryVoice = isLibraryVoiceId(voiceId)
+      ? this.#libraryVoices.find((voice) => voice.info.key === libraryVoiceKey(voiceId))
+      : undefined;
+    if (libraryVoice || (voiceId === MEDIA_OVERLAY_VOICE_ID && this.#libraryVoice)) {
+      if (libraryVoice) await libraryVoice.load();
+      const next = libraryVoice ?? null;
+      const changed = next !== this.#libraryVoice || !this.narrationActive;
+      this.#libraryVoice = next;
+      if (changed) {
+        this.ttsMediaOverlayClient.invalidatePlayback();
+        this.#useNarration = true;
+        await this.ttsMediaOverlayClient.init();
+        this.#attachNarrationSource(this.view.book);
+        this.ttsClient = this.ttsMediaOverlayClient;
+        await this.#rebuildTextSource();
+      }
+      await this.ttsMediaOverlayClient.setRate(this.ttsRate);
+      TTSUtils.setPreferredVoice(this.ttsMediaOverlayClient.name, lang, voiceId);
+      this.#sectionTimeline?.setVoice(voiceId);
+      this.dispatchEvent(
+        new CustomEvent('library-voice-change', { detail: { key: next?.info.key ?? null } }),
+      );
+      return;
+    }
 
     // Switching into or out of narration changes the mark source, not just the
     // engine: the current section's TTS instance has to be rebuilt.
@@ -2415,6 +2522,7 @@ export class TTSController extends EventTarget {
   }
 
   getVoiceId() {
+    if (this.narrationActive && this.#libraryVoice) return this.#libraryVoice.id;
     return this.ttsClient.getVoiceId();
   }
 

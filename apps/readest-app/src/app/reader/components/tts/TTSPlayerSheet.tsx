@@ -23,6 +23,7 @@ import { TbArrowBarToRight } from 'react-icons/tb';
 import { useAppRouter } from '@/hooks/useAppRouter';
 import { TTSVoicesGroup } from '@/services/tts';
 import { MEDIA_OVERLAY_VOICE_ID } from '@/services/tts/mediaOverlay';
+import { isLibraryVoiceId } from '@/services/tts/libraryVoice';
 import type { TTSLoopState } from '@/services/tts/TTSController';
 import { saveViewSettings } from '@/helpers/settings';
 import { useEnv } from '@/context/EnvContext';
@@ -51,6 +52,10 @@ import SpeedRuler, { formatRate } from './SpeedRuler';
 import TTSChaptersView from './TTSChaptersView';
 import { TTS_STOP_AT_CHAPTER_END } from '@/services/tts/TTSSessionManager';
 import type { UseTTSDownloadsResult } from '@/app/reader/hooks/useTTSDownloads';
+
+// Gutenberg AI fork: library read-along voices are recordings too.
+const isNarrationVoice = (id: string): boolean =>
+  id === MEDIA_OVERLAY_VOICE_ID || isLibraryVoiceId(id);
 
 type SheetView = 'main' | 'speed' | 'voice' | 'timer' | 'chapters';
 
@@ -268,9 +273,9 @@ const TTSPlayerSheet = ({
   // Books with recorded narration expose it as a voice; while it is playing
   // there is nothing to pre-download, since the audio ships with the book.
   const hasNarrationVoice = voiceGroups.some((group) =>
-    group.voices.some((voice) => voice.id === MEDIA_OVERLAY_VOICE_ID),
+    group.voices.some((voice) => isNarrationVoice(voice.id)),
   );
-  const isNarrating = selectedVoice === MEDIA_OVERLAY_VOICE_ID;
+  const isNarrating = isNarrationVoice(selectedVoice);
 
   // Fresh open: land on the main view with current rate/voice.
   useEffect(() => {
@@ -343,7 +348,7 @@ const TTSPlayerSheet = ({
     // synthetic voice; ttsVoice alone can't say, since it inherits the global
     // default. Only written for books that offer narration at all.
     if (hasNarrationVoice) {
-      vs.ttsUseNarration = voice === MEDIA_OVERLAY_VOICE_ID;
+      vs.ttsUseNarration = isNarrationVoice(voice);
     }
     setViewSettings(bookKey, vs);
     setView('main');

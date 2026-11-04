@@ -2650,5 +2650,6 @@
   "Preparing narration… it starts in a few seconds": "ナレーションを準備しています…数秒後に始まります",
   "Narration in progress: {{percent}}% of the book narrated": "ナレーション再生中：本の{{percent}}%を読み上げました",
   "Preparing narration — it starts in a few seconds.": "ナレーションを準備しています — 数秒後に始まります。",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "読み上げはまだこの章に達していません。まもなくここから開始します。"
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "読み上げはまだこの章に達していません。まもなくここから開始します。",
+  "Read-along voices": "読み上げ音声"
 }

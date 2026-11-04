@@ -69,7 +69,7 @@ const BLOCK_TAGS = new Set([
 // A whole-paragraph par is its own block; word- or phrase-level pars inside one
 // paragraph share it, which is what makes word-by-word highlighting fall out of
 // the recording's own granularity.
-const blockAncestor = (el: Element): Element => {
+export const blockAncestor = (el: Element): Element => {
   let node: Element | null = el;
   while (node) {
     if (BLOCK_TAGS.has(node.localName)) return node;
@@ -89,7 +89,7 @@ const blockAncestor = (el: Element): Element => {
 // TTS ranges come from its text walker and are always text-node-based; these
 // have to match. Returns null for an element with no readable text (a narrated
 // image), whose clip is still heard because a block plays as one span.
-const textRangeOf = (doc: Document, el: Element): Range | null => {
+export const textRangeOf = (doc: Document, el: Element): Range | null => {
   const walker = doc.createTreeWalker(el, NodeFilter.SHOW_TEXT);
   let first: Text | null = null;
   let last: Text | null = null;

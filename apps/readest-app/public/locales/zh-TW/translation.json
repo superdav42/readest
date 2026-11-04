@@ -2650,5 +2650,6 @@
   "Preparing narration… it starts in a few seconds": "正在準備朗讀…幾秒後開始",
   "Narration in progress: {{percent}}% of the book narrated": "正在朗讀：本書已朗讀 {{percent}}%",
   "Preparing narration — it starts in a few seconds.": "正在準備朗讀 — 幾秒後開始。",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "旁白尚未播放到本章，稍後就會從這裡開始。"
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "旁白尚未播放到本章，稍後就會從這裡開始。",
+  "Read-along voices": "伴讀聲音"
 }

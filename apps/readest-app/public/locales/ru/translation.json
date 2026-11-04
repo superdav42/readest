@@ -2857,5 +2857,6 @@
   "Preparing narration… it starts in a few seconds": "Подготавливаем аудиоверсию… она начнётся через несколько секунд",
   "Narration in progress: {{percent}}% of the book narrated": "Идёт озвучивание: озвучено {{percent}}% книги",
   "Preparing narration — it starts in a few seconds.": "Подготавливаем аудиоверсию — она начнётся через несколько секунд.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "Озвучивание ещё не дошло до этой главы. Скоро оно начнётся здесь."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Озвучивание ещё не дошло до этой главы. Скоро оно начнётся здесь.",
+  "Read-along voices": "Голоса для чтения вслух"
 }
