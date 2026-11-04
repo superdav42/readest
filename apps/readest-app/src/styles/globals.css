@@ -1,11 +1,22 @@
 /* Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md. */
 @import 'tailwindcss' source('../');
+/* Tests quote class names (and common words) that would otherwise pull in unused CSS. */
+@source not '../__tests__';
 @plugin '@tailwindcss/typography';
 @plugin 'daisyui' {
   themes:
     light --default,
     dark --prefersdark;
   logs: false;
+  /* daisyUI components no markup in src/ uses. Their class names are ordinary words
+     ("stat", "status", "list", "label", "diff"...) that Tailwind's scanner matches in
+     comments and variable names, so each one would ship its full stylesheet. Remove an
+     entry from this list when you start using the component. */
+  exclude:
+    aura, avatar, calendar, carousel, chat, countdown, diff, divider, dock, drawer, fab,
+    fieldset, fileinput, filter, footer, hover3d, hovergallery, indicator, label, list, mask,
+    megamenu, mockup, navbar, otp, rating, stack, stat, status, swap, textrotate, timeline,
+    validator;
 }
 /* The built-in Readest themes, compiled from themes.ts (see daisyui-themes.ts). */
 @plugin './daisyui-themes.ts';
