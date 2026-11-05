@@ -1,4 +1,4 @@
-// Modified 2026-10-31 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React from 'react';
 
@@ -43,6 +43,7 @@ const BookMenu: React.FC<BookMenuProps> = ({ menuClassName, setIsDropdownOpen })
   const bookData = sideBarBookKey ? getBookData(sideBarBookKey) : null;
   const showPairAudiobook = canPairAudiobook(bookData);
   const showTOCThumbnails = viewSettings?.showTOCThumbnails ?? true;
+  const showAnnotationTransfer = !isIndependentDeployment();
 
   const [isSortedTOC, setIsSortedTOC] = React.useState(viewSettings?.sortedTOC || false);
 
@@ -292,8 +293,12 @@ const BookMenu: React.FC<BookMenuProps> = ({ menuClassName, setIsDropdownOpen })
         />
       )}
       <hr aria-hidden='true' className='border-base-200 my-1' />
-      <MenuItem label={_('Export Annotations')} onClick={handleExportAnnotations} />
-      <MenuItem label={_('Import Annotations')} onClick={handleImportAnnotations} />
+      {showAnnotationTransfer && (
+        <>
+          <MenuItem label={_('Export Annotations')} onClick={handleExportAnnotations} />
+          <MenuItem label={_('Import Annotations')} onClick={handleImportAnnotations} />
+        </>
+      )}
       <MenuItem
         label={_('Clear Annotations')}
         disabled={annotationsToClear === 0}
