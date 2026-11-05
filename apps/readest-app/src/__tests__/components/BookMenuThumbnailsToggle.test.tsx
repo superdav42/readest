@@ -30,7 +30,16 @@ const setBook = (bookDoc: object, viewSettings: object) => {
     viewStates: { book1: { viewSettings } },
   });
   (useBookDataStore.setState as unknown as (state: unknown) => void)({
-    booksData: { book1: { id: 'book1', book: null, file: null, config: null, bookDoc } },
+    booksData: {
+      book1: {
+        id: 'book1',
+        book: { format: 'EPUB' },
+        file: null,
+        config: null,
+        docFormat: 'EPUB',
+        bookDoc,
+      },
+    },
   });
 };
 
@@ -58,6 +67,18 @@ describe('BookMenu page thumbnails toggle', () => {
     rerender(<BookMenu />);
     expect(screen.queryByRole('menuitem', { name: 'Export Annotations' })).toBeNull();
     expect(screen.queryByRole('menuitem', { name: 'Import Annotations' })).toBeNull();
+    expect(screen.getByText('Clear Annotations')).not.toBeNull();
+  });
+
+  it('hides manual audiobook pairing only for independent deployments', () => {
+    setBook({ rendition: {}, toc: [{}] }, { showTOCThumbnails: true });
+    const { rerender } = render(<BookMenu />);
+    expect(screen.getByRole('menuitem', { name: 'Pair Audiobook' })).not.toBeNull();
+
+    brand.independentDeployment = true;
+    rerender(<BookMenu />);
+    expect(screen.queryByRole('menuitem', { name: 'Pair Audiobook' })).toBeNull();
+    expect(screen.getByRole('menuitem', { name: 'Proofread' })).not.toBeNull();
     expect(screen.getByText('Clear Annotations')).not.toBeNull();
   });
 
