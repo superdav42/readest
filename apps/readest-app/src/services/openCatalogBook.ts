@@ -104,7 +104,9 @@ export const openCatalogBook = async (
   onProgress: (fraction: number) => void = () => undefined,
 ): Promise<Book> => {
   const existing = findLibraryEdition(useLibraryStore.getState().library, edition);
-  if (existing) return existing;
+  // Catalog metadata can seed a shelf row before its EPUB exists on this device. Reuse only
+  // a readable local or streaming source; importing below fills that row with the real file.
+  if (existing && (await appService.isBookAvailable(existing))) return existing;
   const { library, setLibrary } = useLibraryStore.getState();
   let book: Book | null = null;
   let streaming = false;
