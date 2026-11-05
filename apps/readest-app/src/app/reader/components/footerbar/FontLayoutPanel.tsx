@@ -1,13 +1,17 @@
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { TbBoxMargin } from 'react-icons/tb';
 import { RxLineHeight } from 'react-icons/rx';
 import { PiGear } from 'react-icons/pi';
 import { useEnv } from '@/context/EnvContext';
 import { useReaderStore } from '@/store/readerStore';
 import { useSettingsStore } from '@/store/settingsStore';
+import { useCustomFontStore } from '@/store/customFontStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { saveViewSettings } from '@/helpers/settings';
+import { NON_FREE_FONTS, SANS_SERIF_FONTS, SERIF_FONTS } from '@/services/constants';
+import { getOSPlatform } from '@/utils/misc';
 import Slider from '@/components/Slider';
 
 const FONT_SIZE_LIMITS = {
@@ -51,8 +55,74 @@ export const FontLayoutPanel: React.FC<FontLayoutPanelProps> = ({
   const { envConfig, appService } = useEnv();
   const { getView, getViewSettings, setHoveredBookKey } = useReaderStore();
   const { setSettingsDialogBookKey, setSettingsDialogOpen, setRequestedPanel } = useSettingsStore();
+  const customFontRecords = useCustomFontStore((state) => state.fonts);
   const viewSettings = getViewSettings(bookKey);
   const view = getView(bookKey);
+  const [fontCategory, setFontCategory] = useState(viewSettings?.defaultFont ?? 'Serif');
+  const [serifFont, setSerifFont] = useState(viewSettings?.serifFont ?? 'Bitter');
+  const [sansSerifFont, setSansSerifFont] = useState(viewSettings?.sansSerifFont ?? 'Roboto');
+
+  useEffect(() => {
+    setFontCategory(viewSettings?.defaultFont ?? 'Serif');
+    setSerifFont(viewSettings?.serifFont ?? 'Bitter');
+    setSansSerifFont(viewSettings?.sansSerifFont ?? 'Roboto');
+  }, [bookKey, viewSettings?.defaultFont, viewSettings?.sansSerifFont, viewSettings?.serifFont]);
+
+  const filterAvailableFonts = useCallback(
+    (font: string) =>
+      !['android', 'linux'].includes(getOSPlatform()) || !NON_FREE_FONTS.includes(font),
+    [],
+  );
+  const customFonts = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          customFontRecords
+            .filter((font) => font.loaded && !font.error && !font.deletedAt)
+            .map((font) => font.family || font.name),
+        ),
+      ).sort((a, b) => a.localeCompare(b)),
+    [customFontRecords],
+  );
+  const serifOptions = useMemo(
+    () =>
+      Array.from(new Set([serifFont, ...customFonts, ...SERIF_FONTS.filter(filterAvailableFonts)])),
+    [customFonts, filterAvailableFonts, serifFont],
+  );
+  const sansSerifOptions = useMemo(
+    () =>
+      Array.from(
+        new Set([sansSerifFont, ...customFonts, ...SANS_SERIF_FONTS.filter(filterAvailableFonts)]),
+      ),
+    [customFonts, filterAvailableFonts, sansSerifFont],
+  );
+  const selectedFont = fontCategory === 'Sans-serif' ? sansSerifFont : serifFont;
+  const selectedFontOptions = fontCategory === 'Sans-serif' ? sansSerifOptions : serifOptions;
+  const selectedGenericFamily = fontCategory === 'Sans-serif' ? 'sans-serif' : 'serif';
+
+  const handleFontCategoryChange = useCallback(
+    (category: string) => {
+      setFontCategory(category);
+      saveViewSettings(envConfig, bookKey, 'defaultFont', category);
+      // A deliberate quick-font choice must win over a book-authored family.
+      saveViewSettings(envConfig, bookKey, 'overrideFont', true);
+    },
+    [bookKey, envConfig],
+  );
+
+  const handleFontFaceChange = useCallback(
+    (font: string) => {
+      if (fontCategory === 'Sans-serif') {
+        setSansSerifFont(font);
+        saveViewSettings(envConfig, bookKey, 'sansSerifFont', font);
+      } else {
+        setSerifFont(font);
+        saveViewSettings(envConfig, bookKey, 'serifFont', font);
+      }
+      saveViewSettings(envConfig, bookKey, 'overrideFont', true);
+    },
+    [bookKey, envConfig, fontCategory],
+  );
 
   const handleFontSizeChange = useCallback(
     (value: number) => {
@@ -112,7 +182,7 @@ export const FontLayoutPanel: React.FC<FontLayoutPanelProps> = ({
   }, []);
 
   const classes = clsx(
-    'footerbar-font-mobile not-eink:bg-base-200 eink:bg-base-100 absolute flex w-full flex-col items-center gap-y-8 px-4 transition-all',
+    'footerbar-font-mobile not-eink:bg-base-200 eink:bg-base-100 absolute flex w-full flex-col items-center gap-y-6 px-4 transition-all',
     'eink:border-base-content eink:border-t',
     !forceMobileLayout && 'sm:hidden',
     // Paddings stay constant in both states (the slide is transform-only) so
@@ -134,6 +204,42 @@ export const FontLayoutPanel: React.FC<FontLayoutPanelProps> = ({
         ...insetStyle,
       }}
     >
+      <div className='flex w-full items-end gap-3'>
+        <label className='flex min-w-0 flex-1 flex-col gap-1.5 text-sm'>
+          <span className='text-base-content/70'>{_('Font Category')}</span>
+          <select
+            aria-label={_('Font Category')}
+            className='select eink-bordered bg-base-100 h-11 min-h-11 w-full'
+            value={fontCategory}
+            onChange={(event) => handleFontCategoryChange(event.target.value)}
+          >
+            <option value='Serif'>{_('Serif Font')}</option>
+            <option value='Sans-serif'>{_('Sans-Serif Font')}</option>
+          </select>
+        </label>
+        <label className='flex min-w-0 flex-[1.35] flex-col gap-1.5 text-sm'>
+          <span className='text-base-content/70'>
+            {_(fontCategory === 'Sans-serif' ? 'Sans-Serif Font' : 'Serif Font')}
+          </span>
+          <select
+            aria-label={_(fontCategory === 'Sans-serif' ? 'Sans-Serif Font' : 'Serif Font')}
+            className='select eink-bordered bg-base-100 h-11 min-h-11 w-full'
+            style={{ fontFamily: `'${selectedFont}', ${selectedGenericFamily}` }}
+            value={selectedFont}
+            onChange={(event) => handleFontFaceChange(event.target.value)}
+          >
+            {selectedFontOptions.map((font) => (
+              <option
+                key={font}
+                value={font}
+                style={{ fontFamily: `'${font}', ${selectedGenericFamily}` }}
+              >
+                {font}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
       <Slider
         label={_('Font Size')}
         initialValue={viewSettings?.defaultFontSize ?? FONT_SIZE_LIMITS.DEFAULT}
@@ -170,12 +276,12 @@ export const FontLayoutPanel: React.FC<FontLayoutPanelProps> = ({
           onChange={handleLineHeightChange}
         />
       </div>
-      {/* -mt-4 halves the container's gap-y-8 above this row: the sliders are
+      {/* The negative margin halves the gap above this row: the sliders are
           peers of each other, this is a trailing escape hatch and reads better
           tucked closer. `self-end` follows `dir`, so it mirrors in RTL. */}
       <button
         type='button'
-        className='btn btn-ghost btn-sm text-base-content/70 -mt-4 h-8 min-h-8 gap-1.5 self-end px-2 font-normal'
+        className='btn btn-ghost text-base-content/70 -mt-2 h-11 min-h-11 gap-1.5 self-end px-3 font-normal'
         onClick={handleOpenSettings}
       >
         <PiGear size={16} />

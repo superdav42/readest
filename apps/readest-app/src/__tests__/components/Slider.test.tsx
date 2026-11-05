@@ -1,5 +1,5 @@
-import { cleanup, render } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { cleanup, fireEvent, render } from '@testing-library/react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import Slider from '@/components/Slider';
 
@@ -49,6 +49,19 @@ describe('Slider', () => {
 
     rerender(<Slider label='Reading Progress' initialValue={75} heightPx={44} />);
     expect(thumb.style.insetInlineStart).toBe('calc(75% - 11px)');
+  });
+
+  it('moves by one semantic value step with the keyboard', () => {
+    const onChange = vi.fn();
+    const { getByRole } = render(
+      <Slider label='Font Size' min={8} max={30} initialValue={16} onChange={onChange} />,
+    );
+    const input = getByRole('slider') as HTMLInputElement;
+
+    input.stepUp();
+    fireEvent.change(input);
+
+    expect(onChange).toHaveBeenCalledWith(17);
   });
 
   it('never pins itself to a physical side', () => {
