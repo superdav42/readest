@@ -1,4 +1,4 @@
-// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { RiDeleteBinLine } from 'react-icons/ri';
 
@@ -24,6 +24,7 @@ import { useSidebarStore } from '@/store/sidebarStore';
 import { useCustomDictionaryStore } from '@/store/customDictionaryStore';
 import { isSystemDictionaryEnabled } from '@/services/dictionaries/registry';
 import { getRuntimeConfig } from '@/services/runtimeConfig';
+import { isIndependentDeployment } from '@/utils/appBrand';
 import { invokeSystemDictionary } from '@/services/dictionaries/systemDictionary';
 import { buildSelectionContext } from '@/services/dictionaries/contextDictionary';
 import type { DictionarySelectionContext } from '@/services/dictionaries/types';
@@ -146,6 +147,7 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
   gridInsets = ZERO_INSETS,
 }) => {
   const _ = useTranslation();
+  const annotationTransferEnabled = !isIndependentDeployment();
   const { envConfig, appService } = useEnv();
   const { settings, setSettingsDialogBookKey, setSettingsDialogOpen, setActiveSettingsItemId } =
     useSettingsStore();
@@ -1063,18 +1065,22 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
   }, [bookKey, showingPopup, repositionPopups]);
 
   useEffect(() => {
-    eventDispatcher.on('export-annotations', handleExportMarkdown);
+    if (annotationTransferEnabled) {
+      eventDispatcher.on('export-annotations', handleExportMarkdown);
+      eventDispatcher.on('import-annotations', handleImportAnnotations);
+    }
     eventDispatcher.on('clear-annotations', handleClearAnnotations);
-    eventDispatcher.on('import-annotations', handleImportAnnotations);
     eventDispatcher.on('create-tts-highlight', handleCreateTTSHighlight);
     return () => {
-      eventDispatcher.off('export-annotations', handleExportMarkdown);
+      if (annotationTransferEnabled) {
+        eventDispatcher.off('export-annotations', handleExportMarkdown);
+        eventDispatcher.off('import-annotations', handleImportAnnotations);
+      }
       eventDispatcher.off('clear-annotations', handleClearAnnotations);
-      eventDispatcher.off('import-annotations', handleImportAnnotations);
       eventDispatcher.off('create-tts-highlight', handleCreateTTSHighlight);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [annotationTransferEnabled]);
 
   useEffect(() => {
     // Lazily back-fill `page` on every annotation that doesn't have one
@@ -2890,7 +2896,7 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
           onClose={handleCloseQuoteCard}
         />
       )}
-      {showExportDialog && exportData && bookData.book && (
+      {annotationTransferEnabled && showExportDialog && exportData && bookData.book && (
         <ExportMarkdownDialog
           bookKey={bookKey}
           isOpen={showExportDialog}
@@ -2906,7 +2912,7 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
           onExport={handleConfirmExport}
         />
       )}
-      {showImportDialog && (
+      {annotationTransferEnabled && showImportDialog && (
         <ImportAnnotationsDialog
           isOpen={showImportDialog}
           onClose={() => setShowImportDialog(false)}

@@ -38,6 +38,8 @@ const h = vi.hoisted(() => ({
     vertical: false,
   },
   onExport: null as null | OnExport,
+  importDialogMounted: false,
+  independentDeployment: false,
 }));
 
 const settings = {
@@ -181,6 +183,10 @@ vi.mock('@/services/transformService', () => ({
   transformContent: ({ content }: { content: string }) => Promise.resolve(content),
 }));
 
+vi.mock('@/utils/appBrand', () => ({
+  isIndependentDeployment: () => h.independentDeployment,
+}));
+
 vi.mock('@/utils/clipboard', () => ({
   writeTextToClipboard: vi.fn().mockResolvedValue(true),
 }));
@@ -201,7 +207,10 @@ vi.mock('@/app/reader/components/annotator/ExportMarkdownDialog', () => ({
   },
 }));
 vi.mock('@/app/reader/components/annotator/ImportAnnotationsDialog', () => ({
-  default: () => null,
+  default: () => {
+    h.importDialogMounted = true;
+    return null;
+  },
 }));
 
 import Annotator from '@/app/reader/components/annotator/Annotator';
@@ -222,6 +231,8 @@ describe('Annotator export confirmation on macOS', () => {
 
   beforeEach(() => {
     h.onExport = null;
+    h.importDialogMounted = false;
+    h.independentDeployment = false;
     toasts.length = 0;
     h.appService.saveFile.mockClear();
     h.appService.saveFile.mockResolvedValue(true);
@@ -261,5 +272,18 @@ describe('Annotator export confirmation on macOS', () => {
       expect.objectContaining({ share: true }),
     );
     expect(toasts).toEqual([]);
+  });
+
+  test('independent deployments ignore annotation transfer events and do not mount dialogs', async () => {
+    h.independentDeployment = true;
+    render(<Annotator bookKey='book-1' contentInsets={{ top: 0, right: 0, bottom: 0, left: 0 }} />);
+
+    await act(async () => {
+      await eventDispatcher.dispatch('export-annotations', { bookKey: 'book-1' });
+      await eventDispatcher.dispatch('import-annotations', { bookKey: 'book-1' });
+    });
+
+    expect(h.onExport).toBeNull();
+    expect(h.importDialogMounted).toBe(false);
   });
 });

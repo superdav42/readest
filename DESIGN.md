@@ -19,3 +19,6 @@ fork-specific product decisions that should survive future upstream merges.
   content.
 - Reader chrome uses existing safe-area, orientation, theme, e-ink, and responsive mechanisms rather
   than introducing a separate mobile shell.
+- Independent deployments keep annotation creation, viewing, notes, highlights, and clearing, but do
+  not expose annotation-file import or export in reader menus and do not respond to those commands.
+  Standard Readest deployments retain the transfer actions.
