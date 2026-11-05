@@ -42,6 +42,7 @@ const BookMenu: React.FC<BookMenuProps> = ({ menuClassName, setIsDropdownOpen })
   const viewSettings = getViewSettings(sideBarBookKey!);
   const bookData = sideBarBookKey ? getBookData(sideBarBookKey) : null;
   const showPairAudiobook = !isIndependentDeployment() && canPairAudiobook(bookData);
+  const showProofread = !isIndependentDeployment();
   const showTOCThumbnails = viewSettings?.showTOCThumbnails ?? true;
   const showAnnotationTransfer = !isIndependentDeployment();
 
@@ -282,15 +283,21 @@ const BookMenu: React.FC<BookMenuProps> = ({ menuClassName, setIsDropdownOpen })
           </ul>
         </MenuItem>
       )}
-      <hr aria-hidden='true' className='border-base-200 my-1' />
-      <MenuItem label={_('Proofread')} onClick={showProofreadRulesWindow} />
-      {showPairAudiobook && (
-        <MenuItem
-          label={
-            getConfig(sideBarBookKey!)?.audiobook ? _('Manage Audiobook') : _('Pair Audiobook')
-          }
-          onClick={handleManageAudiobook}
-        />
+      {(showProofread || showPairAudiobook) && (
+        <>
+          <hr aria-hidden='true' className='border-base-200 my-1' />
+          {showProofread && (
+            <MenuItem label={_('Proofread')} onClick={showProofreadRulesWindow} />
+          )}
+          {showPairAudiobook && (
+            <MenuItem
+              label={
+                getConfig(sideBarBookKey!)?.audiobook ? _('Manage Audiobook') : _('Pair Audiobook')
+              }
+              onClick={handleManageAudiobook}
+            />
+          )}
+        </>
       )}
       <hr aria-hidden='true' className='border-base-200 my-1' />
       {showAnnotationTransfer && (

@@ -1,3 +1,4 @@
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 'use client';
 
 import clsx from 'clsx';
@@ -31,6 +32,7 @@ import { ProofreadRulesManager } from './ProofreadRules';
 import { Toast } from '@/components/Toast';
 import { getLocale } from '@/utils/misc';
 import { initDayjs } from '@/utils/time';
+import { isIndependentDeployment } from '@/utils/appBrand';
 import ReaderContent from './ReaderContent';
 
 /*
@@ -170,7 +172,7 @@ const Reader: React.FC<{ ids?: string }> = ({ ids }) => {
         <ReadingStatsDialog />
         <KeyboardShortcutsHelp />
         <UpdaterWindow />
-        <ProofreadRulesManager />
+        {!isIndependentDeployment() && <ProofreadRulesManager />}
         <Toast />
       </Suspense>
     </div>

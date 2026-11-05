@@ -148,6 +148,7 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
 }) => {
   const _ = useTranslation();
   const annotationTransferEnabled = !isIndependentDeployment();
+  const proofreadEnabled = !isIndependentDeployment();
   const { envConfig, appService } = useEnv();
   const { settings, setSettingsDialogBookKey, setSettingsDialogOpen, setActiveSettingsItemId } =
     useSettingsStore();
@@ -311,7 +312,10 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
   const globalToggleActive = !!currentAnnotation?.global;
   const annotPopupMaxWidth = Math.min(useResponsiveSize(300), maxWidth);
   const annotPopupToolSize = useResponsiveSize(44);
-  const toolbarToolTypes = getToolbarToolTypes(viewSettings.annotationToolbarItems, canShare);
+  const toolbarToolTypes = getToolbarToolTypes(
+    viewSettings.annotationToolbarItems,
+    canShare,
+  ).filter((type) => proofreadEnabled || type !== 'proofread');
   const highlightOptionsGap = toolbarToolTypes.length <= 4 ? 4 : 8;
   // Three 30px styles, a four- or five-color pill (100px or 122px), and three gaps;
   // the global toggle adds a 30px button and a gap. Keep in sync with HighlightOptions.
@@ -2062,12 +2066,13 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
         return true;
       },
       onProofreadSelection: () => {
+        if (!proofreadEnabled) return false;
         if (selection?.popup && !selection.cfi) return false;
         handleProofread();
         return true;
       },
     },
-    [selection?.text, selection?.cfi, selection?.popup],
+    [proofreadEnabled, selection?.text, selection?.cfi, selection?.popup],
   );
 
   const handleImportAnnotations = (event: CustomEvent) => {
@@ -2836,21 +2841,25 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
             onDismiss={noteEditorTarget ? handleCancelNote : handleDismissPopupAndSelection}
           />
         )}
-      {showProofreadPopup && trianglePosition && proofreadPopupPosition && selection && (
-        <ProofreadPopup
-          bookKey={bookKey}
-          selection={selection}
-          position={proofreadPopupPosition}
-          trianglePosition={trianglePosition}
-          popupWidth={proofreadPopupWidth}
-          popupHeight={proofreadPopupHeight}
-          onDismiss={handleDismissPopupShowToolbar}
-          onManage={() => {
-            handleDismissPopupAndSelection();
-            setProofreadRulesVisibility(true);
-          }}
-        />
-      )}
+      {proofreadEnabled &&
+        showProofreadPopup &&
+        trianglePosition &&
+        proofreadPopupPosition &&
+        selection && (
+          <ProofreadPopup
+            bookKey={bookKey}
+            selection={selection}
+            position={proofreadPopupPosition}
+            trianglePosition={trianglePosition}
+            popupWidth={proofreadPopupWidth}
+            popupHeight={proofreadPopupHeight}
+            onDismiss={handleDismissPopupShowToolbar}
+            onManage={() => {
+              handleDismissPopupAndSelection();
+              setProofreadRulesVisibility(true);
+            }}
+          />
+        )}
       {!editingAnnotation &&
         !overlaySurfaceOpen &&
         selection?.handlesSuppressed &&
