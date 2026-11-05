@@ -199,9 +199,12 @@ export const prepareLibraryVoices = async (
   }
   const list = voices.voices.map((info) => new LibraryVoice(info));
   const chosen = getChosenLibraryVoice(voices.work_id, voices.lang);
+  const eligibleDefault = (voice: LibraryVoice) => !hasOverlays || voice.info.kind !== 'ai';
   const ordered = [
-    ...list.filter((voice) => voice.info.key === chosen),
-    ...list.filter((voice) => voice.info.default && voice.info.key !== chosen),
+    ...list.filter((voice) => voice.info.key === chosen && eligibleDefault(voice)),
+    ...list.filter(
+      (voice) => voice.info.default && voice.info.key !== chosen && eligibleDefault(voice),
+    ),
   ];
   for (const voice of ordered) {
     const ok = await withTimeout(

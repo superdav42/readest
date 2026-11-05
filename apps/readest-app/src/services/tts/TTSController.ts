@@ -2391,18 +2391,21 @@ export class TTSController extends EventTarget {
     // voice available for that book by a wide margin.
     // Gutenberg AI fork: a library text edition lists every voice it has (human LibriVox
     // readings, dramatized and AI narration), default first, plus the book's own recording.
+    const hasBookNarration = hasMediaOverlays(this.view?.book);
     const narrationVoices = this.#libraryVoices.length
       ? [
           {
             id: 'library-voices',
             name: _('Read-along voices'),
             voices: [
-              ...this.#libraryVoices.map((voice) => ({
-                id: voice.id,
-                name: libraryVoiceName(voice.info),
-                lang,
-              })),
-              ...(hasMediaOverlays(this.view?.book)
+              ...this.#libraryVoices
+                .filter((voice) => !hasBookNarration || voice.info.kind !== 'ai')
+                .map((voice) => ({
+                  id: voice.id,
+                  name: libraryVoiceName(voice.info),
+                  lang,
+                })),
+              ...(hasBookNarration
                 ? [{ id: MEDIA_OVERLAY_VOICE_ID, name: _('Book narration'), lang }]
                 : []),
             ],
