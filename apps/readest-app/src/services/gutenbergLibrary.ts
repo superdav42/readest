@@ -204,6 +204,64 @@ export const requestEdition = (
         body: JSON.stringify({ work_id: workId, lang, kind }),
       });
 
+export type PassageReportCategory =
+  | 'meaning'
+  | 'missing'
+  | 'grammar'
+  | 'untranslated'
+  | 'formatting'
+  | 'other';
+
+export interface PassageReport {
+  workId: number;
+  lang: string;
+  quote: string;
+  category: PassageReportCategory;
+  comment?: string;
+  /** Content hash of the edition being read, when known. */
+  hash?: string;
+}
+
+/** A library edition that is a translation (its identifier carries a target language). */
+export const isTranslatedLibraryBook = (book: Pick<Book, 'metadata'>): boolean =>
+  isSharedLibraryOnly() && /urn:gutenberg-ai:\d+:[a-z]{2}/.test(book.metadata?.identifier ?? '');
+
+/**
+ * Report a faulty passage of a translated edition. The library routes it to a
+ * stronger re-translation in its next background review. Throws `library_api_<status>`
+ * (429: too many reports; 404: not a translated edition).
+ */
+export const reportPassage = (report: PassageReport) => {
+  const quote = report.quote.replace(/\s+/g, ' ').trim().slice(0, 1000);
+  const comment = report.comment?.replace(/\s+/g, ' ').trim().slice(0, 1000) || undefined;
+  const hash = report.hash && /^[0-9a-f]{32}$/.test(report.hash) ? report.hash : undefined;
+  return rpcBase()
+    ? api<{ ok: boolean }>('/report_passage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          p_work_id: report.workId,
+          p_lang: report.lang,
+          p_quote: quote,
+          p_category: report.category,
+          p_comment: comment ?? null,
+          p_hash: hash ?? null,
+        }),
+      })
+    : api<{ ok: boolean }>('/reports', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          work_id: report.workId,
+          lang: report.lang,
+          quote,
+          category: report.category,
+          comment,
+          hash,
+        }),
+      });
+};
+
 /** App route that opens the operator's catalog (in the reader's language), or null. */
 export const getLibraryBrowsePath = (): string | null => {
   const url = getRuntimeConfig()?.featuredCatalogUrl;

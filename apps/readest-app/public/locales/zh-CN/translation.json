@@ -2651,5 +2651,22 @@
   "Narration in progress: {{percent}}% of the book narrated": "正在朗读：已朗读本书的 {{percent}}%",
   "Preparing narration — it starts in a few seconds.": "正在准备朗读——几秒后开始。",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "朗读内容尚未到达本章，请稍候，即将从这里开始。",
-  "Read-along voices": "伴读声音"
+  "Read-along voices": "伴读声音",
+  "Report Issue": "报告问题",
+  "Report a translation problem in the selection": "报告所选内容中的翻译问题",
+  "Report a translation problem": "报告翻译问题",
+  "Selected passage": "所选段落",
+  "What is wrong?": "哪里有问题？",
+  "The meaning is wrong": "意思错误",
+  "Something is missing": "有内容遗漏",
+  "Grammar or spelling": "语法或拼写",
+  "Not translated": "未翻译",
+  "Formatting": "格式",
+  "Other": "其他",
+  "Details (optional)": "详细说明（可选）",
+  "Send report": "发送报告",
+  "Sending…": "正在发送…",
+  "Thank you. This passage will be checked again.": "谢谢。我们会重新检查这一段。",
+  "Too many reports. Please try again later.": "报告过多，请稍后再试。",
+  "Could not send the report. Please try again later.": "无法发送报告，请稍后再试。"
 }

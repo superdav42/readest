@@ -134,5 +134,22 @@
   "Restored collection \"{{name}}\" ({{count}} books)_other": "Restored collection \"{{name}}\" ({{count}} books)",
   "Added {{count}} books in your language_one": "Added {{count}} book in your language",
   "Added {{count}} books in your language_other": "Added {{count}} books in your language",
-  "Read-along voices": "Read-along voices"
+  "Read-along voices": "Read-along voices",
+  "Report Issue": "Report Issue",
+  "Report a translation problem in the selection": "Report a translation problem in the selection",
+  "Report a translation problem": "Report a translation problem",
+  "Selected passage": "Selected passage",
+  "What is wrong?": "What is wrong?",
+  "The meaning is wrong": "The meaning is wrong",
+  "Something is missing": "Something is missing",
+  "Grammar or spelling": "Grammar or spelling",
+  "Not translated": "Not translated",
+  "Formatting": "Formatting",
+  "Other": "Other",
+  "Details (optional)": "Details (optional)",
+  "Send report": "Send report",
+  "Sending…": "Sending…",
+  "Thank you. This passage will be checked again.": "Thank you. This passage will be checked again.",
+  "Too many reports. Please try again later.": "Too many reports. Please try again later.",
+  "Could not send the report. Please try again later.": "Could not send the report. Please try again later."
 }

@@ -23,7 +23,12 @@ export const ALL_ANNOTATION_TOOL_TYPES: AnnotationToolType[] = [
   'proofread',
   'share',
   'quotecard',
+  'report',
 ];
+
+// Gutenberg AI fork: tools the reader adds by itself where they apply (report is
+// shown for translated library editions only), never placed by the user.
+export const AUTOMATIC_TOOL_TYPES: ReadonlySet<AnnotationToolType> = new Set(['report']);
 
 // Default toolbar: the eight pre-existing tools in their original order.
 // 'share' starts hidden in the Available tray per the #4014 design, and
@@ -47,7 +52,11 @@ const sanitize = (items: AnnotationToolType[] | undefined): AnnotationToolType[]
   const seen = new Set<AnnotationToolType>();
   const out: AnnotationToolType[] = [];
   for (const type of source) {
-    if (ALL_ANNOTATION_TOOL_TYPES.includes(type) && !seen.has(type)) {
+    if (
+      ALL_ANNOTATION_TOOL_TYPES.includes(type) &&
+      !AUTOMATIC_TOOL_TYPES.has(type) &&
+      !seen.has(type)
+    ) {
       seen.add(type);
       out.push(type);
     }
@@ -82,7 +91,8 @@ export const getAvailableToolTypes = (
 ): AnnotationToolType[] => {
   const visible = new Set(sanitize(items));
   return ALL_ANNOTATION_TOOL_TYPES.filter(
-    (type) => !visible.has(type) && (canShare || type !== 'share'),
+    (type) =>
+      !visible.has(type) && !AUTOMATIC_TOOL_TYPES.has(type) && (canShare || type !== 'share'),
   );
 };
 

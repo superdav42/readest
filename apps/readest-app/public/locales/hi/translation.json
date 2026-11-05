@@ -2720,5 +2720,22 @@
   "Narration in progress: {{percent}}% of the book narrated": "नैरेशन जारी है: किताब का {{percent}}% सुनाया जा चुका है",
   "Preparing narration — it starts in a few seconds.": "नैरेशन तैयार किया जा रहा है — यह कुछ ही सेकंड में शुरू होगा।",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "नैरेशन अभी इस अध्याय तक नहीं पहुँचा है। यह जल्द ही यहाँ शुरू होगा।",
-  "Read-along voices": "साथ-साथ पढ़ने की आवाज़ें"
+  "Read-along voices": "साथ-साथ पढ़ने की आवाज़ें",
+  "Report Issue": "समस्या बताएँ",
+  "Report a translation problem in the selection": "चयनित अंश में अनुवाद की समस्या बताएँ",
+  "Report a translation problem": "अनुवाद की समस्या बताएँ",
+  "Selected passage": "चयनित अंश",
+  "What is wrong?": "क्या गलत है?",
+  "The meaning is wrong": "अर्थ गलत है",
+  "Something is missing": "कुछ छूट गया है",
+  "Grammar or spelling": "व्याकरण या वर्तनी",
+  "Not translated": "अनुवाद नहीं हुआ",
+  "Formatting": "स्वरूपण",
+  "Other": "अन्य",
+  "Details (optional)": "विवरण (वैकल्पिक)",
+  "Send report": "रिपोर्ट भेजें",
+  "Sending…": "भेजा जा रहा है…",
+  "Thank you. This passage will be checked again.": "धन्यवाद। इस अंश की फिर से जाँच की जाएगी।",
+  "Too many reports. Please try again later.": "बहुत अधिक रिपोर्टें। कृपया बाद में फिर से प्रयास करें।",
+  "Could not send the report. Please try again later.": "रिपोर्ट नहीं भेजी जा सकी। कृपया बाद में फिर से प्रयास करें।"
 }
