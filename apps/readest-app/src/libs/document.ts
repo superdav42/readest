@@ -30,9 +30,12 @@ export interface TOCItem {
   subitems?: TOCItem[];
 }
 
-export interface LandmarkItem extends TOCItem {
+export interface LandmarkItem {
+  label?: string | null;
+  href?: string | null;
   /** EPUB landmark semantics such as cover, toc, or bodymatter. */
   type?: string[];
+  subitems?: LandmarkItem[] | null;
 }
 
 export interface SectionFragment {

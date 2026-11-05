@@ -32,8 +32,8 @@ describe('getMeaningfulFirstLocation', () => {
         section('preface.xhtml', 'preface-cfi'),
       ],
       landmarks: [
-        { id: 0, label: 'Cover', href: 'cover.xhtml', index: 0, type: ['cover'] },
-        { id: 1, label: 'Contents', href: 'nav.xhtml#toc', index: 0, type: ['toc'] },
+        { label: 'Cover', href: 'cover.xhtml', type: ['cover'] },
+        { label: 'Contents', href: 'nav.xhtml#toc', type: ['toc'] },
       ],
     });
 
@@ -43,9 +43,7 @@ describe('getMeaningfulFirstLocation', () => {
   it('preserves authored front matter that is not explicitly cover or navigation', () => {
     const doc = bookDoc({
       sections: [section('letter.xhtml', 'letter-cfi'), section('chapter-1.xhtml', 'chapter-cfi')],
-      landmarks: [
-        { id: 0, label: 'Start', href: 'chapter-1.xhtml', index: 0, type: ['bodymatter'] },
-      ],
+      landmarks: [{ label: 'Start', href: 'chapter-1.xhtml', type: ['bodymatter'] }],
     });
 
     expect(getMeaningfulFirstLocation(doc)).toBeNull();
@@ -54,7 +52,7 @@ describe('getMeaningfulFirstLocation', () => {
   it('keeps the existing start when cover metadata is not at the initial linear section', () => {
     const doc = bookDoc({
       sections: [section('preface.xhtml', 'preface-cfi'), section('cover.xhtml', 'cover-cfi')],
-      landmarks: [{ id: 0, label: 'Cover', href: 'cover.xhtml', index: 0, type: ['cover'] }],
+      landmarks: [{ label: 'Cover', href: 'cover.xhtml', type: ['cover'] }],
     });
 
     expect(getMeaningfulFirstLocation(doc)).toBeNull();
