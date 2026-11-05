@@ -2397,11 +2397,13 @@ export class TTSController extends EventTarget {
             id: 'library-voices',
             name: _('Read-along voices'),
             voices: [
-              ...this.#libraryVoices.map((voice) => ({
-                id: voice.id,
-                name: libraryVoiceName(voice.info),
-                lang,
-              })),
+              ...this.#libraryVoices
+                .filter((voice) => !hasMediaOverlays(this.view?.book) || voice.info.kind !== 'ai')
+                .map((voice) => ({
+                  id: voice.id,
+                  name: libraryVoiceName(voice.info),
+                  lang,
+                })),
               ...(hasMediaOverlays(this.view?.book)
                 ? [{ id: MEDIA_OVERLAY_VOICE_ID, name: _('Book narration'), lang }]
                 : []),
