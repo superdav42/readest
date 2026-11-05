@@ -49,6 +49,7 @@ fastlane/metadata/android/en-US/changelogs
 result*
 
 .playwright-mcp/
+.opencode/opencode-loop/
 .gstack
 
 .claude/worktrees
