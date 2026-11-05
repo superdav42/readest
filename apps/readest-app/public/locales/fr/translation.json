@@ -2788,5 +2788,22 @@
   "Narration in progress: {{percent}}% of the book narrated": "Narration en cours : {{percent}} % du livre raconté",
   "Preparing narration — it starts in a few seconds.": "Préparation de la narration — elle commence dans quelques secondes.",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "La narration n’a pas encore atteint ce chapitre. Elle commencera ici sous peu.",
-  "Read-along voices": "Voix de lecture accompagnée"
+  "Read-along voices": "Voix de lecture accompagnée",
+  "Report Issue": "Signaler un problème",
+  "Report a translation problem in the selection": "Signaler un problème de traduction dans la sélection",
+  "Report a translation problem": "Signaler un problème de traduction",
+  "Selected passage": "Passage sélectionné",
+  "What is wrong?": "Quel est le problème ?",
+  "The meaning is wrong": "Le sens est faux",
+  "Something is missing": "Il manque quelque chose",
+  "Grammar or spelling": "Grammaire ou orthographe",
+  "Not translated": "Non traduit",
+  "Formatting": "Mise en forme",
+  "Other": "Autre",
+  "Details (optional)": "Détails (facultatif)",
+  "Send report": "Envoyer le signalement",
+  "Sending…": "Envoi…",
+  "Thank you. This passage will be checked again.": "Merci. Ce passage sera vérifié à nouveau.",
+  "Too many reports. Please try again later.": "Trop de signalements. Réessayez plus tard.",
+  "Could not send the report. Please try again later.": "Impossible d’envoyer le signalement. Réessayez plus tard."
 }

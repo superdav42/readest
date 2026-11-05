@@ -24,6 +24,11 @@ import { useSidebarStore } from '@/store/sidebarStore';
 import { useCustomDictionaryStore } from '@/store/customDictionaryStore';
 import { isSystemDictionaryEnabled } from '@/services/dictionaries/registry';
 import { getRuntimeConfig } from '@/services/runtimeConfig';
+import {
+  getBookLanguage,
+  getBookWorkId,
+  isTranslatedLibraryBook,
+} from '@/services/gutenbergLibrary';
 import { invokeSystemDictionary } from '@/services/dictionaries/systemDictionary';
 import { buildSelectionContext } from '@/services/dictionaries/contextDictionary';
 import type { DictionarySelectionContext } from '@/services/dictionaries/types';
@@ -106,6 +111,7 @@ import ProofreadPopup from './ProofreadPopup';
 import { setProofreadRulesVisibility } from '@/app/reader/components/ProofreadRules';
 import ExportMarkdownDialog from './ExportMarkdownDialog';
 import QuoteCardDialog from './QuoteCardDialog';
+import ReportPassageDialog from './ReportPassageDialog';
 import type { QuoteCardColors, QuoteCardFont } from '@/utils/quoteCard';
 import { getFontFamilies } from '@/utils/style';
 import type { QuoteCardContent } from '@/utils/quoteCardRenderer';
@@ -309,7 +315,12 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
   const globalToggleActive = !!currentAnnotation?.global;
   const annotPopupMaxWidth = Math.min(useResponsiveSize(300), maxWidth);
   const annotPopupToolSize = useResponsiveSize(44);
-  const toolbarToolTypes = getToolbarToolTypes(viewSettings.annotationToolbarItems, canShare);
+  // Gutenberg AI fork: translated library editions offer "Report Issue" automatically.
+  const canReportPassage = !!bookData.book && isTranslatedLibraryBook(bookData.book);
+  const toolbarToolTypes = [
+    ...getToolbarToolTypes(viewSettings.annotationToolbarItems, canShare),
+    ...(canReportPassage ? (['report'] as const) : []),
+  ];
   const highlightOptionsGap = toolbarToolTypes.length <= 4 ? 4 : 8;
   // Three 30px styles, a four- or five-color pill (100px or 122px), and three gaps;
   // the global toggle adds a 30px button and a gap. Keep in sync with HighlightOptions.
@@ -1631,6 +1642,26 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
     });
   };
 
+  const [passageReport, setPassageReport] = useState<{
+    workId: number;
+    lang: string;
+    quote: string;
+    hash?: string;
+  } | null>(null);
+
+  const handleReportPassage = () => {
+    const book = bookData.book;
+    const workId = book ? getBookWorkId(book) : null;
+    if (!book || workId === null || !selection?.text?.trim()) return;
+    setPassageReport({
+      workId,
+      lang: getBookLanguage(book),
+      quote: selection.text.trim(),
+      hash: book.hash,
+    });
+    handleDismissPopupAndSelection();
+  };
+
   const handleCloseQuoteCard = () => {
     if (quoteCard?.content.coverUrl) URL.revokeObjectURL(quoteCard.content.coverUrl);
     setQuoteCard(null);
@@ -2667,6 +2698,8 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
         return { tooltipText: _(label), Icon, onClick: handleShare };
       case 'quotecard':
         return { tooltipText: _(label), Icon, onClick: () => void handleQuoteCard() };
+      case 'report':
+        return { tooltipText: _(label), Icon, onClick: handleReportPassage };
       default:
         return null;
     }
@@ -2878,6 +2911,15 @@ const Annotator: React.FC<{ bookKey: string; contentInsets: Insets; gridInsets?:
           noteAutoTurnPoint={noteAutoTurnPoint}
           cancelAutoTurn={cancelAutoTurn}
           onAutoTurn={onAutoTurn}
+        />
+      )}
+      {passageReport && (
+        <ReportPassageDialog
+          workId={passageReport.workId}
+          lang={passageReport.lang}
+          quote={passageReport.quote}
+          hash={passageReport.hash}
+          onClose={() => setPassageReport(null)}
         />
       )}
       {quoteCard && (

@@ -2651,5 +2651,22 @@
   "Narration in progress: {{percent}}% of the book narrated": "ナレーション再生中：本の{{percent}}%を読み上げました",
   "Preparing narration — it starts in a few seconds.": "ナレーションを準備しています — 数秒後に始まります。",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "読み上げはまだこの章に達していません。まもなくここから開始します。",
-  "Read-along voices": "読み上げ音声"
+  "Read-along voices": "読み上げ音声",
+  "Report Issue": "問題を報告",
+  "Report a translation problem in the selection": "選択箇所の翻訳の問題を報告",
+  "Report a translation problem": "翻訳の問題を報告",
+  "Selected passage": "選択した箇所",
+  "What is wrong?": "何が問題ですか？",
+  "The meaning is wrong": "意味が間違っている",
+  "Something is missing": "抜けている部分がある",
+  "Grammar or spelling": "文法・表記",
+  "Not translated": "翻訳されていない",
+  "Formatting": "書式",
+  "Other": "その他",
+  "Details (optional)": "詳細（任意）",
+  "Send report": "報告を送信",
+  "Sending…": "送信中…",
+  "Thank you. This passage will be checked again.": "ありがとうございます。この箇所はもう一度確認されます。",
+  "Too many reports. Please try again later.": "報告が多すぎます。しばらくしてからもう一度お試しください。",
+  "Could not send the report. Please try again later.": "報告を送信できませんでした。しばらくしてからもう一度お試しください。"
 }

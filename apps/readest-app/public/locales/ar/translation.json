@@ -2996,5 +2996,22 @@
   "Narration in progress: {{percent}}% of the book narrated": "السرد الصوتي جارٍ: تم سرد {{percent}}٪ من الكتاب",
   "Preparing narration — it starts in a few seconds.": "جارٍ تحضير السرد الصوتي — سيبدأ بعد بضع ثوانٍ.",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "لم يصل السرد الصوتي إلى هذا الفصل بعد. سيبدأ من هنا قريبًا.",
-  "Read-along voices": "أصوات القراءة المصاحبة"
+  "Read-along voices": "أصوات القراءة المصاحبة",
+  "Report Issue": "الإبلاغ عن مشكلة",
+  "Report a translation problem in the selection": "الإبلاغ عن مشكلة في ترجمة النص المحدد",
+  "Report a translation problem": "الإبلاغ عن مشكلة في الترجمة",
+  "Selected passage": "المقطع المحدد",
+  "What is wrong?": "ما المشكلة؟",
+  "The meaning is wrong": "المعنى خاطئ",
+  "Something is missing": "هناك شيء ناقص",
+  "Grammar or spelling": "القواعد أو الإملاء",
+  "Not translated": "غير مترجم",
+  "Formatting": "التنسيق",
+  "Other": "أخرى",
+  "Details (optional)": "تفاصيل (اختياري)",
+  "Send report": "إرسال البلاغ",
+  "Sending…": "جارٍ الإرسال…",
+  "Thank you. This passage will be checked again.": "شكرًا. ستتم مراجعة هذا المقطع مرة أخرى.",
+  "Too many reports. Please try again later.": "بلاغات كثيرة جدًا. يُرجى المحاولة لاحقًا.",
+  "Could not send the report. Please try again later.": "تعذّر إرسال البلاغ. يُرجى المحاولة لاحقًا."
 }

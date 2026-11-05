@@ -2858,5 +2858,22 @@
   "Narration in progress: {{percent}}% of the book narrated": "Идёт озвучивание: озвучено {{percent}}% книги",
   "Preparing narration — it starts in a few seconds.": "Подготавливаем аудиоверсию — она начнётся через несколько секунд.",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "Озвучивание ещё не дошло до этой главы. Скоро оно начнётся здесь.",
-  "Read-along voices": "Голоса для чтения вслух"
+  "Read-along voices": "Голоса для чтения вслух",
+  "Report Issue": "Сообщить о проблеме",
+  "Report a translation problem in the selection": "Сообщить о проблеме перевода в выделенном тексте",
+  "Report a translation problem": "Сообщить о проблеме перевода",
+  "Selected passage": "Выделенный фрагмент",
+  "What is wrong?": "Что не так?",
+  "The meaning is wrong": "Неверный смысл",
+  "Something is missing": "Что-то пропущено",
+  "Grammar or spelling": "Грамматика или орфография",
+  "Not translated": "Не переведено",
+  "Formatting": "Оформление",
+  "Other": "Другое",
+  "Details (optional)": "Подробности (необязательно)",
+  "Send report": "Отправить",
+  "Sending…": "Отправка…",
+  "Thank you. This passage will be checked again.": "Спасибо. Этот фрагмент проверят ещё раз.",
+  "Too many reports. Please try again later.": "Слишком много сообщений. Попробуйте позже.",
+  "Could not send the report. Please try again later.": "Не удалось отправить сообщение. Попробуйте позже."
 }
