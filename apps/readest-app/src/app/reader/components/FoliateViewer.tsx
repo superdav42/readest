@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
+
 import clsx from 'clsx';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -32,6 +35,7 @@ import { useBackgroundTexture } from '@/hooks/useBackgroundTexture';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useEinkMode } from '@/hooks/useEinkMode';
+import { getMeaningfulFirstLocation } from '@/utils/initialBookLocation';
 import { bookOrbitProgressProvider } from '../hooks/bookOrbitProgressProvider';
 import { useKOSync } from '../hooks/useKOSync';
 import { useFileSync } from '../hooks/useFileSync';
@@ -891,7 +895,12 @@ const FoliateViewer: React.FC<{
       if (lastLocation) {
         await view.init({ lastLocation });
       } else {
-        await view.goToFraction(0);
+        const meaningfulStart = getMeaningfulFirstLocation(bookDoc);
+        if (meaningfulStart) {
+          await view.init({ lastLocation: meaningfulStart });
+        } else {
+          await view.goToFraction(0);
+        }
       }
       // The reader is showing a deep-link target, not the user's actual reading
       // position. Mark the view as a preview so progress writers (auto-save,
