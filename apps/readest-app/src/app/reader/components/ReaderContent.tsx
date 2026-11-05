@@ -472,15 +472,13 @@ const ReaderContent: React.FC<{ ids?: string; settings: SystemSettings }> = ({ i
         onGoToLibrary={handleCloseBooksToLibrary}
       />
       {isSettingsDialogOpen && <SettingsDialog bookKey={settingsDialogBookKey} />}
-      {!isIndependentDeployment() &&
-        audiobookBookKey &&
-        getBookData(audiobookBookKey)?.bookDoc && (
-          <AudiobookPairingDialog
-            bookKey={audiobookBookKey}
-            bookDoc={getBookData(audiobookBookKey)!.bookDoc!}
-            onClose={() => setAudiobookBookKey(null)}
-          />
-        )}
+      {!isIndependentDeployment() && audiobookBookKey && getBookData(audiobookBookKey)?.bookDoc && (
+        <AudiobookPairingDialog
+          bookKey={audiobookBookKey}
+          bookDoc={getBookData(audiobookBookKey)!.bookDoc!}
+          onClose={() => setAudiobookBookKey(null)}
+        />
+      )}
       {hardcoverLinkBookKey && (
         <HardcoverLinkDialog
           bookKey={hardcoverLinkBookKey}
