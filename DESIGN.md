@@ -22,3 +22,6 @@ fork-specific product decisions that should survive future upstream merges.
 - Independent deployments keep annotation creation, viewing, notes, highlights, and clearing, but do
   not expose annotation-file import or export in reader menus and do not respond to those commands.
   Standard Readest deployments retain the transfer actions.
+- Independent deployments do not expose or respond to manual Pair/Manage Audiobook actions. Existing
+  pairings remain stored and playable, and catalog-provided narration, read-along highlighting, and
+  voice selection keep their standard reader controls.

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
-import { cleanup, render, waitFor } from '@testing-library/react';
+import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 
 import type { Book, BookConfig } from '@/types/book';
 import type { SystemSettings } from '@/types/settings';
@@ -16,6 +16,7 @@ const h = vi.hoisted(() => {
     appService,
     envConfig: { getAppService: async () => appService },
     onCloseWindow: vi.fn(async (_callback: () => unknown) => () => {}),
+    independentDeployment: false,
   };
 });
 
@@ -28,6 +29,9 @@ vi.mock('@/context/EnvContext', () => ({
 }));
 vi.mock('@/context/AuthContext', () => ({ useAuth: () => ({ user: null }) }));
 vi.mock('@/hooks/useTranslation', () => ({ useTranslation: () => (s: string) => s }));
+vi.mock('@/utils/appBrand', () => ({
+  isIndependentDeployment: () => h.independentDeployment,
+}));
 vi.mock('@/hooks/useAndroidGamepadConnection', () => ({
   useAndroidGamepadConnection: () => false,
 }));
@@ -58,7 +62,9 @@ vi.mock('@/app/reader/components/notebook/NotebookTransitionAlert', () => ({
 }));
 vi.mock('@/app/reader/components/BooksGrid', () => ({ default: () => null }));
 vi.mock('@/app/reader/components/audiobook/AudiobookPairingDialog', () => ({
-  default: () => null,
+  default: ({ bookKey }: { bookKey: string }) => (
+    <div data-testid='audiobook-pairing-dialog'>{bookKey}</div>
+  ),
 }));
 vi.mock('@/app/reader/components/hardcover/HardcoverLinkDialog', () => ({ default: () => null }));
 vi.mock('@/app/reader/components/pagebound/PageboundLinkDialog', () => ({ default: () => null }));
@@ -71,6 +77,7 @@ import ReaderContent from '@/app/reader/components/ReaderContent';
 import { flushPendingLibrarySave, useBookDataStore } from '@/store/bookDataStore';
 import { useLibraryStore } from '@/store/libraryStore';
 import { useReaderStore } from '@/store/readerStore';
+import { eventDispatcher } from '@/utils/event';
 
 const book = {
   hash: 'h1',
@@ -85,6 +92,7 @@ const book = {
 describe('ReaderContent window close', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    h.independentDeployment = false;
     useLibraryStore.getState().setLibrary([book]);
     useBookDataStore.setState({
       booksData: {
@@ -93,14 +101,14 @@ describe('ReaderContent window close', () => {
           book,
           file: null,
           config: { progress: [29, 39], location: 'cfi-29', updatedAt: 1 } as BookConfig,
-          bookDoc: null,
+          bookDoc: {},
           isFixedLayout: false,
         },
       },
     });
     useReaderStore.setState({
       viewStates: {
-        'h1-k1': { key: 'h1-k1', isPrimary: true } as NonNullable<
+        'h1-k1': { key: 'h1-k1', isPrimary: true, viewSettings: {} } as NonNullable<
           ReturnType<ReturnType<typeof useReaderStore.getState>['getViewState']>
         >,
       },
@@ -125,5 +133,22 @@ describe('ReaderContent window close', () => {
     expect(h.appService.saveLibraryBooks).toHaveBeenCalled();
     const saved = h.appService.saveLibraryBooks.mock.calls.at(-1)![0] as Book[];
     expect(saved.find((b) => b.hash === 'h1')?.progress).toEqual([29, 39]);
+  });
+
+  test('opens manual audiobook pairing in a standard Readest deployment', async () => {
+    render(<ReaderContent settings={{} as SystemSettings} />);
+
+    await act(() => eventDispatcher.dispatch('manage-audiobook', { bookKey: 'h1-k1' }));
+
+    expect(await screen.findByTestId('audiobook-pairing-dialog')).toHaveTextContent('h1-k1');
+  });
+
+  test('ignores stale manual audiobook pairing actions in an independent deployment', async () => {
+    h.independentDeployment = true;
+    render(<ReaderContent settings={{} as SystemSettings} />);
+
+    await act(() => eventDispatcher.dispatch('manage-audiobook', { bookKey: 'h1-k1' }));
+
+    expect(screen.queryByTestId('audiobook-pairing-dialog')).toBeNull();
   });
 });

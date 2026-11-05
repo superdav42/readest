@@ -1,4 +1,4 @@
-// Modified 2026-11-03 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 'use client';
 
 import dynamic from 'next/dynamic';
@@ -44,6 +44,7 @@ import {
   flushNotebookDocument,
 } from '../hooks/useNotebookDocumentCoordinator';
 import { writeTextToClipboard } from '@/utils/clipboard';
+import { isIndependentDeployment } from '@/utils/appBrand';
 
 import useBooksManager from '../hooks/useBooksManager';
 import useBookShortcuts from '../hooks/useBookShortcuts';
@@ -171,6 +172,7 @@ const ReaderContent: React.FC<{ ids?: string; settings: SystemSettings }> = ({ i
 
   useEffect(() => {
     const handleManageAudiobook = (event: CustomEvent) => {
+      if (isIndependentDeployment()) return;
       const detail = event.detail as { bookKey?: string } | undefined;
       if (detail?.bookKey) setAudiobookBookKey(detail.bookKey);
     };
@@ -470,13 +472,15 @@ const ReaderContent: React.FC<{ ids?: string; settings: SystemSettings }> = ({ i
         onGoToLibrary={handleCloseBooksToLibrary}
       />
       {isSettingsDialogOpen && <SettingsDialog bookKey={settingsDialogBookKey} />}
-      {audiobookBookKey && getBookData(audiobookBookKey)?.bookDoc && (
-        <AudiobookPairingDialog
-          bookKey={audiobookBookKey}
-          bookDoc={getBookData(audiobookBookKey)!.bookDoc!}
-          onClose={() => setAudiobookBookKey(null)}
-        />
-      )}
+      {!isIndependentDeployment() &&
+        audiobookBookKey &&
+        getBookData(audiobookBookKey)?.bookDoc && (
+          <AudiobookPairingDialog
+            bookKey={audiobookBookKey}
+            bookDoc={getBookData(audiobookBookKey)!.bookDoc!}
+            onClose={() => setAudiobookBookKey(null)}
+          />
+        )}
       {hardcoverLinkBookKey && (
         <HardcoverLinkDialog
           bookKey={hardcoverLinkBookKey}

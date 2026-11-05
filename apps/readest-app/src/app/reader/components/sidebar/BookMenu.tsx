@@ -41,7 +41,7 @@ const BookMenu: React.FC<BookMenuProps> = ({ menuClassName, setIsDropdownOpen })
   const { parallelViews, setParallel, unsetParallel } = useParallelViewStore();
   const viewSettings = getViewSettings(sideBarBookKey!);
   const bookData = sideBarBookKey ? getBookData(sideBarBookKey) : null;
-  const showPairAudiobook = canPairAudiobook(bookData);
+  const showPairAudiobook = !isIndependentDeployment() && canPairAudiobook(bookData);
   const showTOCThumbnails = viewSettings?.showTOCThumbnails ?? true;
   const showAnnotationTransfer = !isIndependentDeployment();
 
