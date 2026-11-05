@@ -1,21 +1,30 @@
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from '@/hooks/useTranslation';
 import { isMacPlatform } from '@/services/environment';
-import { getShortcutsForDisplay } from '@/helpers/shortcuts';
+import { getShortcutsForDisplay, ShortcutAction } from '@/helpers/shortcuts';
 import { formatKeyForDisplay } from '@/utils/shortcutKeys';
+import { isIndependentDeployment } from '@/utils/appBrand';
 import useShortcuts from '@/hooks/useShortcuts';
 import Dialog from './Dialog';
 import Link from './Link';
+
+const HIDDEN_PROOFREAD_SHORTCUTS = new Set<ShortcutAction>(['onProofreadSelection']);
 
 export const KeyboardShortcutsHelp = () => {
   const _ = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const isMac = isMacPlatform();
+  const proofreadEnabled = !isIndependentDeployment();
+  const getSections = useCallback(
+    () => getShortcutsForDisplay(isMac, proofreadEnabled ? undefined : HIDDEN_PROOFREAD_SHORTCUTS),
+    [isMac, proofreadEnabled],
+  );
 
-  const [sections, setSections] = useState(() => getShortcutsForDisplay(isMac));
+  const [sections, setSections] = useState(getSections);
 
   useEffect(() => {
-    const refreshShortcuts = () => setSections(getShortcutsForDisplay(isMac));
+    const refreshShortcuts = () => setSections(getSections());
     const handleStorage = (event: StorageEvent) => {
       // `key` is null when another tab called localStorage.clear().
       if (event.key === null || event.key === 'customShortcuts') refreshShortcuts();
@@ -26,7 +35,7 @@ export const KeyboardShortcutsHelp = () => {
       window.removeEventListener('shortcutUpdate', refreshShortcuts);
       window.removeEventListener('storage', handleStorage);
     };
-  }, [isMac]);
+  }, [getSections]);
 
   // Split sections into two balanced columns by item count
   const [leftColumn, rightColumn] = useMemo(() => {

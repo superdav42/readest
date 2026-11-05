@@ -1,3 +1,4 @@
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { beforeEach, describe, it, expect, vi } from 'vitest';
 
 const getModule = async () => {
@@ -117,6 +118,16 @@ describe('No identical keybinding lists across actions (#3675)', () => {
 });
 
 describe('getShortcutsForDisplay', () => {
+  it('omits excluded actions without changing the stored shortcut', async () => {
+    const mod = await getModule();
+    const result = mod.getShortcutsForDisplay(false, new Set(['onProofreadSelection'] as const));
+
+    expect(
+      result.flatMap((section) => section.items).map((item) => item.description),
+    ).not.toContain('Proofread Selection');
+    expect(mod.loadShortcuts().onProofreadSelection.keys).toEqual(['ctrl+p', 'cmd+p', 'alt+p']);
+  });
+
   it('returns sections in the correct order', async () => {
     const mod = await getModule();
     const result = mod.getShortcutsForDisplay(true);

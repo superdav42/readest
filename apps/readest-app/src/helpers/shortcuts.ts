@@ -1,3 +1,4 @@
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { stubTranslation as _ } from '@/utils/misc';
 import { filterPlatformKeys, normalizeShortcut } from '@/utils/shortcutKeys';
 
@@ -345,11 +346,15 @@ type ShortcutDisplaySection = {
   items: ShortcutDisplayItem[];
 };
 
-export const getShortcutsForDisplay = (isMac: boolean): ShortcutDisplaySection[] => {
+export const getShortcutsForDisplay = (
+  isMac: boolean,
+  excludedActions: ReadonlySet<ShortcutAction> = new Set(),
+): ShortcutDisplaySection[] => {
   const shortcuts = loadShortcuts();
   return SHORTCUT_SECTIONS.map((section) => {
     const itemMap = new Map<string, ShortcutDisplayItem>();
     for (const action of Object.keys(shortcuts) as ShortcutAction[]) {
+      if (excludedActions.has(action)) continue;
       const entry = shortcuts[action];
       if (entry.section !== section) continue;
       const keys = getVisibleShortcutKeys(shortcuts, action, isMac);

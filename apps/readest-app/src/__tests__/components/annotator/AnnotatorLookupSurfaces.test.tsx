@@ -1,3 +1,4 @@
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 /**
  * When a lookup surface (dictionary / translator / proofread) may open, and when
  * it must stay shut.
@@ -39,6 +40,7 @@ const h = vi.hoisted(() => ({
   restoreSelectionRange: vi.fn(() => true),
   isTextSelected: { current: true },
   appService: {} as { isIOSApp?: boolean },
+  independentDeployment: false,
   onNativeTouch: null as null | ((ev: { type: string; x: number; y: number }) => void),
   // Swapped per test: the fixed-layout branch of `onLoad` used to wire PDF-only
   // listeners, so a regression there is only visible with this on.
@@ -76,6 +78,10 @@ vi.mock('@/hooks/useTranslation', () => ({
 
 vi.mock('@/hooks/useResponsiveSize', () => ({
   useResponsiveSize: (value: number) => value,
+}));
+
+vi.mock('@/utils/appBrand', () => ({
+  isIndependentDeployment: () => h.independentDeployment,
 }));
 
 vi.mock('@/store/settingsStore', () => ({
@@ -304,6 +310,7 @@ const republishSelectionWithSuppressedHandles = async () => {
 beforeEach(() => {
   h.actions = null;
   h.appService = {};
+  h.independentDeployment = false;
   h.onNativeTouch = null;
   h.book = { format: 'EPUB', isFixedLayout: false };
   h.foliateHandlers = null;
@@ -337,6 +344,20 @@ describe('a lookup surface survives the selection it is anchored to being republ
 
     expect(screen.queryByTestId(testId)).toBeTruthy();
     expect(screen.queryByTestId('annotation-toolbar')).toBeNull();
+  });
+
+  test('the proofread shortcut cannot open its surface in an independent deployment', async () => {
+    h.independentDeployment = true;
+    render(<Annotator bookKey='book-1' contentInsets={{ top: 0, right: 0, bottom: 0, left: 0 }} />);
+    await selectText();
+
+    let handled: boolean | undefined;
+    act(() => {
+      handled = h.actions?.['onProofreadSelection']?.();
+    });
+
+    expect(handled).toBe(false);
+    expect(screen.queryByTestId('proofread-surface')).toBeNull();
   });
 });
 
