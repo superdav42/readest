@@ -56,6 +56,10 @@ const Slider: React.FC<SliderProps> = ({
 
   const valueToPos = valueToPosition || defaultValueToPosition;
   const posToValue = positionToValue || defaultPositionToValue;
+  // The native input always represents a 0–100 position. Convert the public
+  // value step into that coordinate space so one Arrow-key press advances one
+  // semantic step even when the value range is not 0–100.
+  const positionStep = max === min ? 1 : Math.min(100, (step / (max - min)) * 100);
 
   const handleChange = (e: React.ChangeEvent) => {
     const position = parseInt((e.target as HTMLInputElement).value, 10);
@@ -135,7 +139,7 @@ const Slider: React.FC<SliderProps> = ({
           type='range'
           min={0}
           max={100}
-          step={step}
+          step={positionStep}
           value={percentage}
           className='slider-input absolute inset-0 h-full min-h-12 w-full cursor-pointer opacity-0'
           onChange={handleChange}

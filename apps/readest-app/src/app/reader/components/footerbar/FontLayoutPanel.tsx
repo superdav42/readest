@@ -104,6 +104,8 @@ export const FontLayoutPanel: React.FC<FontLayoutPanelProps> = ({
     (category: string) => {
       setFontCategory(category);
       saveViewSettings(envConfig, bookKey, 'defaultFont', category);
+      // A deliberate quick-font choice must win over a book-authored family.
+      saveViewSettings(envConfig, bookKey, 'overrideFont', true);
     },
     [bookKey, envConfig],
   );
@@ -117,6 +119,7 @@ export const FontLayoutPanel: React.FC<FontLayoutPanelProps> = ({
         setSerifFont(font);
         saveViewSettings(envConfig, bookKey, 'serifFont', font);
       }
+      saveViewSettings(envConfig, bookKey, 'overrideFont', true);
     },
     [bookKey, envConfig, fontCategory],
   );
@@ -278,7 +281,7 @@ export const FontLayoutPanel: React.FC<FontLayoutPanelProps> = ({
           tucked closer. `self-end` follows `dir`, so it mirrors in RTL. */}
       <button
         type='button'
-        className='btn btn-ghost btn-sm text-base-content/70 -mt-2 h-8 min-h-8 gap-1.5 self-end px-2 font-normal'
+        className='btn btn-ghost text-base-content/70 -mt-2 h-11 min-h-11 gap-1.5 self-end px-3 font-normal'
         onClick={handleOpenSettings}
       >
         <PiGear size={16} />

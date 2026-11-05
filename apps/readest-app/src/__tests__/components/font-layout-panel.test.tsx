@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { FontLayoutPanel } from '@/app/reader/components/footerbar/FontLayoutPanel';
 import { useSettingsStore } from '@/store/settingsStore';
 
+const saveViewSettingsMock = vi.hoisted(() => vi.fn());
+
 vi.mock('@/hooks/useTranslation', () => ({
   useTranslation: () => (key: string) => key,
 }));
@@ -12,13 +14,16 @@ vi.mock('@/context/EnvContext', () => ({
   useEnv: () => ({ envConfig: {}, appService: { isAndroidApp: false } }),
 }));
 
-vi.mock('@/helpers/settings', () => ({ saveViewSettings: vi.fn() }));
+vi.mock('@/helpers/settings', () => ({ saveViewSettings: saveViewSettingsMock }));
 
 const setHoveredBookKeyMock = vi.fn();
 vi.mock('@/store/readerStore', () => ({
   useReaderStore: () => ({
     getView: () => null,
     getViewSettings: () => ({
+      defaultFont: 'Serif',
+      serifFont: 'Bitter',
+      sansSerifFont: 'Roboto',
       defaultFontSize: 16,
       lineHeight: 1.6,
       marginTopPx: 44,
@@ -30,6 +35,7 @@ vi.mock('@/store/readerStore', () => ({
 
 afterEach(() => {
   cleanup();
+  saveViewSettingsMock.mockReset();
   setHoveredBookKeyMock.mockReset();
   useSettingsStore.setState({
     requestedPanel: null,
@@ -39,6 +45,25 @@ afterEach(() => {
 });
 
 describe('FontLayoutPanel More Settings', () => {
+  it('enables the book-font override when a quick font choice is made', () => {
+    render(
+      <FontLayoutPanel
+        bookKey='book-1'
+        actionTab='font'
+        bottomOffset='64px'
+        marginIconSize={20}
+        forceMobileLayout={false}
+      />,
+    );
+
+    fireEvent.change(screen.getByRole('combobox', { name: 'Font Category' }), {
+      target: { value: 'Sans-serif' },
+    });
+
+    expect(saveViewSettingsMock).toHaveBeenCalledWith({}, 'book-1', 'defaultFont', 'Sans-serif');
+    expect(saveViewSettingsMock).toHaveBeenCalledWith({}, 'book-1', 'overrideFont', true);
+  });
+
   it('deep-links to the Font panel and dismisses the footer bar', () => {
     render(
       <FontLayoutPanel
