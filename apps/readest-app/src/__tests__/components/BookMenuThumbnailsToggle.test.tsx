@@ -1,3 +1,4 @@
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -70,15 +71,16 @@ describe('BookMenu page thumbnails toggle', () => {
     expect(screen.getByText('Clear Annotations')).not.toBeNull();
   });
 
-  it('hides manual audiobook pairing only for independent deployments', () => {
+  it('hides manual audiobook pairing and proofreading only for independent deployments', () => {
     setBook({ rendition: {}, toc: [{}] }, { showTOCThumbnails: true });
     const { rerender } = render(<BookMenu />);
     expect(screen.getByRole('menuitem', { name: 'Pair Audiobook' })).not.toBeNull();
+    expect(screen.getByRole('menuitem', { name: 'Proofread' })).not.toBeNull();
 
     brand.independentDeployment = true;
     rerender(<BookMenu />);
     expect(screen.queryByRole('menuitem', { name: 'Pair Audiobook' })).toBeNull();
-    expect(screen.getByRole('menuitem', { name: 'Proofread' })).not.toBeNull();
+    expect(screen.queryByRole('menuitem', { name: 'Proofread' })).toBeNull();
     expect(screen.getByText('Clear Annotations')).not.toBeNull();
   });
 

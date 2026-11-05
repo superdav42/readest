@@ -1,3 +1,4 @@
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import React, { useEffect, useRef, useState } from 'react';
 import ModalPortal from '@/components/ModalPortal';
 import {
@@ -17,6 +18,7 @@ import {
 import { useKeyDownActions } from '@/hooks/useKeyDownActions';
 import { useTranslation } from '@/hooks/useTranslation';
 import { isMacPlatform } from '@/services/environment';
+import { isIndependentDeployment } from '@/utils/appBrand';
 import {
   formatKeyForDisplay,
   getShortcutFromKeyboardEvent,
@@ -53,6 +55,9 @@ interface KeyboardShortcutsSettingsProps {
 const KeyboardShortcutsSettings: React.FC<KeyboardShortcutsSettingsProps> = ({ onBack }) => {
   const _ = useTranslation();
   const isMac = isMacPlatform();
+  const proofreadEnabled = !isIndependentDeployment();
+  const isVisibleAction = (action: ShortcutAction) =>
+    proofreadEnabled || action !== 'onProofreadSelection';
   const [shortcuts, setShortcuts] = useState<ShortcutConfig>(loadShortcuts);
   const shortcutsRef = useRef(shortcuts);
   const [listening, setListening] = useState<Recording | null>(null);
@@ -127,9 +132,15 @@ const KeyboardShortcutsSettings: React.FC<KeyboardShortcutsSettingsProps> = ({ o
   }, [pendingReplacement]);
 
   const persist = (next: ShortcutConfig) => {
-    shortcutsRef.current = next;
-    setShortcuts(next);
-    saveShortcuts(next);
+    const nextWithHiddenActions = proofreadEnabled
+      ? next
+      : {
+          ...next,
+          onProofreadSelection: shortcutsRef.current.onProofreadSelection,
+        };
+    shortcutsRef.current = nextWithHiddenActions;
+    setShortcuts(nextWithHiddenActions);
+    saveShortcuts(nextWithHiddenActions);
   };
 
   const stopListening = () => {
@@ -141,7 +152,9 @@ const KeyboardShortcutsSettings: React.FC<KeyboardShortcutsSettingsProps> = ({ o
   const finishCapture = (binding: string) => {
     if (!listening) return;
     const { action, replacing } = listening;
-    const conflicts = getShortcutConflicts(shortcutsRef.current, action, binding);
+    const conflicts = getShortcutConflicts(shortcutsRef.current, action, binding).filter(
+      isVisibleAction,
+    );
     stopListening();
     if (conflicts.length > 0) {
       setPendingReplacement({ action, replacing, binding, conflicts });
@@ -208,9 +221,9 @@ const KeyboardShortcutsSettings: React.FC<KeyboardShortcutsSettingsProps> = ({ o
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listening]);
 
-  const hasCustomShortcuts = (Object.keys(shortcuts) as ShortcutAction[]).some((action) =>
-    isShortcutCustomized(shortcuts, action),
-  );
+  const hasCustomShortcuts = (Object.keys(shortcuts) as ShortcutAction[])
+    .filter(isVisibleAction)
+    .some((action) => isShortcutCustomized(shortcuts, action));
 
   const resetAll = () => {
     stopListening();
@@ -249,7 +262,7 @@ const KeyboardShortcutsSettings: React.FC<KeyboardShortcutsSettingsProps> = ({ o
       <div className='space-y-6 pb-4'>
         {SHORTCUT_SECTIONS.map((section) => {
           const actions = (Object.keys(shortcuts) as ShortcutAction[]).filter(
-            (action) => shortcuts[action].section === section,
+            (action) => isVisibleAction(action) && shortcuts[action].section === section,
           );
           if (actions.length === 0) return null;
           return (

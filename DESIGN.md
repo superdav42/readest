@@ -25,3 +25,6 @@ fork-specific product decisions that should survive future upstream merges.
 - Independent deployments do not expose or respond to manual Pair/Manage Audiobook actions. Existing
   pairings remain stored and playable, and catalog-provided narration, read-along highlighting, and
   voice selection keep their standard reader controls.
+- Independent deployments do not expose proofreading in the selection toolbar, its customizer, or
+  the book menu, and its shortcut cannot open the proofreader or replacement-rule manager. Existing
+  rules remain stored and continue to transform content; standard Readest deployments remain unchanged.

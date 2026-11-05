@@ -1,3 +1,4 @@
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React, { useCallback, useRef, useState } from 'react';
 import {
@@ -34,6 +35,7 @@ import {
   reorderToolbar,
 } from '@/utils/annotationToolbar';
 import { canShareText } from '@/utils/share';
+import { isIndependentDeployment } from '@/utils/appBrand';
 import SubPageHeader from './SubPageHeader';
 
 type ZoneId = 'toolbar' | 'available';
@@ -156,6 +158,9 @@ const AnnotationToolbarCustomizer: React.FC<AnnotationToolbarCustomizerProps> = 
   const viewSettings = getViewSettings(bookKey) || settings.globalViewSettings;
 
   const canShare = canShareText(appService);
+  const proofreadEnabled = !isIndependentDeployment();
+  const showTool = (type: AnnotationToolType) => proofreadEnabled || type !== 'proofread';
+  const savedToolbar = getToolbarToolTypes(viewSettings.annotationToolbarItems, true);
 
   // `share` is hidden on platforms that can't share (Windows/Linux desktop).
   // If the user enabled it on a share-capable device (e.g. their phone) and it
@@ -165,10 +170,14 @@ const AnnotationToolbarCustomizer: React.FC<AnnotationToolbarCustomizerProps> = 
     'share',
   );
   const preserveHiddenShare = !canShare && savedHasShare;
+  const savedProofreadIndex = savedToolbar.indexOf('proofread');
+  const preserveHiddenProofread = !proofreadEnabled && savedProofreadIndex >= 0;
 
   const [items, setItems] = useState<Record<ZoneId, AnnotationToolType[]>>(() => ({
-    toolbar: getToolbarToolTypes(viewSettings.annotationToolbarItems, canShare),
-    available: getAvailableToolTypes(viewSettings.annotationToolbarItems, canShare),
+    toolbar: getToolbarToolTypes(viewSettings.annotationToolbarItems, canShare).filter(showTool),
+    available: getAvailableToolTypes(viewSettings.annotationToolbarItems, canShare).filter(
+      showTool,
+    ),
   }));
   // dnd-kit invokes onDragEnd with the handler captured at drag start, so the
   // closed-over `items` is stale by the time a cross-zone drag finishes. Read
@@ -211,17 +220,21 @@ const AnnotationToolbarCustomizer: React.FC<AnnotationToolbarCustomizerProps> = 
   );
 
   const persist = (toolbar: AnnotationToolType[]) => {
-    const toSave =
-      preserveHiddenShare && !toolbar.includes('share')
-        ? [...toolbar, 'share' as AnnotationToolType]
-        : toolbar;
+    const toSave = [...toolbar];
+    if (preserveHiddenProofread && !toSave.includes('proofread')) {
+      toSave.splice(Math.min(savedProofreadIndex, toSave.length), 0, 'proofread');
+    }
+    if (preserveHiddenShare && !toSave.includes('share')) toSave.push('share');
     saveViewSettings(envConfig, bookKey, 'annotationToolbarItems', toSave, false, true);
   };
 
   // Commit a new toolbar order: keep the user's arrangement, recompute the
   // available tray as its canonical-order complement, and persist.
   const commit = (toolbar: AnnotationToolType[]) => {
-    setItems({ toolbar, available: getAvailableToolTypes(toolbar, canShare) });
+    setItems({
+      toolbar,
+      available: getAvailableToolTypes(toolbar, canShare).filter(showTool),
+    });
     persist(toolbar);
   };
 
@@ -239,7 +252,10 @@ const AnnotationToolbarCustomizer: React.FC<AnnotationToolbarCustomizerProps> = 
 
   // "Add all" rebuilds the toolbar in the canonical predefined order (not the
   // user's prior arrangement); "Clear all" empties it.
-  const addAll = () => commit(ALL_ANNOTATION_TOOL_TYPES.filter((t) => canShare || t !== 'share'));
+  const addAll = () =>
+    commit(
+      ALL_ANNOTATION_TOOL_TYPES.filter((type) => showTool(type) && (canShare || type !== 'share')),
+    );
   const clearAll = () => commit([]);
 
   const handleDragStart = () => {
