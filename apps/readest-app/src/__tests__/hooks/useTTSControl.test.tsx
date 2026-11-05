@@ -154,7 +154,8 @@ vi.mock('@/services/tts', () => ({
             pendingInitResolvers.push(() => resolve());
           }),
       ),
-      initViewTTS: vi.fn().mockResolvedValue(undefined),
+      // The hook treats a falsy result as "narration not reached" when narrated.
+      initViewTTS: vi.fn().mockResolvedValue(true),
       updateHighlightOptions: vi.fn(),
       setHighlightGranularity: vi.fn(),
       setSkipInlineAnnotations: vi.fn(),
