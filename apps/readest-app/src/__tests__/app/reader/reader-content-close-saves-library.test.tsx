@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 
 import type { Book, BookConfig } from '@/types/book';
+import type { BookDoc } from '@/libs/document';
 import type { SystemSettings } from '@/types/settings';
 
 const h = vi.hoisted(() => {
@@ -101,7 +102,7 @@ describe('ReaderContent window close', () => {
           book,
           file: null,
           config: { progress: [29, 39], location: 'cfi-29', updatedAt: 1 } as BookConfig,
-          bookDoc: {},
+          bookDoc: {} as BookDoc,
           isFixedLayout: false,
         },
       },
@@ -140,7 +141,7 @@ describe('ReaderContent window close', () => {
 
     await act(() => eventDispatcher.dispatch('manage-audiobook', { bookKey: 'h1-k1' }));
 
-    expect(await screen.findByTestId('audiobook-pairing-dialog')).toHaveTextContent('h1-k1');
+    expect((await screen.findByTestId('audiobook-pairing-dialog')).textContent).toBe('h1-k1');
   });
 
   test('ignores stale manual audiobook pairing actions in an independent deployment', async () => {

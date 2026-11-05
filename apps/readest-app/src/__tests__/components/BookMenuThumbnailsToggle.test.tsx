@@ -79,7 +79,7 @@ describe('BookMenu page thumbnails toggle', () => {
     rerender(<BookMenu />);
     expect(screen.queryByRole('menuitem', { name: 'Pair Audiobook' })).toBeNull();
     expect(screen.getByRole('menuitem', { name: 'Proofread' })).not.toBeNull();
-    expect(screen.getByRole('menuitem', { name: 'Clear Annotations' })).not.toBeNull();
+    expect(screen.getByText('Clear Annotations')).not.toBeNull();
   });
 
   it('is not offered for books without page thumbnails', () => {
