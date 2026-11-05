@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+// Modified 2026-11-05 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
+
 import { BookFormat } from '@/types/book';
 import { Collection, Contributor, Identifier, LanguageMap } from '@/utils/book';
 import { configureZip } from '@/utils/zip';
@@ -25,6 +28,14 @@ export interface TOCItem {
   cfi?: string;
   location?: Location;
   subitems?: TOCItem[];
+}
+
+export interface LandmarkItem {
+  label?: string | null;
+  href?: string | null;
+  /** EPUB landmark semantics such as cover, toc, or bodymatter. */
+  type?: string[];
+  subitems?: LandmarkItem[] | null;
 }
 
 export interface SectionFragment {
@@ -125,6 +136,7 @@ export interface BookDoc {
   dir: string;
   toc?: Array<TOCItem>;
   pageList?: Array<TOCItem>;
+  landmarks?: Array<LandmarkItem>;
   sections: Array<SectionItem>;
   transformTarget?: EventTarget;
   splitTOCHref(href: string): Array<string | number>;

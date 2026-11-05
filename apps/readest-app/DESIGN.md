@@ -64,6 +64,11 @@ detached card siblings of the dictionary list above it because they share
 >
 > **Good**: list and add-button share the same surface vocabulary. The eye flows.
 
+Reader entry follows the same content-first rule: a fresh EPUB may pass over an initial cover or
+table-of-contents document only when EPUB landmarks explicitly identify that spine item. Saved
+positions and explicit links take precedence, and ambiguous metadata or authored front matter keeps
+the publisher's start. Opening for reading remains silent; audio starts only from the Play action.
+
 #### 2.2 Brand color is reserved for CTAs
 
 Brand `primary` is reserved for true **call-to-action** moments — the actions the product
