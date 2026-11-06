@@ -84,6 +84,16 @@ describe('BookMenu page thumbnails toggle', () => {
     expect(screen.getByText('Clear Annotations')).not.toBeNull();
   });
 
+  it('hides parallel reading only for independent deployments', () => {
+    setBook({}, { showTOCThumbnails: true });
+    const { rerender } = render(<BookMenu />);
+    expect(screen.getByRole('button', { name: 'Parallel Read' })).not.toBeNull();
+
+    brand.independentDeployment = true;
+    rerender(<BookMenu />);
+    expect(screen.queryByRole('button', { name: 'Parallel Read' })).toBeNull();
+  });
+
   it('is not offered for books without page thumbnails', () => {
     setBook({}, { showTOCThumbnails: true });
     render(<BookMenu />);

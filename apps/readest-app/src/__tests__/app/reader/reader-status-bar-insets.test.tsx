@@ -1,3 +1,4 @@
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { act, cleanup, render } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -13,20 +14,29 @@ const h = vi.hoisted(() => ({
   setSystemUIVisibility: vi.fn(() => Promise.resolve({ success: true })),
   onUpdateInsets: vi.fn(),
   hoveredBookKey: '',
+  libraryLoaded: false,
+  independentDeployment: false,
+  readerContentSinglePane: [] as (boolean | undefined)[],
 }));
 
-vi.mock('next/navigation', () => ({ useRouter: () => ({ back: vi.fn() }) }));
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ back: vi.fn() }),
+}));
 vi.mock('@/context/EnvContext', () => ({
   useEnv: () => ({ appService: { isMobileApp: true, isIOSApp: true, isAndroidApp: false } }),
 }));
 vi.mock('@/hooks/useTheme', () => ({ useTheme: () => ({ onUpdateInsets: h.onUpdateInsets }) }));
-vi.mock('@/hooks/useLibrary', () => ({ useLibrary: () => ({ libraryLoaded: false }) }));
+vi.mock('@/hooks/useLibrary', () => ({
+  useLibrary: () => ({ libraryLoaded: h.libraryLoaded }),
+}));
 vi.mock('@/hooks/useScreenWakeLock', () => ({ useScreenWakeLock: vi.fn() }));
 vi.mock('@/app/reader/hooks/useScreenBrightness', () => ({ useScreenBrightness: vi.fn() }));
 vi.mock('@/hooks/useTransferQueue', () => ({ useTransferQueue: vi.fn() }));
 vi.mock('@/hooks/useReplicaPull', () => ({ useReplicaPull: vi.fn() }));
 vi.mock('@/store/settingsStore', () => ({
-  useSettingsStore: () => ({ settings: { alwaysShowStatusBar: false } }),
+  useSettingsStore: () => ({
+    settings: { alwaysShowStatusBar: false, globalReadSettings: {} },
+  }),
 }));
 vi.mock('@/store/readerStore', () => ({
   useReaderStore: () => ({ hoveredBookKey: h.hoveredBookKey }),
@@ -51,7 +61,15 @@ vi.mock('@/components/KeyboardShortcutsHelp', () => ({ KeyboardShortcutsHelp: ()
 vi.mock('@/components/UpdaterWindow', () => ({ UpdaterWindow: () => null }));
 vi.mock('@/components/Toast', () => ({ Toast: () => null }));
 vi.mock('@/app/reader/components/ProofreadRules', () => ({ ProofreadRulesManager: () => null }));
-vi.mock('@/app/reader/components/ReaderContent', () => ({ default: () => null }));
+vi.mock('@/utils/appBrand', () => ({
+  isIndependentDeployment: () => h.independentDeployment,
+}));
+vi.mock('@/app/reader/components/ReaderContent', () => ({
+  default: ({ singlePane }: { singlePane?: boolean }) => {
+    h.readerContentSinglePane.push(singlePane);
+    return null;
+  },
+}));
 
 import { useThemeStore } from '@/store/themeStore';
 import Reader from '@/app/reader/components/Reader';
@@ -60,6 +78,9 @@ beforeEach(() => {
   useThemeStore.setState({ systemUIAlwaysHidden: false, isIPhoneDuo: false });
   h.setSystemUIVisibility.mockClear();
   h.onUpdateInsets.mockClear();
+  h.libraryLoaded = false;
+  h.independentDeployment = false;
+  h.readerContentSinglePane = [];
 });
 
 afterEach(cleanup);
@@ -78,5 +99,14 @@ describe('Reader status bar visibility', () => {
     await act(async () => {});
     expect(h.setSystemUIVisibility).toHaveBeenCalledTimes(1);
     expect(h.onUpdateInsets).toHaveBeenCalledTimes(1);
+  });
+
+  it('requests a single reader pane in independent deployments', () => {
+    h.libraryLoaded = true;
+    h.independentDeployment = true;
+
+    render(<Reader />);
+
+    expect(h.readerContentSinglePane.at(-1)).toBe(true);
   });
 });

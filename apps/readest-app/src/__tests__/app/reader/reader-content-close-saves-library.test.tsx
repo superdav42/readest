@@ -1,3 +1,4 @@
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { act, cleanup, render, screen, waitFor } from '@testing-library/react';
 
@@ -108,6 +109,7 @@ describe('ReaderContent window close', () => {
       },
     });
     useReaderStore.setState({
+      bookKeys: [],
       viewStates: {
         'h1-k1': { key: 'h1-k1', isPrimary: true, viewSettings: {} } as NonNullable<
           ReturnType<ReturnType<typeof useReaderStore.getState>['getViewState']>
@@ -151,5 +153,17 @@ describe('ReaderContent window close', () => {
     await act(() => eventDispatcher.dispatch('manage-audiobook', { bookKey: 'h1-k1' }));
 
     expect(screen.queryByTestId('audiobook-pairing-dialog')).toBeNull();
+  });
+
+  test('initializes only the first persisted book when a single pane is requested', async () => {
+    const setBookKeys = vi.spyOn(useReaderStore.getState(), 'setBookKeys');
+
+    render(<ReaderContent ids='h1+second-book' settings={{} as SystemSettings} singlePane />);
+
+    await waitFor(() => expect(setBookKeys).toHaveBeenCalled());
+    const initializedKeys = setBookKeys.mock.calls[0]![0];
+    expect(initializedKeys).toHaveLength(1);
+    expect(initializedKeys[0]).toMatch(/^h1-/);
+    setBookKeys.mockRestore();
   });
 });

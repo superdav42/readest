@@ -1,4 +1,4 @@
-// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React from 'react';
 
@@ -43,6 +43,7 @@ const BookMenu: React.FC<BookMenuProps> = ({ menuClassName, setIsDropdownOpen })
   const bookData = sideBarBookKey ? getBookData(sideBarBookKey) : null;
   const showPairAudiobook = !isIndependentDeployment() && canPairAudiobook(bookData);
   const showProofread = !isIndependentDeployment();
+  const showParallelRead = !isIndependentDeployment();
   const showTOCThumbnails = viewSettings?.showTOCThumbnails ?? true;
   const showAnnotationTransfer = !isIndependentDeployment();
 
@@ -179,40 +180,43 @@ const BookMenu: React.FC<BookMenuProps> = ({ menuClassName, setIsDropdownOpen })
       className={clsx('book-menu dropdown-content z-20 shadow-2xl', menuClassName)}
       onCancel={() => setIsDropdownOpen?.(false)}
     >
-      <MenuItem
-        label={_('Parallel Read')}
-        buttonClass={bookKeys.length > 1 ? 'lg:tooltip lg:tooltip-bottom' : ''}
-        tooltip={parallelViews.length > 0 ? _('Disable') : _('Enable')}
-        Icon={parallelViews.length > 0 && bookKeys.length > 1 ? MdCheck : undefined}
-      >
-        <ul className='max-h-60 overflow-y-auto'>
-          {getVisibleLibrary()
-            .filter((book) => !FIXED_LAYOUT_FORMATS.has(book.format))
-            .filter((book) => !!book.downloadedAt)
-            .slice(0, 20)
-            .map((book) => (
-              <MenuItem
-                key={book.hash}
-                Icon={
-                  <img
-                    src={book.coverImageUrl!}
-                    alt={book.title}
-                    width={56}
-                    height={80}
-                    className='aspect-auto max-h-8 max-w-4 rounded-xs shadow-md'
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                }
-                label={book.title}
-                labelClass='max-w-36'
-                onClick={() => handleParallelView(book.hash)}
-              />
-            ))}
-        </ul>
-      </MenuItem>
-      {bookKeys.length > 1 &&
+      {showParallelRead && (
+        <MenuItem
+          label={_('Parallel Read')}
+          buttonClass={bookKeys.length > 1 ? 'lg:tooltip lg:tooltip-bottom' : ''}
+          tooltip={parallelViews.length > 0 ? _('Disable') : _('Enable')}
+          Icon={parallelViews.length > 0 && bookKeys.length > 1 ? MdCheck : undefined}
+        >
+          <ul className='max-h-60 overflow-y-auto'>
+            {getVisibleLibrary()
+              .filter((book) => !FIXED_LAYOUT_FORMATS.has(book.format))
+              .filter((book) => !!book.downloadedAt)
+              .slice(0, 20)
+              .map((book) => (
+                <MenuItem
+                  key={book.hash}
+                  Icon={
+                    <img
+                      src={book.coverImageUrl!}
+                      alt={book.title}
+                      width={56}
+                      height={80}
+                      className='aspect-auto max-h-8 max-w-4 rounded-xs shadow-md'
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  }
+                  label={book.title}
+                  labelClass='max-w-36'
+                  onClick={() => handleParallelView(book.hash)}
+                />
+              ))}
+          </ul>
+        </MenuItem>
+      )}
+      {showParallelRead &&
+        bookKeys.length > 1 &&
         (parallelViews.length > 0 ? (
           <MenuItem label={_('Exit Parallel Read')} onClick={handleUnsetParallel} />
         ) : (

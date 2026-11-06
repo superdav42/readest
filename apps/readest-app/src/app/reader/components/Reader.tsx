@@ -1,4 +1,4 @@
-// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 'use client';
 
 import clsx from 'clsx';
@@ -167,7 +167,7 @@ const Reader: React.FC<{ ids?: string }> = ({ ids }) => {
       )}
     >
       <Suspense fallback={<div className='full-height'></div>}>
-        <ReaderContent ids={ids} settings={settings} />
+        <ReaderContent ids={ids} settings={settings} singlePane={isIndependentDeployment()} />
         <AboutWindow />
         <ReadingStatsDialog />
         <KeyboardShortcutsHelp />

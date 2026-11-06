@@ -28,3 +28,6 @@ fork-specific product decisions that should survive future upstream merges.
 - Independent deployments do not expose proofreading in the selection toolbar, its customizer, or
   the book menu, and its shortcut cannot open the proofreader or replacement-rule manager. Existing
   rules remain stored and continue to transform content; standard Readest deployments remain unchanged.
+- Independent deployments expose a single reading pane and no Parallel Read actions. Opening a saved
+  multi-book reader route uses its first book without deleting either library book or changing either
+  saved passage; standard Readest deployments retain parallel reading.
