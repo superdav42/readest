@@ -1,3 +1,4 @@
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEnv } from '@/context/EnvContext';
@@ -10,6 +11,7 @@ import { navigateToReader } from '@/utils/nav';
 import { eventDispatcher } from '@/utils/event';
 import { consumePendingTTSAutoplay } from '@/utils/ttsAutoplay';
 import { useTranslation } from '@/hooks/useTranslation';
+import { isIndependentDeployment } from '@/utils/appBrand';
 
 const useBooksManager = () => {
   const router = useRouter();
@@ -174,6 +176,7 @@ const useBooksManager = () => {
   };
 
   const openParallelView = (id: string) => {
+    if (isIndependentDeployment()) return;
     const sideBarBookId = sideBarBookKey?.split('-')[0];
     appendBook(id, sideBarBookId != id, true);
   };

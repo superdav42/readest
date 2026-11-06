@@ -1,3 +1,4 @@
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { act, cleanup, renderHook } from '@testing-library/react';
 import { eventDispatcher } from '@/utils/event';
@@ -14,6 +15,8 @@ const h = vi.hoisted(() => ({
   viewStates: {} as Record<string, { inited: boolean; view: object }>,
   hasProgress: true,
   progressListeners: new Set<() => void>(),
+  setParallelMock: vi.fn(),
+  independentDeployment: false,
 }));
 
 vi.mock('next/navigation', () => ({
@@ -56,9 +59,12 @@ vi.mock('@/store/sidebarStore', () => ({
   useSidebarStore: () => ({ sideBarBookKey: null, setSideBarBookKey: h.setSideBarBookKeyMock }),
 }));
 vi.mock('@/store/parallelViewStore', () => ({
-  useParallelViewStore: () => ({ setParallel: vi.fn() }),
+  useParallelViewStore: () => ({ setParallel: h.setParallelMock }),
 }));
 vi.mock('@/utils/nav', () => ({ navigateToReader: vi.fn() }));
+vi.mock('@/utils/appBrand', () => ({
+  isIndependentDeployment: () => h.independentDeployment,
+}));
 
 import useBooksManager from '@/app/reader/hooks/useBooksManager';
 import { setPendingTTSAutoplay } from '@/utils/ttsAutoplay';
@@ -70,6 +76,7 @@ describe('useBooksManager open-failure handling', () => {
     h.bookKeys = [];
     h.viewStates = {};
     h.hasProgress = true;
+    h.independentDeployment = false;
     h.progressListeners.clear();
     setPendingTTSAutoplay(null);
   });
@@ -89,6 +96,17 @@ describe('useBooksManager open-failure handling', () => {
 
     expect(dispatchSpy).toHaveBeenCalledWith('toast', expect.objectContaining({ type: 'error' }));
     dispatchSpy.mockRestore();
+  });
+
+  it('ignores stale parallel-open requests in independent deployments', () => {
+    h.independentDeployment = true;
+    const { result } = renderHook(() => useBooksManager());
+
+    act(() => result.current.openParallelView('second-book'));
+
+    expect(h.initViewStateMock).not.toHaveBeenCalled();
+    expect(h.setBookKeysMock).not.toHaveBeenCalled();
+    expect(h.setParallelMock).not.toHaveBeenCalled();
   });
 
   // Cold-restore autoplay: the app relaunches straight into the reader with the

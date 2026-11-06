@@ -1,4 +1,4 @@
-// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 'use client';
 
 import dynamic from 'next/dynamic';
@@ -76,7 +76,11 @@ const NOTION_FLUSH_TIMEOUT_MS = 3000;
 // holds the old page on screen. The app may also serve the library at `/`.
 const libraryArrived = () => !!document.querySelector('.bookshelf');
 
-const ReaderContent: React.FC<{ ids?: string; settings: SystemSettings }> = ({ ids, settings }) => {
+const ReaderContent: React.FC<{
+  ids?: string;
+  settings: SystemSettings;
+  singlePane?: boolean;
+}> = ({ ids, settings, singlePane = false }) => {
   const _ = useTranslation();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -131,14 +135,15 @@ const ReaderContent: React.FC<{ ids?: string; settings: SystemSettings }> = ({ i
     // paths use (src/utils/audiobook.ts), so a stray ABS id is handled
     // identically everywhere it could turn up.
     const { getBookByHash } = useLibraryStore.getState();
-    const { audiobookHash, readerIds: initialIds } = splitLibraryOpenIds(
-      requestedIds,
-      getBookByHash,
-    );
+    const { audiobookHash, readerIds } = splitLibraryOpenIds(requestedIds, getBookByHash);
     if (audiobookHash) {
       router.replace(`/player?id=${audiobookHash}`);
       return;
     }
+    // Independent deployments intentionally expose one reader pane. Keep the
+    // first persisted book usable without opening or rewriting any other book's
+    // saved view state; the library entries and their positions remain intact.
+    const initialIds = singlePane ? readerIds.slice(0, 1) : readerIds;
     // Back from a page opened over the reader, e.g. the account page (#6607):
     // the books are still open, so show them again instead of loading anew.
     if (useReaderStore.getState().areBooksOpen(initialIds)) return;
