@@ -3,6 +3,11 @@ import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/re
 import { StrictMode, type ReactNode } from 'react';
 
 const env = vi.hoisted(() => ({ isAndroidApp: true, isMobile: true }));
+const brand = vi.hoisted(() => ({ independent: false }));
+const settingsNavigation = vi.hoisted(() => ({
+  activeSettingsItemId: null as string | null,
+  requestedPanel: null as string | null,
+}));
 // OverlayScrollbars initializes with `defer`, so on open the contents element
 // exists but is not yet the scrolling viewport.
 const scroller = vi.hoisted(() => ({ initialized: true }));
@@ -10,6 +15,9 @@ vi.mock('@/context/EnvContext', () => ({ useEnv: () => ({ appService: env }) }))
 vi.mock('@/hooks/useTranslation', () => ({ useTranslation: () => (text: string) => text }));
 vi.mock('@/hooks/useResponsiveSize', () => ({ useResponsiveSize: (size: number) => size }));
 vi.mock('@/utils/rtl', () => ({ getDirFromUILanguage: () => 'ltr' }));
+vi.mock('@/utils/appBrand', () => ({
+  isIndependentDeployment: () => brand.independent,
+}));
 vi.mock('@/services/environment', () => ({ getCommandPaletteShortcut: () => '' }));
 vi.mock('@/components/command-palette', () => ({ useCommandPalette: () => ({ open: vi.fn() }) }));
 vi.mock('@/components/Dropdown', () => ({ default: () => null }));
@@ -18,7 +26,9 @@ vi.mock('@/store/settingsStore', () => ({
   useSettingsStore: () => ({
     setFontPanelView: vi.fn(),
     setSettingsDialogOpen: vi.fn(),
+    activeSettingsItemId: settingsNavigation.activeSettingsItemId,
     setActiveSettingsItemId: vi.fn(),
+    requestedPanel: settingsNavigation.requestedPanel,
     setRequestedPanel: vi.fn(),
   }),
 }));
@@ -50,7 +60,9 @@ vi.mock('@/components/settings/ControlPanel', () => ({ default: () => null }));
 vi.mock('@/components/settings/TTSPanel', () => ({ default: () => null }));
 vi.mock('@/components/settings/LangPanel', () => ({ default: () => null }));
 vi.mock('@/components/settings/AIPanel', () => ({ default: () => null }));
-vi.mock('@/components/settings/IntegrationsPanel', () => ({ default: () => null }));
+vi.mock('@/components/settings/IntegrationsPanel', () => ({
+  default: () => <div data-testid='integrations-panel'>Integrations content</div>,
+}));
 vi.mock('@/components/settings/MiscPanel', () => ({ default: () => null }));
 
 const { default: SettingsDialog, resetSettingsScrollPosition } = await import(
@@ -66,6 +78,9 @@ beforeEach(() => {
     },
   );
   env.isAndroidApp = true;
+  brand.independent = false;
+  settingsNavigation.activeSettingsItemId = null;
+  settingsNavigation.requestedPanel = null;
   scroller.initialized = true;
   localStorage.clear();
 });
@@ -210,5 +225,30 @@ describe('Settings tab scrolling', () => {
     viewport.scrollTop = 300;
     fireEvent.click(screen.getByTitle('Font'));
     expect(viewport.scrollTop).toBe(0);
+  });
+});
+
+describe('independent deployment settings', () => {
+  it('keeps Integrations available in standard Readest mode', () => {
+    setup();
+    fireEvent.click(screen.getByTitle('Integrations'));
+    expect(screen.getByTestId('integrations-panel')).toBeTruthy();
+  });
+
+  it.each([
+    ['saved panel', () => localStorage.setItem('lastConfigPanel', 'Integrations')],
+    ['direct panel request', () => (settingsNavigation.requestedPanel = 'Integrations')],
+    [
+      'settings search result',
+      () => (settingsNavigation.activeSettingsItemId = 'settings.integrations.localsend'),
+    ],
+  ])('rejects a stale %s without mounting Integrations', async (_name, arrange) => {
+    brand.independent = true;
+    arrange();
+    setup();
+
+    await waitFor(() => expect(screen.queryByTestId('integrations-panel')).toBeNull());
+    expect(screen.queryByTitle('Integrations')).toBeNull();
+    expect(screen.getByTestId('content')).toBeTruthy();
   });
 });

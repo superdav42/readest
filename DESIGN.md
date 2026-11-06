@@ -31,3 +31,6 @@ fork-specific product decisions that should survive future upstream merges.
 - Independent deployments expose a single reading pane and no Parallel Read actions. Opening a saved
   multi-book reader route uses its first book without deleting either library book or changing either
   saved passage; standard Readest deployments retain parallel reading.
+- Independent deployments do not expose integration settings or mount their sub-pages. Settings
+  search, saved tabs, and direct navigation fall back to a supported panel without deleting stored
+  credentials; catalog access, local reading, downloads, and managed narration remain available.

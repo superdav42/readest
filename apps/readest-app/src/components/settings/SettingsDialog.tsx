@@ -1,3 +1,4 @@
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useEnv } from '@/context/EnvContext';
@@ -21,6 +22,7 @@ import {
 import { FiSearch } from 'react-icons/fi';
 import { getDirFromUILanguage } from '@/utils/rtl';
 import { getCommandPaletteShortcut } from '@/services/environment';
+import { isIndependentDeployment } from '@/utils/appBrand';
 import FontPanel from './FontPanel';
 import LayoutPanel from './LayoutPanel';
 import ThemePanel from './ThemePanel';
@@ -83,6 +85,7 @@ const SettingsDialog: React.FC<{ bookKey: string }> = ({ bookKey }) => {
     setRequestedPanel,
   } = useSettingsStore();
   const { open: openCommandPalette } = useCommandPalette();
+  const integrationsAvailable = !isIndependentDeployment();
 
   const handleOpenCommandPalette = () => {
     openCommandPalette();
@@ -119,6 +122,7 @@ const SettingsDialog: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       tab: 'Integrations',
       icon: RiShareLine,
       label: _('Integrations'),
+      disabled: !integrationsAvailable,
     },
     {
       tab: 'AI',
@@ -143,11 +147,11 @@ const SettingsDialog: React.FC<{ bookKey: string }> = ({ bookKey }) => {
     // dialog, honor that for the initial state. The store-clear lives in
     // a useEffect below so we never call a zustand setter during render
     // (would warn "Cannot update a component while rendering another").
-    if (requestedPanel && tabConfig.some((tab) => tab.tab === requestedPanel)) {
+    if (requestedPanel && tabConfig.some((tab) => !tab.disabled && tab.tab === requestedPanel)) {
       return requestedPanel as SettingsPanelType;
     }
     const lastPanel = localStorage.getItem('lastConfigPanel');
-    if (lastPanel && tabConfig.some((tab) => tab.tab === lastPanel)) {
+    if (lastPanel && tabConfig.some((tab) => !tab.disabled && tab.tab === lastPanel)) {
       return lastPanel as SettingsPanelType;
     }
     return 'Font' as SettingsPanelType;
@@ -344,7 +348,11 @@ const SettingsDialog: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       };
       const panelKey = parts[1]?.toLowerCase();
       const targetPanel = panelMap[panelKey || ''];
-      if (targetPanel && targetPanel !== activePanel) {
+      if (
+        targetPanel &&
+        tabConfig.some((tab) => !tab.disabled && tab.tab === targetPanel) &&
+        targetPanel !== activePanel
+      ) {
         // eslint-disable-next-line react-hooks/set-state-in-effect -- panel switch based on external navigation is intended
         setActivePanel(targetPanel);
       }
@@ -599,7 +607,7 @@ const SettingsDialog: React.FC<{ bookKey: string }> = ({ bookKey }) => {
           />
         )}
         {activePanel === 'AI' && <AIPanel />}
-        {activePanel === 'Integrations' && <IntegrationsPanel />}
+        {integrationsAvailable && activePanel === 'Integrations' && <IntegrationsPanel />}
         {activePanel === 'Custom' && (
           <MiscPanel
             bookKey={bookKey}
