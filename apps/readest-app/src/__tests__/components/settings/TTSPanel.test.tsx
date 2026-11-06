@@ -14,6 +14,11 @@ const state = vi.hoisted(() => ({
   token: null as string | null,
   user: null as { id: string } | null,
   push: vi.fn(),
+  independentDeployment: false,
+}));
+
+vi.mock('@/utils/appBrand', () => ({
+  isIndependentDeployment: () => state.independentDeployment,
 }));
 
 vi.mock('@/context/AuthContext', () => ({
@@ -78,6 +83,7 @@ describe('TTSPanel inline reading annotations', () => {
     vi.clearAllMocks();
     state.uiLocale = 'ja';
     state.viewSettings.ttsSkipInlineAnnotations = false;
+    state.independentDeployment = false;
   });
 
   afterEach(cleanup);
@@ -132,6 +138,7 @@ describe('TTSPanel custom TTS services premium gate', () => {
     state.token = null;
     state.user = null;
     state.push.mockReset();
+    state.independentDeployment = false;
   });
 
   afterEach(cleanup);
@@ -161,5 +168,16 @@ describe('TTSPanel custom TTS services premium gate', () => {
     expect(state.push).not.toHaveBeenCalled();
     fireEvent.click(screen.getByText('Add TTS Service'));
     expect(screen.getByLabelText('Base URL')).toBeTruthy();
+  });
+
+  it('does not expose custom service setup in an independent deployment', () => {
+    state.independentDeployment = true;
+    state.token = sessionToken({ plan: 'free', customization_purchased: true });
+    state.user = { id: 'u' };
+
+    render(<TTSPanel bookKey='book-1' onRegisterReset={vi.fn()} />);
+
+    expect(screen.queryByText('Custom TTS Services')).toBeNull();
+    expect(screen.queryByText('Add TTS Service')).toBeNull();
   });
 });

@@ -1,3 +1,4 @@
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import React, { useEffect, useState } from 'react';
 import { useEnv } from '@/context/EnvContext';
 import { useAuth } from '@/context/AuthContext';
@@ -11,6 +12,7 @@ import { useResetViewSettings } from '@/hooks/useResetSettings';
 import { useTranslation } from '@/hooks/useTranslation';
 import { saveViewSettings } from '@/helpers/settings';
 import { getLocale } from '@/utils/misc';
+import { isIndependentDeployment } from '@/utils/appBrand';
 import { SettingsPanelPanelProp } from './SettingsDialog';
 import {
   TTSHighlightGranularity,
@@ -34,6 +36,7 @@ const TTSPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset }
   const router = useAppRouter();
   const { token, user } = useAuth();
   const hasPremium = isCustomTTSAllowed(token);
+  const customTTSAvailable = !isIndependentDeployment();
   const [showCustomServices, setShowCustomServices] = useState(false);
   const { getViewSettings } = useReaderStore();
   const { settings, setSettings, saveSettings } = useSettingsStore();
@@ -127,7 +130,7 @@ const TTSPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset }
 
   // Android Back / Esc steps back to this panel instead of closing Settings.
   useKeyDownActions({
-    enabled: showCustomServices,
+    enabled: customTTSAvailable && showCustomServices,
     onCancel: () => setShowCustomServices(false),
   });
 
@@ -174,7 +177,7 @@ const TTSPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset }
     setTtsHighlightGranularity(granularity);
   };
 
-  if (showCustomServices) {
+  if (customTTSAvailable && showCustomServices) {
     return (
       <div className='w-full'>
         <CustomTTSServices onBack={() => setShowCustomServices(false)} />
@@ -184,15 +187,17 @@ const TTSPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset }
 
   return (
     <div className='my-4 w-full space-y-6'>
-      <BoxedList title={_('Voices')} cardClassName='overflow-hidden'>
-        <NavigationRow
-          title={_('Custom TTS Services')}
-          status={_('Use your own OpenAI-compatible speech service')}
-          badge={hasPremium ? undefined : _('Premium')}
-          onClick={handleOpenCustomServices}
-          data-setting-id='settings.tts.customServices'
-        />
-      </BoxedList>
+      {customTTSAvailable && (
+        <BoxedList title={_('Voices')} cardClassName='overflow-hidden'>
+          <NavigationRow
+            title={_('Custom TTS Services')}
+            status={_('Use your own OpenAI-compatible speech service')}
+            badge={hasPremium ? undefined : _('Premium')}
+            onClick={handleOpenCustomServices}
+            data-setting-id='settings.tts.customServices'
+          />
+        </BoxedList>
+      )}
 
       <TTSHighlightStyleEditor
         granularity={ttsHighlightGranularity}

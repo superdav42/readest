@@ -34,3 +34,6 @@ fork-specific product decisions that should survive future upstream merges.
 - Independent deployments do not expose integration settings or mount their sub-pages. Settings
   search, saved tabs, and direct navigation fall back to a supported panel without deleting stored
   credentials; catalog access, local reading, downloads, and managed narration remain available.
+- Independent deployments do not expose custom TTS service setup, upgrade prompts, or search results.
+  Saved custom endpoints remain stored but are not contacted; recorded and catalog narration, supported
+  voices, playback speed, and read-along highlighting remain available.

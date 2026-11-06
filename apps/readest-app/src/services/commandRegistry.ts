@@ -1,3 +1,4 @@
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { Fzf, FzfResultItem, byLengthAsc } from 'fzf';
 import { SettingsPanelType } from '@/components/settings/SettingsDialog';
 import { RiFontSize, RiDashboardLine, RiTranslate, RiShareLine } from 'react-icons/ri';
@@ -767,6 +768,7 @@ export interface CommandRegistryOptions {
   showAbout: () => void;
   toggleTelemetry: () => void;
   isDesktop: boolean;
+  customTTSAvailable?: boolean;
   // TODO: add reader-specific actions when reader is open (tts, bookmark, etc.)
 }
 
@@ -804,6 +806,7 @@ export const buildCommandRegistry = (options: CommandRegistryOptions): CommandIt
 
   // add color panel items
   for (const def of colorPanelItems) {
+    if (def.id === 'settings.tts.customServices' && options.customTTSAvailable === false) continue;
     items.push(createSettingsItem(def, 'Theme'));
   }
 

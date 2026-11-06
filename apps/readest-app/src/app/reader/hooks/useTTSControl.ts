@@ -1,4 +1,4 @@
-// Modified 2026-11-01 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useEnv } from '@/context/EnvContext';
 import { useAuth } from '@/context/AuthContext';
@@ -45,6 +45,7 @@ import { genSSMLRaw, parseSSMLLang } from '@/utils/ssml';
 import { throttle } from '@/utils/throttle';
 import { isCfiInLocation } from '@/utils/cfi';
 import { getLocale } from '@/utils/misc';
+import { isIndependentDeployment } from '@/utils/appBrand';
 import { getPDFSpeechLang } from '@/utils/langDetect';
 import { estimateTTSTime } from '@/utils/ttsTime';
 import { pageBreakFraction } from '@/utils/ttsPageFollow';
@@ -1022,7 +1023,9 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
           handleSectionChange,
         );
         ttsController.setSkipInlineAnnotations(viewSettings.ttsSkipInlineAnnotations ?? false);
-        ttsController.setCustomTTSServices(getEnabledCustomTTSServices);
+        ttsController.setCustomTTSServices(
+          isIndependentDeployment() ? () => [] : getEnabledCustomTTSServices,
+        );
         // The constructor takes the view directly (attachView, which also binds
         // this, only runs on the background-session reattach path), so set the
         // book key here or the per-book audio cache never gets a hash to open.

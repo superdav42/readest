@@ -89,6 +89,14 @@ describe('buildCommandRegistry', () => {
     expect(panels.has('Custom')).toBe(true);
   });
 
+  it('omits custom TTS setup when it is unavailable', () => {
+    const standardItems = buildCommandRegistry(createMockOptions());
+    const independentItems = buildCommandRegistry(createMockOptions({ customTTSAvailable: false }));
+
+    expect(standardItems.some((item) => item.id === 'settings.tts.customServices')).toBe(true);
+    expect(independentItems.some((item) => item.id === 'settings.tts.customServices')).toBe(false);
+  });
+
   it('should include action items', () => {
     const items = buildCommandRegistry(createMockOptions());
     const actionItems = items.filter((i) => i.category === 'actions');
