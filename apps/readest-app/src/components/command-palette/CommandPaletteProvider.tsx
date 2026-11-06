@@ -1,3 +1,4 @@
+// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 'use client';
 
 import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
@@ -23,6 +24,7 @@ import {
   CommandCategory,
 } from '@/services/commandRegistry';
 import useShortcuts from '@/hooks/useShortcuts';
+import { isIndependentDeployment } from '@/utils/appBrand';
 
 interface CommandPaletteContextValue {
   isOpen: boolean;
@@ -62,6 +64,7 @@ export const CommandPaletteProvider: React.FC<CommandPaletteProviderProps> = ({ 
   const [query, setQuery] = useState('');
 
   const isDesktop = isTauriAppPlatform() && !appService?.isMobile;
+  const customTTSAvailable = !isIndependentDeployment();
 
   // action handlers
   const toggleTheme = useCallback(() => {
@@ -135,6 +138,7 @@ export const CommandPaletteProvider: React.FC<CommandPaletteProviderProps> = ({ 
         showAbout,
         toggleTelemetry,
         isDesktop,
+        customTTSAvailable,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [
@@ -149,6 +153,7 @@ export const CommandPaletteProvider: React.FC<CommandPaletteProviderProps> = ({ 
       showAbout,
       toggleTelemetry,
       isDesktop,
+      customTTSAvailable,
     ],
   );
 

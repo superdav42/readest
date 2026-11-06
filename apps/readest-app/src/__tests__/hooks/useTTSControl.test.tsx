@@ -3,6 +3,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // --- Dependency mocks (must be set up before importing the hook) ---
 
+const fork = vi.hoisted(() => ({ independentDeployment: false }));
+const customTTS = vi.hoisted(() => ({
+  getEnabled: vi.fn(() => [{ id: 'saved-custom-service' }]),
+}));
+
+vi.mock('@/utils/appBrand', () => ({
+  isIndependentDeployment: () => fork.independentDeployment,
+}));
+
+vi.mock('@/store/customTTSStore', () => ({
+  getEnabledCustomTTSServices: customTTS.getEnabled,
+}));
+
 vi.mock('@/context/EnvContext', () => ({
   useEnv: () => ({
     appService: { isIOSApp: false, isMobile: false },
@@ -387,6 +400,8 @@ describe('useTTSControl concurrent tts-speak events', () => {
   beforeEach(() => {
     ttsControllerInstances.length = 0;
     pendingInitResolvers.length = 0;
+    fork.independentDeployment = false;
+    customTTS.getEnabled.mockClear();
   });
 
   afterEach(() => {
@@ -423,6 +438,24 @@ describe('useTTSControl concurrent tts-speak events', () => {
       // cleanly (otherwise the act() would never settle).
       while (pendingInitResolvers.length > 0) pendingInitResolvers.shift()!();
       await Promise.all([p1, p2]);
+    });
+  });
+
+  it('does not offer saved custom services to the controller in an independent deployment', async () => {
+    fork.independentDeployment = true;
+    render(<Harness />);
+
+    await act(async () => {
+      const started = eventDispatcher.dispatch('tts-speak', { bookKey: 'book-1' });
+      for (let i = 0; i < 10; i++) await Promise.resolve();
+      const controller = ttsControllerInstances[0] as {
+        setCustomTTSServices: ReturnType<typeof vi.fn>;
+      };
+      const services = controller.setCustomTTSServices.mock.calls[0]?.[0] as () => unknown[];
+      expect(services()).toEqual([]);
+      expect(customTTS.getEnabled).not.toHaveBeenCalled();
+      while (pendingInitResolvers.length > 0) pendingInitResolvers.shift()!();
+      await started;
     });
   });
 });
