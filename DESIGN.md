@@ -5,9 +5,14 @@ fork-specific product decisions that should survive future upstream merges.
 
 ### Mobile reading
 
-- Mobile books open on the reading surface with application controls hidden. A deliberate center tap
-  reveals the header and footer; page-turn zones, authored links, selection, highlights, narration
-  follow gestures, and keyboard navigation retain their existing meanings.
+- Books open with header and footer controls visible on web and native apps so Read Aloud is
+  discoverable. The header's Enter Focus Mode icon opts into hidden controls; a center tap or desktop
+  edge hover reveals them temporarily, and Exit Focus Mode pins them again. Focus mode is session-only
+  and opening a book starts with menus visible. Page turns, pointer leave, and ordinary reading taps
+  never unpin controls; authored links, selection, highlights, narration follow, and keyboard navigation
+  retain their existing meanings. The audio mini player stacks above the visible footer. The reader
+  reserves measured toolbar clearance while pinned, including when page headers/footers are disabled;
+  entering focus restores the saved reading margins without changing those preferences.
 - Controls dismiss only through an explicit reading-surface action or navigation. Focused controls,
   open menus, settings, and dialogs must not be hidden by a timer.
 - The quick typography panel exposes the active serif/sans-serif category, its bundled or custom

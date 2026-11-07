@@ -117,11 +117,16 @@ describe('readerStore', () => {
       viewStates: {},
       bookKeys: [],
       hoveredBookKey: null,
+      controlsPinned: false,
     });
     useBookDataStore.setState({ booksData: {} });
   });
 
   describe('initial state', () => {
+    test('starts with controls pinned for audio discoverability', () => {
+      expect(useReaderStore.getInitialState().controlsPinned).toBe(true);
+    });
+
     test('has empty viewStates and bookKeys', () => {
       const state = useReaderStore.getState();
       expect(state.viewStates).toEqual({});
@@ -144,6 +149,25 @@ describe('readerStore', () => {
   });
 
   describe('setHoveredBookKey', () => {
+    test('keeps pinned controls visible through taps, page turns and pointer leave', () => {
+      useReaderStore.getState().setControlsPinned(true);
+      useReaderStore.getState().setHoveredBookKey('');
+      expect(useReaderStore.getState().controlsPinned).toBe(true);
+      useReaderStore.getState().setHoveredBookKey(null);
+      expect(useReaderStore.getState().controlsPinned).toBe(true);
+    });
+
+    test('focus icon hides controls and restores tap or hover reveal and dismiss', () => {
+      useReaderStore.getState().setHoveredBookKey('book-1');
+      useReaderStore.getState().setControlsPinned(false);
+      expect(useReaderStore.getState().controlsPinned).toBe(false);
+      expect(useReaderStore.getState().hoveredBookKey).toBe('');
+      useReaderStore.getState().setHoveredBookKey('book-1');
+      expect(useReaderStore.getState().hoveredBookKey).toBe('book-1');
+      useReaderStore.getState().setHoveredBookKey('');
+      expect(useReaderStore.getState().hoveredBookKey).toBe('');
+    });
+
     test('sets hovered book key', () => {
       useReaderStore.getState().setHoveredBookKey('book-1');
       expect(useReaderStore.getState().hoveredBookKey).toBe('book-1');

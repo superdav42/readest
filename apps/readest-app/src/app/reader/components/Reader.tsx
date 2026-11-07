@@ -62,7 +62,7 @@ const Reader: React.FC<{ ids?: string }> = ({ ids }) => {
   const { settings } = useSettingsStore();
   const { libraryLoaded } = useLibrary();
   const { sideBarBookKey } = useSidebarStore();
-  const { hoveredBookKey } = useReaderStore();
+  const { hoveredBookKey, controlsPinned } = useReaderStore();
   const { showSystemUI, dismissSystemUI } = useThemeStore();
   const { acquireBackKeyInterception, releaseBackKeyInterception } = useDeviceControlStore();
   const { isSideBarVisible, isSideBarPinned } = useSidebarStore();
@@ -143,7 +143,7 @@ const Reader: React.FC<{ ids?: string }> = ({ ids }) => {
 
   useEffect(() => {
     if (!appService?.isMobileApp) return;
-    const systemUIVisible = !!hoveredBookKey || settings.alwaysShowStatusBar;
+    const systemUIVisible = controlsPinned || !!hoveredBookKey || settings.alwaysShowStatusBar;
     const visible = !!(systemUIVisible && !systemUIAlwaysHidden);
     setSystemUIVisibility({ visible, darkMode: isDarkMode }).then(() => {
       // iPhone Duo's status bar carries a side inset of its own (its strip):
@@ -157,7 +157,7 @@ const Reader: React.FC<{ ids?: string }> = ({ ids }) => {
       dismissSystemUI();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hoveredBookKey]);
+  }, [hoveredBookKey, controlsPinned]);
 
   return libraryLoaded && settings.globalReadSettings ? (
     <div

@@ -32,10 +32,15 @@ vi.mock('@/store/sidebarStore', () => ({
   useSidebarStore: () => ({ isSideBarVisible: false, getIsSideBarVisible: () => false }),
 }));
 const setHoveredBookKey = vi.hoisted(() => vi.fn());
+const chrome = vi.hoisted(() => ({
+  controlsPinned: true,
+  hoveredBookKey: 'book-1',
+  setControlsPinned: vi.fn(),
+}));
 vi.mock('@/store/readerStore', () => ({
   useReaderStore: () => ({
     bookKeys: ['book-1'],
-    hoveredBookKey: 'book-1',
+    ...chrome,
     getView: () => null,
     getViewSettings: () => ({ enableAnnotationQuickActions: false }),
     setHoveredBookKey,
@@ -109,7 +114,47 @@ afterEach(() => {
   vi.unstubAllGlobals();
   useEnvMock.mockReset();
   setHoveredBookKey.mockReset();
+  chrome.controlsPinned = true;
+  chrome.hoveredBookKey = 'book-1';
+  chrome.setControlsPinned.mockReset();
   currentBookData = null;
+});
+
+describe('HeaderBar focus mode', () => {
+  it('starts visible without a tap or hover and exposes the focus icon', () => {
+    chrome.hoveredBookKey = '';
+    setViewport(390, 844);
+    renderHeader();
+    expect(screen.getByRole('banner').className).toContain('pointer-events-auto');
+    fireEvent.click(screen.getByRole('button', { name: 'Enter Focus Mode' }));
+    expect(chrome.setControlsPinned).toHaveBeenCalledWith(false);
+  });
+
+  it('hides in focus mode until revealed, then offers to pin controls again', () => {
+    chrome.controlsPinned = false;
+    chrome.hoveredBookKey = '';
+    setViewport(1440, 900);
+    const { rerender } = renderHeader();
+    expect(screen.getByRole('banner').className).toContain('pointer-events-none');
+    chrome.hoveredBookKey = 'book-1';
+    rerender(
+      <HeaderBar
+        bookKey='book-1'
+        bookTitle='Book'
+        isTopLeft={false}
+        isHoveredAnim={false}
+        gridInsets={insets}
+        screenInsets={insets}
+        onCloseBook={vi.fn()}
+        onGoToLibrary={vi.fn()}
+      />,
+    );
+    expect(screen.getByRole('banner').className).toContain('pointer-events-auto');
+    const exit = screen.getByRole('button', { name: 'Exit Focus Mode' });
+    expect(exit.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(exit);
+    expect(chrome.setControlsPinned).toHaveBeenCalledWith(true);
+  });
 });
 
 describe('HeaderBar sidebar toggle', () => {
