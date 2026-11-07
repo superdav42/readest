@@ -1,5 +1,6 @@
 import { FileHandle, open, BaseDirectory, SeekMode } from '@tauri-apps/plugin-fs';
 import { getOSPlatform } from './misc';
+import { isWebAppPlatform } from '@/services/environment';
 
 class DeferredBlob extends Blob {
   #dataPromise: Promise<ArrayBuffer>;
@@ -394,8 +395,9 @@ export class RemoteFile extends File implements ClosableFile {
     if (this.#queryRange) {
       return this._open_with_query();
     }
-    // FIXME: currently HEAD request in asset protocol is not supported on Android
-    if (getOSPlatform() === 'android') {
+    // Only native Android needs the asset-protocol workaround. On the web,
+    // Content-Length is CORS-safelisted but Content-Range often is not exposed.
+    if (getOSPlatform() === 'android' && !isWebAppPlatform()) {
       return this._open_with_range();
     } else {
       return this._open_with_head();

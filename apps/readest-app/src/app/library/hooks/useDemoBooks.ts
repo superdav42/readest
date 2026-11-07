@@ -77,11 +77,12 @@ const seedCatalogBooks = async (urls: string[]): Promise<{ books: Book[]; urls: 
 
 export const useDemoBooks = () => {
   const { envConfig } = useEnv();
+  const libraryLoaded = useLibraryStore((state) => state.libraryLoaded);
   const [books, setBooks] = useState<Book[]>([]);
   const isLoading = useRef(false);
 
   useEffect(() => {
-    if (isLoading.current) return;
+    if (!libraryLoaded || isLoading.current) return;
     isLoading.current = true;
 
     const userLang = getUserLang() as keyof typeof libraries;
@@ -101,13 +102,18 @@ export const useDemoBooks = () => {
           rest.map((url) => appService.importBook(url, [], { saveBook: false })),
         );
         setBooks([...seeded.books, ...imported.filter((book) => book !== null)] as Book[]);
+        localStorage.setItem('demoBooksFetched', 'true');
       } catch (error) {
+        localStorage.removeItem('demoBooksFetched');
         console.error('Failed to import demo books:', error);
       }
     };
 
     const demoBooksFetchedFlag = localStorage.getItem('demoBooksFetched');
-    if (isWebAppPlatform() && !demoBooksFetchedFlag) {
+    // Recover flags written before a failed import. Deleted rows remain in the
+    // library, so an intentionally emptied shelf does not resurrect demo books.
+    const emptyLibrary = useLibraryStore.getState().library.length === 0;
+    if (isWebAppPlatform() && (!demoBooksFetchedFlag || emptyLibrary)) {
       // Starter books are fetched over the network: start after the page has loaded and the
       // browser is idle, so they don't compete with the first screen.
       const start = () => {
@@ -118,10 +124,9 @@ export const useDemoBooks = () => {
       };
       if (document.readyState === 'complete') start();
       else window.addEventListener('load', start, { once: true });
-      localStorage.setItem('demoBooksFetched', 'true');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [libraryLoaded]);
 
   return books;
 };

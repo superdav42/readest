@@ -32,7 +32,8 @@ const FooterBar: React.FC<FooterBarProps> = ({
   const { appService } = useEnv();
   const isIPhoneDuo = useThemeStore((s) => s.isIPhoneDuo);
   const { getConfig, setConfig, getBookData } = useBookDataStore();
-  const { hoveredBookKey, setHoveredBookKey, bottomBarTab, setBottomBarTab } = useReaderStore();
+  const { hoveredBookKey, setHoveredBookKey, bottomBarTab, setBottomBarTab, controlsPinned } =
+    useReaderStore();
   const { getView, getViewState, getProgress, getViewSettings } = useReaderStore();
   const { isSideBarVisible, isSideBarPinned, setSideBarVisible } = useSidebarStore();
   const { acquireBackKeyInterception, releaseBackKeyInterception } = useDeviceControlStore();
@@ -44,8 +45,8 @@ const FooterBar: React.FC<FooterBarProps> = ({
   const progress = getProgress(bookKey);
   const viewSettings = getViewSettings(bookKey);
 
-  const actionTab = hoveredBookKey === bookKey ? bottomBarTab : '';
-  const isVisible = hoveredBookKey === bookKey;
+  const isVisible = controlsPinned || hoveredBookKey === bookKey;
+  const actionTab = isVisible ? bottomBarTab : '';
 
   const docs = view?.renderer.getContents() ?? [];
   const pointerInDoc = docs.some(({ doc }) => doc?.body?.style.cursor === 'pointer');

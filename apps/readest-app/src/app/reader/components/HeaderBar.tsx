@@ -2,7 +2,7 @@
 import clsx from 'clsx';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { VscLibrary } from 'react-icons/vsc';
-import { MdOutlineMenu } from 'react-icons/md';
+import { MdOutlineMenu, MdCenterFocusStrong, MdCenterFocusWeak } from 'react-icons/md';
 
 import { Insets } from '@/types/misc';
 import { useEnv } from '@/context/EnvContext';
@@ -67,7 +67,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
   const headerRef = useRef<HTMLDivElement>(null);
   const { isTrafficLightVisible } = useTrafficLight(headerRef);
   const { trafficLightInFullscreen, setTrafficLightVisibility } = useTrafficLightStore();
-  const { bookKeys, hoveredBookKey } = useReaderStore();
+  const { bookKeys, hoveredBookKey, controlsPinned, setControlsPinned } = useReaderStore();
   const { isDarkMode, systemUIVisible, statusBarHeight, isIPhoneDuo } = useThemeStore();
   const { isSideBarVisible, getIsSideBarVisible } = useSidebarStore();
   const { getView, getViewSettings, setHoveredBookKey } = useReaderStore();
@@ -167,7 +167,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
 
   const isHeaderCompact = headerWidth > 0 && headerWidth < 350;
   const insets = window.innerWidth < 640 ? screenInsets : gridInsets;
-  const isHeaderVisible = hoveredBookKey === bookKey || isDropdownOpen;
+  const isHeaderVisible = controlsPinned || hoveredBookKey === bookKey || isDropdownOpen;
   const isMobile = appService?.isMobile || window.innerWidth < 640;
   const forceMobileLayout = isForcedMobileLayout(appService?.isMobile, isIPhoneDuo);
   const triggerHeight = viewSettings ? getHeaderTriggerHeight(gridInsets.top, viewSettings) : 0;
@@ -353,6 +353,20 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
         </div>
 
         <div className='header-tools-end bg-base-100 z-20 ms-auto flex h-full min-w-max items-center gap-x-4 ps-2 max-[350px]:gap-x-2'>
+          <button
+            type='button'
+            title={controlsPinned ? _('Enter Focus Mode') : _('Exit Focus Mode')}
+            aria-label={controlsPinned ? _('Enter Focus Mode') : _('Exit Focus Mode')}
+            aria-pressed={!controlsPinned}
+            className='btn btn-ghost h-11 min-h-11 w-8 p-0'
+            onClick={() => setControlsPinned(!controlsPinned)}
+          >
+            {controlsPinned ? (
+              <MdCenterFocusStrong size={iconSize18} />
+            ) : (
+              <MdCenterFocusWeak size={iconSize18} />
+            )}
+          </button>
           <NotebookToggler bookKey={bookKey} />
           <Dropdown
             label={_('View Options')}

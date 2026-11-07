@@ -115,7 +115,8 @@ const TTSMiniPlayer = ({
   const _ = useTranslation();
   const { appService } = useEnv();
   const isIPhoneDuo = useThemeStore((s) => s.isIPhoneDuo);
-  const { hoveredBookKey, setHoveredBookKey, getViewSettings, bottomBarTab } = useReaderStore();
+  const { hoveredBookKey, setHoveredBookKey, getViewSettings, bottomBarTab, controlsPinned } =
+    useReaderStore();
   const { getBookData } = useBookDataStore();
   const progress = useBookProgress(bookKey);
   const playback = usePlaybackInfo({ bookKey, isEink, onGetPlaybackInfo });
@@ -134,7 +135,7 @@ const TTSMiniPlayer = ({
   // dismissed, or a 16px resting offset. Mirrors FooterBar's mobile/desktop
   // layout split (see forceMobileLayout there) to pick the right bar height.
   const viewSettings = getViewSettings(bookKey);
-  const barVisible = hoveredBookKey === bookKey;
+  const barVisible = controlsPinned || hoveredBookKey === bookKey;
   const safeAreaMargin = appService?.hasSafeAreaInset ? gridInsets.bottom * 0.33 : 0;
   const forceMobileLayout = isForcedMobileLayout(appService?.isMobile, isIPhoneDuo);
   const usesMobileBar = forceMobileLayout || window.innerWidth < 640 || window.innerHeight < 640;

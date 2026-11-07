@@ -41,11 +41,11 @@ export const useMiniPlayerAutoHide = (
   mounted: boolean,
   buffering = false,
 ) => {
-  const { hoveredBookKey } = useReaderStore();
+  const { hoveredBookKey, controlsPinned } = useReaderStore();
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    if (!mounted || playerStyle === 'minimal' || hoveredBookKey === bookKey) {
+    if (!mounted || playerStyle === 'minimal' || controlsPinned || hoveredBookKey === bookKey) {
       setVisible(true);
       return;
     }
@@ -55,7 +55,7 @@ export const useMiniPlayerAutoHide = (
     }
     const timeout = setTimeout(() => setVisible(false), LINGER_MS);
     return () => clearTimeout(timeout);
-  }, [mounted, playerStyle, hoveredBookKey, bookKey, buffering]);
+  }, [mounted, playerStyle, hoveredBookKey, bookKey, buffering, controlsPinned]);
 
   return visible;
 };

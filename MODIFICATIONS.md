@@ -21,6 +21,8 @@ deploy commits that are pushed to that repository.
 
 | Date | Area | Files | Change |
 |---|---|---|---|
+| 2026-11-07 | Android web imports | `src/utils/file.ts`, `src/app/library/hooks/useDemoBooks.ts` | Android browsers use HEAD file-size probes, avoiding missing CORS-exposed Content-Range headers on starter-book downloads; native Android retains its asset-protocol range workaround. Starter imports wait for the saved library, mark completion only after success, and retry a truly empty library after an earlier failure without resurrecting deleted books. |
+| 2026-11-07 | Reader controls | `src/store/readerStore.ts`, `src/app/reader/components/{HeaderBar,Reader,FoliateViewer}.tsx`, `src/app/reader/components/footerbar/FooterBar.tsx`, `src/app/reader/components/tts/{TTSMiniPlayer.tsx,useMiniPlayerAutoHide.ts}` | Web and native reader menus start visible so Read Aloud is discoverable. An accessible focus icon opts into tap/hover-revealed controls; exiting focus pins the menus again. Native system bars and the audio mini player follow the visible chrome. Measured toolbar clearance prevents pinned menus from covering book text without overwriting saved margins. |
 | 2026-10-25 | Self-host catalog | `src/services/runtimeConfig.ts`, `src/app/opds/components/CatalogManager.tsx`, `src/app/api/opds/proxy/route.ts` | Featured OPDS catalog (`FEATURED_OPDS_CATALOG_*`) seeded on first visit; `OPDS_TRUSTED_HOSTS` lets the proxy reach the operator's private catalog |
 | 2026-10-25 | Telemetry | `apps/readest-app/.env` | Upstream PostHog default key removed: no telemetry from self-hosted builds |
 | 2026-10-25 | Starter books | `src/app/library/hooks/useDemoBooks.ts` | `DEMO_BOOK_URLS` replaces the bundled demo books |

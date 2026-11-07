@@ -154,6 +154,7 @@ const FoliateViewer: React.FC<{
   const getProgress = useReaderStore((s) => s.getProgress);
   const getViewSettings = useReaderStore((s) => s.getViewSettings);
   const setViewSettings = useReaderStore((s) => s.setViewSettings);
+  const controlsPinned = useReaderStore((s) => s.controlsPinned);
   const getParallels = useParallelViewStore((s) => s.getParallels);
   const getBookData = useBookDataStore((s) => s.getBookData);
   const getConfig = useBookDataStore((s) => s.getConfig);
@@ -180,6 +181,31 @@ const FoliateViewer: React.FC<{
   const navSpinnerTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const librarySearchHighlightTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [scrollMargins, setScrollMargins] = useState({ top: 0, bottom: 0 });
+  const [chromeClearance, setChromeClearance] = useState({ top: 0, bottom: 0 });
+
+  useEffect(() => {
+    if (!controlsPinned) {
+      setChromeClearance({ top: 0, bottom: 0 });
+      return;
+    }
+    const cell = document.getElementById(`gridcell-${bookKey}`);
+    const header = cell?.querySelector<HTMLElement>('.header-bar');
+    const footer = cell?.querySelector<HTMLElement>('.footer-bar');
+    if (!cell || !header || !footer) return;
+    const measure = () => {
+      // Layout dimensions ignore the footer's focus-mode slide transition.
+      setChromeClearance({
+        top: header.offsetHeight + (parseFloat(getComputedStyle(header).marginTop) || 0),
+        bottom: footer.offsetHeight + (parseFloat(getComputedStyle(footer).bottom) || 0),
+      });
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(cell);
+    observer.observe(header);
+    observer.observe(footer);
+    measure();
+    return () => observer.disconnect();
+  }, [bookKey, controlsPinned]);
   const docLoaded = useRef(false);
 
   const autoScroll = useAutoScroll(bookKey, viewRef);
@@ -957,7 +983,10 @@ const FoliateViewer: React.FC<{
     // The drawing dock stays up for the whole drawing session, so the text
     // makes room for it instead of running underneath.
     const drawingDock = viewState?.drawingEnabled ? getDrawingDockClearance(gridInsets) : null;
-    const topMargin = (showTopHeader ? insets.top : viewInsets.top) + moreTopInset;
+    const topMargin = Math.max(
+      (showTopHeader ? insets.top : viewInsets.top) + moreTopInset,
+      controlsPinned ? chromeClearance.top : 0,
+    );
     // On iPhone Duo the horizontal safe-area insets are applied to the viewer
     // container itself (see the render below), not folded into these margins:
     // the paginator treats a horizontal margin as a gutter and puts only half
@@ -967,6 +996,7 @@ const FoliateViewer: React.FC<{
     const bottomMargin = Math.max(
       (showBottomFooter ? insets.bottom : viewInsets.bottom) + moreBottomInset,
       drawingDock?.bottom ?? 0,
+      controlsPinned ? chromeClearance.bottom : 0,
     );
     const leftMargin = (isIPhoneDuo ? viewInsets.left : insets.left) + moreLeftInset;
     viewRef.current?.renderer.setAttribute('margin-top', `${topMargin}px`);
@@ -982,10 +1012,14 @@ const FoliateViewer: React.FC<{
       // topMargin, not the raw margin sum: it carries the 16px moreTopInset
       // floor, so a negative top margin keeps the scroll viewport glued to the
       // lifted header band instead of running under it (#5303).
-      const scrollTop = headerVisible ? topMargin : 0;
+      const scrollTop = Math.max(
+        headerVisible ? topMargin : 0,
+        controlsPinned ? chromeClearance.top : 0,
+      );
       const scrollBottom = Math.max(
         footerVisible ? Math.max(footerBarHeight, miniPlayerClearance) : miniPlayerClearance,
         drawingDock?.bottom ?? 0,
+        controlsPinned ? chromeClearance.bottom : 0,
       );
       setScrollMargins({ top: bookData?.isFixedLayout ? 0 : scrollTop, bottom: scrollBottom });
     } else {
@@ -1192,6 +1226,10 @@ const FoliateViewer: React.FC<{
     insets.bottom,
     insets.left,
     isIPhoneDuo,
+    controlsPinned,
+    chromeClearance.top,
+    chromeClearance.bottom,
+    viewState?.inited,
     // getViewInsets swaps the full top/bottom bands for the compact ones once
     // the page turns sideways, so the margins follow the axis too.
     viewSettings?.vertical,

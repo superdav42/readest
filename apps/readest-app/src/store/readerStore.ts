@@ -76,6 +76,9 @@ interface ReaderStore {
   viewStates: { [key: string]: ViewState };
   bookKeys: string[];
   hoveredBookKey: string | null;
+  // Session-only: keep menus discoverable until the reader chooses focus mode.
+  controlsPinned: boolean;
+  setControlsPinned: (pinned: boolean) => void;
   /* The action tab selected in the mobile bottom bar (font/color/progress);
      lives here rather than in FooterBar state so the TTS mini player can
      stack above the expanded panel. Persists across bar hide/show. */
@@ -129,6 +132,8 @@ export const useReaderStore = create<ReaderStore>((set, get) => ({
   viewStates: {},
   bookKeys: [],
   hoveredBookKey: null,
+  controlsPinned: true,
+  setControlsPinned: (pinned) => set({ controlsPinned: pinned, hoveredBookKey: '' }),
   bottomBarTab: '',
   setBookKeys: (keys: string[]) => set({ bookKeys: keys }),
   setHoveredBookKey: (key: string | null) => set({ hoveredBookKey: key }),
@@ -187,6 +192,7 @@ export const useReaderStore = create<ReaderStore>((set, get) => ({
     const booksData = useBookDataStore.getState().booksData;
     const bookData = booksData[id];
     set((state) => ({
+      controlsPinned: true,
       viewStates: {
         ...state.viewStates,
         [key]: {
