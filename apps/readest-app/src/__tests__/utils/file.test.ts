@@ -1,5 +1,52 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { RemoteFile } from '@/utils/file';
+import * as misc from '@/utils/misc';
+
+describe('RemoteFile on Android web', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllEnvs();
+  });
+
+  it('uses the CORS-visible HEAD length instead of an unexposed Content-Range', async () => {
+    vi.spyOn(misc, 'getOSPlatform').mockReturnValue('android');
+    vi.stubEnv('NEXT_PUBLIC_APP_PLATFORM', 'web');
+    const fetcher = vi.fn(
+      async (_url: RequestInfo | URL, init?: RequestInit) =>
+        new Response(null, {
+          status: init?.method === 'HEAD' ? 200 : 206,
+          headers: { 'Content-Length': init?.method === 'HEAD' ? '5000' : '1024' },
+        }),
+    );
+    const file = await new RemoteFile(
+      'https://example.test/book.epub',
+      undefined,
+      '',
+      0,
+      fetcher,
+    ).open();
+    expect(file.size).toBe(5000);
+    expect(fetcher).toHaveBeenCalledWith(file.url, { method: 'HEAD' });
+  });
+
+  it('keeps range probing for the native Android asset protocol', async () => {
+    vi.spyOn(misc, 'getOSPlatform').mockReturnValue('android');
+    vi.stubEnv('NEXT_PUBLIC_APP_PLATFORM', 'tauri');
+    const fetcher = vi.fn(
+      async () =>
+        new Response(null, { status: 206, headers: { 'Content-Range': 'bytes 0-1023/5000' } }),
+    );
+    const file = await new RemoteFile(
+      'asset://localhost/book.epub',
+      undefined,
+      '',
+      0,
+      fetcher,
+    ).open();
+    expect(file.size).toBe(5000);
+    expect(fetcher).toHaveBeenCalledWith(file.url, { headers: { Range: 'bytes=0-1023' } });
+  });
+});
 
 // RemoteFile.fromNativePath serves a local file through the `rangefile` custom
 // URI scheme, carrying the byte range in the URL query (?start=&end=) rather
