@@ -73,6 +73,39 @@ export const sentenceAt = (
   return before ? { sectionHref: before.sectionHref, sentenceId: before.sentenceId } : first;
 };
 
+/**
+ * Start reading aloud at a sentence. A bare tts-speak starts at the first passage of the page
+ * shown, which is up to a page (minutes of audio) before the sentence the listener had reached;
+ * the sentence's own range starts exactly there. Waits for the section to render, falls back to
+ * the page start when the sentence cannot be found.
+ */
+const speakFromSentence = async (
+  bookKey: string,
+  sectionIndex: number,
+  sentenceId: string | undefined,
+) => {
+  let range: Range | null = null;
+  if (sentenceId && sectionIndex >= 0) {
+    for (let tries = 0; tries < 20 && !range; tries++) {
+      const view = useReaderStore.getState().getView(bookKey);
+      const doc = view?.renderer
+        ?.getContents?.()
+        .find((content: { index?: number }) => content.index === sectionIndex)?.doc;
+      const element = doc?.getElementById(sentenceId);
+      if (doc && element) {
+        range = doc.createRange();
+        range.selectNodeContents(element);
+      } else {
+        await new Promise((resolve) => setTimeout(resolve, 150));
+      }
+    }
+  }
+  eventDispatcher.dispatch(
+    'tts-speak',
+    range ? { bookKey, range, index: sectionIndex } : { bookKey },
+  );
+};
+
 const VoiceBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   const _ = useTranslation();
   const { appService } = useEnv();
@@ -271,8 +304,9 @@ const VoiceBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       } catch {
         if (index >= 0) await view.goTo(index);
       }
-      if (landing!.autoplay)
-        setTimeout(() => eventDispatcher.dispatch('tts-speak', { bookKey }), 600);
+      if (landing!.autoplay) {
+        setTimeout(() => void speakFromSentence(bookKey, index, landing!.sentenceId), 600);
+      }
     }, 250);
     return () => clearInterval(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
