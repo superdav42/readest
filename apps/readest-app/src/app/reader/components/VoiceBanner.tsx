@@ -26,7 +26,7 @@ import {
 } from '@/services/gutenbergLibrary';
 import { openCatalogBook } from '@/services/openCatalogBook';
 import { sectionIndexForHref } from '@/services/tts/libraryVoice';
-import { VOICE_PREPARING_EVENT } from '../hooks/useVoiceOnDemand';
+import { pollDelay, VOICE_PREPARING_EVENT } from '../hooks/useVoiceOnDemand';
 
 /** Set by Speak when it asks for a voice: { workId, lang, since }. */
 export const VOICE_WANTED_KEY = 'gai:voiceWanted';
@@ -34,7 +34,6 @@ export const VOICE_WANTED_KEY = 'gai:voiceWanted';
 const LANDING_KEY = 'gai:voiceLanding';
 export const VOICE_REQUESTED_EVENT = 'voice-requested';
 
-const POLL_MS = 2500;
 /** Stop asking after this long without a voice (the job failed or the queue is deep). */
 const GIVE_UP_MS = 15 * 60_000;
 
@@ -258,11 +257,18 @@ const VoiceBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         setSwitching(false);
       }
     };
-    void poll();
-    const timer = setInterval(poll, POLL_MS);
+    // One look at a time, each after a delay that grows while the voice is being made.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const tick = async () => {
+      await poll();
+      if (!cancelled && !switched.current) {
+        timer = setTimeout(() => void tick(), pollDelay(Date.now() - wanted.since));
+      }
+    };
+    void tick();
     return () => {
       cancelled = true;
-      clearInterval(timer);
+      clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isWanted, wanted?.since, workId, lang, book?.hash]);
