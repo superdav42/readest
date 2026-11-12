@@ -31,9 +31,12 @@ import {
   parseWorkId,
   rememberNarrationRequest,
   requestEdition,
+  requestVoice,
   toContentLanguage,
 } from '@/services/gutenbergLibrary';
 import { prepareLibraryVoices, setChosenLibraryVoice } from '@/services/tts/libraryVoice';
+import { useVoiceOnDemand, VOICE_WAIT_EVENT } from './useVoiceOnDemand';
+import { VOICE_REQUESTED_EVENT, VOICE_WANTED_KEY } from '../components/VoiceBanner';
 import { hasMediaOverlays } from '@/services/tts/mediaOverlay';
 import {
   NARRATION_REQUESTED_EVENT,
@@ -113,6 +116,8 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
   const pageFollowTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const previousSectionLabelRef = useRef<string | undefined>(undefined);
   const ttsControllerRef = useRef<TTSController | null>(null);
+  // Gutenberg AI fork: voices built as people listen (request the next tracks, wait for them).
+  useVoiceOnDemand(bookKey, ttsControllerRef);
   const isStartingTTSRef = useRef(false);
   // Each start takes a generation; stopping moves it on, so a start still
   // initializing when the user turns read aloud off is cancelled (and never
@@ -993,6 +998,7 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
         ttsControllerRef.current = null;
       }
 
+      let libraryVoiceBuilding = false;
       try {
         // Gesture-path audio unlocks, BEFORE any network/plugin await: WebKit
         // rejects AudioContext.resume() outside the user-gesture window, and
@@ -1075,6 +1081,13 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
             );
             ttsController.setLibraryVoices(voices, active);
             if (voices.length) {
+              ttsController.addEventListener('library-voice-wait', (event) =>
+                eventDispatcher.dispatch(VOICE_WAIT_EVENT, {
+                  bookKey,
+                  fromSection: (event as CustomEvent<{ fromSection: number }>).detail.fromSection,
+                  mode: 'end',
+                }),
+              );
               ttsController.addEventListener('library-voice-change', (event) =>
                 setChosenLibraryVoice(
                   workId,
@@ -1101,7 +1114,12 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
           void ttsController.shutdown();
           return;
         }
-        if (!ttsReady && ttsController.narrationActive) throw new NarrationNotReachedError();
+        if (!ttsReady && ttsController.narrationActive) {
+          // A library voice built track by track has not reached here: it is made, not requested.
+          libraryVoiceBuilding =
+            !!ttsController.activeLibraryVoice && !ttsController.activeLibraryVoice.complete;
+          throw new NarrationNotReachedError();
+        }
         const speechSection = view.renderer.getContents().find((x) => x.index === ttsFromIndex);
         const primaryLang =
           bookData.book.format === 'PDF'
@@ -1165,6 +1183,14 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
         setIsPlaying(false);
         const notReached = error instanceof NarrationNotReachedError;
         if (notReached) await handleStop(bookKey);
+        if (notReached && libraryVoiceBuilding) {
+          eventDispatcher.dispatch(VOICE_WAIT_EVENT, {
+            bookKey,
+            fromSection: getProgress(bookKey)?.index ?? 0,
+            mode: 'jump',
+          });
+          return;
+        }
         if (error instanceof NarrationUnavailableError || notReached) {
           // Recorded-narration-only mode: ask our pipeline to narrate this book (or, when its
           // narration hasn't reached the reader's chapter yet, to narrate from there next).
@@ -1177,6 +1203,20 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
             (Array.isArray(metadata?.language) ? metadata.language[0] : metadata?.language) ||
               bookData.book.primaryLanguage,
           );
+          // A LibriVox recording of this book: ask for its read-along voice (built from the
+          // first track, in minutes) and play the original recording meanwhile (VoiceBanner).
+          const voiceRequest =
+            workId !== null && !notReached
+              ? await requestVoice(workId, lang, 0, 2).catch(() => null)
+              : null;
+          if (voiceRequest && voiceRequest.status !== 'unavailable' && workId !== null) {
+            sessionStorage.setItem(
+              VOICE_WANTED_KEY,
+              JSON.stringify({ workId, lang, since: Date.now() }),
+            );
+            eventDispatcher.dispatch(VOICE_REQUESTED_EVENT, { bookKey });
+            return;
+          }
           // Narrate from where the reader is; the reader switches to the narration as soon as
           // its first part is published (NarrationBanner) and starts playing.
           const startSection = getProgress(bookKey)?.index ?? undefined;

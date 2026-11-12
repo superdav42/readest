@@ -26,6 +26,7 @@ import SectionInfo from './SectionInfo';
 import HeaderBar from './HeaderBar';
 import InstantTranslationBanner from './InstantTranslationBanner';
 import NarrationBanner from './NarrationBanner';
+import VoiceBanner from './VoiceBanner';
 import PageNavigationButtons from './PageNavigationButtons';
 import FooterBar from './footerbar/FooterBar';
 import ProgressBar from './ProgressBar';
@@ -204,6 +205,7 @@ const BookCellInner: React.FC<BookCellProps> = ({
     >
       <InstantTranslationBanner bookKey={bookKey} />
       <NarrationBanner bookKey={bookKey} />
+      <VoiceBanner bookKey={bookKey} />
       <HeaderBar
         bookKey={bookKey}
         gridInsets={chromeGridInsets}

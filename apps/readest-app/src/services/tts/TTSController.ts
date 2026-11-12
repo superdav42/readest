@@ -85,6 +85,7 @@ import {
   libraryVoiceKey,
   libraryVoiceName,
   type LibraryVoice,
+  type LibraryVoiceInfo,
 } from './libraryVoice';
 import { SKIP_BACKWARD_SEC, SKIP_FORWARD_SEC } from '@/services/playback/playbackSource';
 import {
@@ -651,6 +652,23 @@ export class TTSController extends EventTarget {
     return this.#libraryVoice;
   }
 
+  /**
+   * Gutenberg AI fork: the track (0-based) of the library voice's recording now sounding, or
+   * null when no library voice plays. Listening on makes the next tracks be built (useVoiceOnDemand).
+   */
+  currentLibraryTrack(): number | null {
+    const voice = this.#libraryVoice;
+    const position = voice && this.narrationActive ? this.#narrationPosition() : null;
+    const track = position ? voice!.trackIndexOf(position.audioHref) : -1;
+    return track >= 0 ? track : null;
+  }
+
+  /** Take a newer published state of a library voice (more tracks built, or cleaned again). */
+  async refreshLibraryVoice(info: LibraryVoiceInfo): Promise<boolean> {
+    const voice = this.#libraryVoices.find((v) => v.info.key === info.key);
+    return voice ? await voice.update(info) : false;
+  }
+
   #libraryVoiceAvailable(book: FoliateView['book'] | null | undefined): boolean {
     return !!(
       book &&
@@ -961,7 +979,15 @@ export class TTSController extends EventTarget {
     // whichever direction playback is moving instead of stalling on silence.
     if (this.narrationActive) {
       const narrated = this.#findNarratedSection(this.view.book, sectionIndex, direction);
-      if (narrated === -1) return false;
+      if (narrated === -1) {
+        // Gutenberg AI fork: a library voice built track by track has not reached this far yet.
+        if (direction === 1 && this.#libraryVoice && !this.#libraryVoice.complete) {
+          this.dispatchEvent(
+            new CustomEvent('library-voice-wait', { detail: { fromSection: sectionIndex } }),
+          );
+        }
+        return false;
+      }
       sectionIndex = narrated;
     }
 
