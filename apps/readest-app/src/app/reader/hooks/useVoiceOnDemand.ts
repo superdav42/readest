@@ -25,8 +25,14 @@ import type { TTSController } from '@/services/tts/TTSController';
 const AHEAD = 2;
 /** How often a listener's place is reported while playing. */
 const FOLLOW_MS = 15_000;
-/** How often a waiting listener asks whether the next part is there. */
-const WAIT_MS = 3_000;
+/**
+ * Delay before the next "is it ready yet?" question of a listener who is waiting for a voice or its
+ * next part: quick while a build is likely to finish soon (the first minute: the original
+ * recording's tracks appear), then slower, so one waiting listener costs a few requests a minute
+ * instead of dozens. `waited` is the time spent waiting so far, in ms.
+ */
+export const pollDelay = (waited: number): number =>
+  waited < 60_000 ? 3_000 : waited < 180_000 ? 6_000 : 10_000;
 /** Give up waiting after this long (the job may have failed or the queue is deep). */
 const WAIT_GIVE_UP_MS = 10 * 60_000;
 
@@ -142,6 +148,7 @@ export const useVoiceOnDemand = (
         eventDispatcher.dispatch(VOICE_PREPARING_EVENT, { bookKey, preparing });
       announce(true);
       const began = Date.now();
+      let loaded: LibraryVoice | null = null;
       try {
         while (Date.now() - began < WAIT_GIVE_UP_MS) {
           const listing = await fetchWorkVoices(identity.workId, identity.lang, true);
@@ -161,7 +168,9 @@ export const useVoiceOnDemand = (
             );
           }
           const answer = await requestVoice(identity.workId, identity.lang, track, AHEAD);
-          const voice = new LibraryVoice(info);
+          // The sync map is fetched once per published build, not on every look.
+          if (!loaded || loaded.info.sync_url !== info.sync_url) loaded = new LibraryVoice(info);
+          const voice = loaded;
           await voice.load().catch(() => undefined);
           if (voice.loaded) {
             const forward = voice.findSection(view.book, detail.fromSection, 1);
@@ -183,7 +192,7 @@ export const useVoiceOnDemand = (
               return;
             }
           }
-          await new Promise((resolve) => setTimeout(resolve, WAIT_MS));
+          await new Promise((resolve) => setTimeout(resolve, pollDelay(Date.now() - began)));
         }
       } catch (error) {
         console.warn('Voice on demand: waiting for the next part failed', error);
