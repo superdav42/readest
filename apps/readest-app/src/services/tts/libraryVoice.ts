@@ -29,14 +29,17 @@ export interface LibraryVoiceInfo {
   default: boolean;
   duration_seconds?: number | null;
   sync_url: string;
-  tracks: { href: string; title?: string; seconds: number }[];
+  tracks: { href: string; title?: string; seconds: number; ready?: boolean }[];
   info?: {
     source?: string;
     dramatic?: boolean;
     solo?: boolean;
     partial?: boolean;
     url?: string;
-    quality?: { score?: number; cleaned?: boolean };
+    quality?: { score?: number; cleaned?: boolean; engine?: string };
+    /** Built track by track as readers listen (migration 0391). */
+    progressive?: boolean;
+    processed?: { tracks: number; of: number; through: number };
   };
 }
 
@@ -70,7 +73,7 @@ export const libraryVoiceName = (voice: LibraryVoiceInfo): string => {
   return voice.label;
 };
 
-const sectionIndexForHref = (book: BookDoc, href: string): number =>
+export const sectionIndexForHref = (book: BookDoc, href: string): number =>
   book.sections.findIndex(
     (section) =>
       section.id === href ||
@@ -80,7 +83,7 @@ const sectionIndexForHref = (book: BookDoc, href: string): number =>
 
 /** One voice of a text edition: its sync map, fetched once and indexed by book section. */
 export class LibraryVoice {
-  readonly info: LibraryVoiceInfo;
+  info: LibraryVoiceInfo;
   #sync: SyncMap | null = null;
   #loading: Promise<SyncMap> | null = null;
   #bySection = new Map<number, SyncPar[]>();
@@ -111,6 +114,38 @@ export class LibraryVoice {
 
   get loaded(): boolean {
     return !!this.#sync;
+  }
+
+  /** The tracks of the voice that are built: audio exists for them and the sync map times them. */
+  get builtTracks(): number {
+    return this.info.tracks.filter((track) => track.ready !== false).length;
+  }
+
+  /** True when every track of the recording is built (a voice made track by track grows). */
+  get complete(): boolean {
+    return this.builtTracks >= this.info.tracks.length;
+  }
+
+  /** Index of the track an audio URL belongs to, or -1. */
+  trackIndexOf(url: string): number {
+    return this.info.tracks.findIndex((track) => track.href === url);
+  }
+
+  /**
+   * Take a newer published state of this voice (more tracks built, or the same ones cleaned
+   * again): fetch its sync map and swap it in. Sentences being played keep their clips; the
+   * next section looked up sees the new ones. Returns true when the voice changed.
+   */
+  async update(next: LibraryVoiceInfo): Promise<boolean> {
+    if (next.sync_url === this.info.sync_url) return false;
+    const res = await fetch(next.sync_url);
+    if (!res.ok) throw new Error(`voice_sync_${res.status}`);
+    const sync = (await res.json()) as SyncMap;
+    this.info = next;
+    this.#sync = sync;
+    this.#loading = Promise.resolve(sync);
+    this.#indexedFor = null;
+    return true;
   }
 
   #index(book: BookDoc): Map<number, SyncPar[]> {

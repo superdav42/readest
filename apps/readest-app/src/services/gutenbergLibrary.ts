@@ -132,9 +132,14 @@ const voicesCache = new Map<string, Promise<LibraryVoices | null>>();
  * Read-along voices of a work's text edition in a language (migration 0370), default first;
  * null when it has none or the catalog is not the Supabase one. Cached per session.
  */
-export const fetchWorkVoices = (workId: number, lang: string): Promise<LibraryVoices | null> => {
+export const fetchWorkVoices = (
+  workId: number,
+  lang: string,
+  fresh = false,
+): Promise<LibraryVoices | null> => {
   if (!rpcBase()) return Promise.resolve(null);
   const key = `${workId}:${lang}`;
+  if (fresh) voicesCache.delete(key);
   let pending = voicesCache.get(key);
   if (!pending) {
     pending = api<LibraryVoices | null>(
@@ -146,6 +151,42 @@ export const fetchWorkVoices = (workId: number, lang: string): Promise<LibraryVo
     voicesCache.set(key, pending);
   }
   return pending;
+};
+
+/** The original LibriVox recording of a work, to play while its read-along voice is made. */
+export interface VoiceSource {
+  key: string;
+  librivox_id?: number | null;
+  title?: string | null;
+  readers: string[];
+  tracks: { title?: string; seconds: number; url: string }[];
+}
+
+/** Answer of request_voice (migration 0391). */
+export interface VoiceRequest {
+  /** ready: the tracks asked for are built; queued/running: a job is on it; unavailable: no recording. */
+  status: 'ready' | 'queued' | 'running' | 'blocked' | 'unavailable';
+  source?: VoiceSource | null;
+}
+
+/**
+ * A listener is at `track` (0-based) of the work's human voice: make sure it and the `ahead`
+ * tracks after it are built (a reader-priority job when they are not). Idempotent, so it is
+ * called again and again while listening; `source` carries the original recording once a
+ * worker has fetched it.
+ */
+export const requestVoice = (
+  workId: number,
+  lang: string,
+  track = 0,
+  ahead = 2,
+): Promise<VoiceRequest> => {
+  if (!rpcBase()) return Promise.resolve({ status: 'unavailable' });
+  return api<VoiceRequest>('/request_voice', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ p_work: workId, p_lang: lang, p_track: track, p_ahead: ahead }),
+  });
 };
 
 /** Catalog metadata of one published edition file. */
