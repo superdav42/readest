@@ -79,9 +79,11 @@ export default function LanguageSwitcher({
         <PiGlobe className='h-5 w-5' />
         <span className='uppercase'>{current}</span>
       </button>
+      {/* mt-1 overlaps the reader's 44px header: a gap would let the pointer leave
+          the header on its way to the menu, hiding the header in focus mode. */}
       <ul
         tabIndex={0}
-        className='dropdown-content menu bg-base-100 rounded-box eink-bordered z-50 mt-2 max-h-96 w-56 flex-nowrap overflow-y-auto p-2 shadow'
+        className='dropdown-content menu bg-base-100 rounded-box eink-bordered z-50 mt-1 max-h-96 w-56 flex-nowrap overflow-y-auto p-2 shadow'
       >
         {languages.map((lang) => (
           <li key={lang.code}>
