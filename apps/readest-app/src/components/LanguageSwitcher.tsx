@@ -26,7 +26,14 @@ const FALLBACK: LibraryLanguage[] = [
   { code: 'en', name: 'English', available: 0, narration: true },
 ];
 
-export default function LanguageSwitcher({ className }: { className?: string }) {
+export default function LanguageSwitcher({
+  className,
+  align = 'end',
+}: {
+  className?: string;
+  /** Menu edge aligned with the button: `start` when the button sits near the start edge. */
+  align?: 'start' | 'end';
+}) {
   const _ = useTranslation();
   const { envConfig } = useEnv();
   const [languages, setLanguages] = useState<LibraryLanguage[]>(FALLBACK);
@@ -59,7 +66,9 @@ export default function LanguageSwitcher({ className }: { className?: string }) 
   };
 
   return (
-    <div className={clsx('dropdown dropdown-end', className)}>
+    <div
+      className={clsx('dropdown', align === 'start' ? 'dropdown-start' : 'dropdown-end', className)}
+    >
       <button
         tabIndex={0}
         type='button'
