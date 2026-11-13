@@ -26,7 +26,14 @@ const FALLBACK: LibraryLanguage[] = [
   { code: 'en', name: 'English', available: 0, narration: true },
 ];
 
-export default function LanguageSwitcher({ className }: { className?: string }) {
+export default function LanguageSwitcher({
+  className,
+  align = 'end',
+}: {
+  className?: string;
+  /** Menu edge aligned with the button: `start` when the button sits near the start edge. */
+  align?: 'start' | 'end';
+}) {
   const _ = useTranslation();
   const { envConfig } = useEnv();
   const [languages, setLanguages] = useState<LibraryLanguage[]>(FALLBACK);
@@ -59,7 +66,9 @@ export default function LanguageSwitcher({ className }: { className?: string }) 
   };
 
   return (
-    <div className={clsx('dropdown dropdown-end', className)}>
+    <div
+      className={clsx('dropdown', align === 'start' ? 'dropdown-start' : 'dropdown-end', className)}
+    >
       <button
         tabIndex={0}
         type='button'
@@ -70,9 +79,11 @@ export default function LanguageSwitcher({ className }: { className?: string }) 
         <PiGlobe className='h-5 w-5' />
         <span className='uppercase'>{current}</span>
       </button>
+      {/* mt-1 overlaps the reader's 44px header: a gap would let the pointer leave
+          the header on its way to the menu, hiding the header in focus mode. */}
       <ul
         tabIndex={0}
-        className='dropdown-content menu bg-base-100 rounded-box eink-bordered z-50 mt-2 max-h-96 w-56 flex-nowrap overflow-y-auto p-2 shadow'
+        className='dropdown-content menu bg-base-100 rounded-box eink-bordered z-50 mt-1 max-h-96 w-56 flex-nowrap overflow-y-auto p-2 shadow'
       >
         {languages.map((lang) => (
           <li key={lang.code}>

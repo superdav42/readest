@@ -291,8 +291,10 @@ const HeaderBar: React.FC<HeaderBarProps> = ({
             </button>
             <BookmarkToggler bookKey={bookKey} />
             <TranslationToggler bookKey={bookKey} />
-            <LanguageSwitcher />
           </div>
+          {/* Outside the scroller: its overflow clips vertically too, which hid
+              the language menu below the 44px bar so a tap seemed to do nothing. */}
+          <LanguageSwitcher align='start' />
           {enableAnnotationQuickActions && (
             <Dropdown
               label={
