@@ -57,6 +57,8 @@ interface DiscoverHomeProps {
 }
 
 const POLL_MS = 30_000;
+/** Give up on opening a book when its download or import has not advanced for this long. */
+const OPEN_STALL_MS = 3 * 60_000;
 
 const isInProgress = (book: Book) =>
   !book.deletedAt && !!book.progress && book.progress[0] < book.progress[1];
@@ -418,6 +420,9 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
     cover: string;
     progress: number;
   } | null>(null);
+  // Which open the overlay belongs to: cancelling (or a stall) invalidates it, so a late
+  // download or import never navigates away from where the reader went back to.
+  const openAttempt = useRef(0);
   const [sheet, setSheet] = useState<{
     card: DiscoverCard;
     instant: boolean;
@@ -544,25 +549,53 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
       instantLang?: string,
     ) => {
       if (!appService || opening) return;
+      const attempt = ++openAttempt.current;
+      const current = () => openAttempt.current === attempt;
       setOpening({ ...display, progress: 0 });
       try {
-        const book = await openCatalogBook(appService, edition, (progress) =>
-          setOpening((current) => (current ? { ...current, progress } : current)),
-        );
+        const book = await openCatalogBook(appService, edition, (progress) => {
+          if (current()) setOpening((state) => (state ? { ...state, progress } : state));
+        });
+        // Cancelled meanwhile: the book stays in the library (My books), nothing opens.
+        if (!current()) return;
         setInstantTranslation(book.hash, edition.work_id, instantLang ?? null);
         navigateToReader(router, [book.hash]);
       } catch (error) {
         console.warn('Discover: could not open', edition.url, error);
+        if (!current()) return;
         eventDispatcher.dispatch('toast', {
           message: _('Could not open this book. Check your connection and try again.'),
           type: 'error',
         });
       } finally {
-        setOpening(null);
+        if (current()) setOpening(null);
       }
     },
     [appService, opening, router, _],
   );
+
+  /** Dismiss the opening overlay; a download or import still running finishes in the background. */
+  const cancelOpening = useCallback(() => {
+    openAttempt.current++;
+    setOpening(null);
+  }, []);
+
+  // A download or import that makes no progress for this long is given up on, so the full-screen
+  // overlay can never trap the reader (it used to stay on screen until the app was restarted).
+  const isOpening = opening !== null;
+  const openingProgress = opening?.progress;
+  const openingPercent = Math.round((openingProgress ?? 0) * 100);
+  useEffect(() => {
+    if (!isOpening) return;
+    const timer = setTimeout(() => {
+      cancelOpening();
+      eventDispatcher.dispatch('toast', {
+        message: _('Could not open this book. Check your connection and try again.'),
+        type: 'error',
+      });
+    }, OPEN_STALL_MS);
+    return () => clearTimeout(timer);
+  }, [isOpening, openingProgress, cancelOpening, _]);
 
   const openCard = useCallback(
     async (card: DiscoverCard) => {
@@ -784,7 +817,13 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
               }}
             />
           </div>
-          <p className='text-base-content/75 text-sm'>{_('Opening book…')}</p>
+          <p className='text-base-content/75 text-sm'>
+            {_('Opening book…')}
+            {openingPercent > 0 && openingPercent < 100 && ` ${openingPercent}%`}
+          </p>
+          <button type='button' className='btn btn-ghost btn-sm' onClick={cancelOpening}>
+            {_('Cancel')}
+          </button>
         </div>
       )}
     </div>
