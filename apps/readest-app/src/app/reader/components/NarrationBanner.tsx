@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Added 2026-11-01 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
+// Added 2026-11-01, modified 2026-11-14 for the Gutenberg AI fork of Readest; see
+// MODIFICATIONS.md.
 //
 // Narration that is still being made. After Speak asks for narration (useTTSControl), the
 // library narrates from the reader's chapter and publishes a read-along edition within
@@ -115,6 +116,36 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   // Followed (polled) whenever it may still grow: a narrated book is checked until the server
   // reports no narration job, which also covers a reload into a newer edition.
   const following = workId !== null && (isWanted || narrated);
+
+  // A book opened as its text-only edition (Discover opens that for a read-along, which is far
+  // larger): once it is open, check once whether a narration exists and offer it. Nothing is
+  // downloaded until the listener taps; then the wish below makes this banner open it in place.
+  const loaded = !!bookData?.bookDoc;
+  const [offer, setOffer] = useState(false);
+  const bookHash = book?.hash;
+  useEffect(() => {
+    setOffer(false);
+    if (workId === null || !bookHash || !loaded || narrated || isWanted || dismissed) return;
+    let cancelled = false;
+    fetchWork(workId, lang)
+      .then((latest) => {
+        const best = latest.best;
+        if (cancelled || best?.kind !== 'readalong' || !best.hash) return;
+        setOffer(best.hash !== bookHash && best.lang === lang);
+      })
+      .catch(() => undefined);
+    return () => {
+      cancelled = true;
+    };
+  }, [workId, lang, bookHash, loaded, narrated, isWanted, dismissed]);
+
+  const listenNow = () => {
+    if (workId === null) return;
+    const wish: Wanted = { workId, lang, autoplay: true, since: Date.now() };
+    sessionStorage.setItem(NARRATION_WANTED_KEY, JSON.stringify(wish));
+    setWanted(wish);
+    setOffer(false);
+  };
 
   // Land at the sentence the listener was at, and keep playing, after a switch.
   useEffect(() => {
@@ -359,6 +390,34 @@ const NarrationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   }, [workId, lang, book?.hash, following, narrated, isWanted]);
 
   const waitingForDownload = preparing && !dismissed;
+  if (offer && !active && !waitingForDownload) {
+    return (
+      <div
+        className='pointer-events-none absolute inset-x-0 z-20 flex justify-center px-3'
+        style={{ top: 'calc(env(safe-area-inset-top, 0px) + 3.25rem)' }}
+      >
+        <div className='bg-base-200/95 text-base-content pointer-events-auto flex items-center gap-1 rounded-full py-1 pe-1 ps-1 text-sm shadow-md'>
+          <button
+            type='button'
+            onClick={listenNow}
+            className='bg-primary text-primary-content flex items-center gap-2 rounded-full px-4 py-1.5'
+          >
+            <PiHeadphones className='h-4 w-4' />
+            <span>{_('Ready to listen')}</span>
+          </button>
+          <button
+            type='button'
+            onClick={() => setDismissed(true)}
+            aria-label={_('Close')}
+            title={_('Close')}
+            className='btn btn-ghost btn-circle btn-xs shrink-0'
+          >
+            <PiX className='h-3.5 w-3.5' />
+          </button>
+        </div>
+      </div>
+    );
+  }
   if (!active && !waitingForDownload) return null;
   const percent = Math.max(1, Number((job?.progress ?? '').match(/(\d+)%/)?.[1] ?? 0));
   const message = waitingForDownload
