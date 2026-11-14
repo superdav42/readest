@@ -2826,9 +2826,7 @@
   "Not yet translated": "Še ni prevedeno",
   "Not yet translated into {{language}}.": "Še ni prevedeno v jezik {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Pripravili bomo kakovosten prevod v jezik {{language}}. Napredek lahko spremljate na tem zaslonu in v knjigi.",
-  "Read now with instant translation": "Berite zdaj s takojšnjim prevodom",
   "Read the original ({{language}})": "Berite izvirnik ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "Takojšnji prevod obdela naprava: je hiter, vendar manj izpopolnjen. Ob prvi uporabi se prenese približno 15 MB podatkov.",
   "Your requested translations": "Vaši zahtevani prevodi",
   "{{percent}}% · {{eta}}": "{{percent}} % · {{eta}}",
   "In line #{{position}}": "V čakalni vrsti št. {{position}}",
@@ -2844,7 +2842,6 @@
   "The high-quality translation hit a problem. We will retry it.": "Pri pripravi kakovostnega prevoda je prišlo do težave. Poskusili bomo znova.",
   "High-quality {{language}} translation requested.": "Zahtevan je kakovosten prevod v jezik {{language}}.",
   "Translation ready": "Prevod je pripravljen",
-  "Instant machine translation": "Takojšnji strojni prevod",
   "Hide details": "Skrij podrobnosti",
   "Show details": "Prikaži podrobnosti",
   "Switch to the high-quality translation": "Preklopi na kakovosten prevod",
@@ -2857,5 +2854,9 @@
   "Preparing narration… it starts in a few seconds": "Pripravljanje zvočne različice … predvajanje se začne čez nekaj sekund",
   "Narration in progress: {{percent}}% of the book narrated": "Zvočna različica se predvaja: {{percent}} % knjige je že zvočno prebrane",
   "Preparing narration — it starts in a few seconds.": "Pripravljanje zvočne različice — predvajanje se začne čez nekaj sekund.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "Zvočna pripoved še ni dosegla tega poglavja. Kmalu se bo začela tukaj."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Zvočna pripoved še ni dosegla tega poglavja. Kmalu se bo začela tukaj.",
+  "Translate the first part now": "Prevedi prvi del zdaj",
+  "Preparing your translation…": "Pripravljamo vaš prevod…",
+  "Translation preview": "Predogled prevoda",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Zaenkrat je preveden samo začetek. Preostanek ostane v izvirnem jeziku, dokler popoln prevod ni pripravljen."
 }

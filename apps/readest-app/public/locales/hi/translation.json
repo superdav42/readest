@@ -2688,9 +2688,7 @@
   "Not yet translated": "अभी तक अनुवाद नहीं हुआ",
   "Not yet translated into {{language}}.": "अभी तक {{language}} में अनुवाद नहीं हुआ।",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "हम आपके लिए {{language}} में उच्च-गुणवत्ता वाला अनुवाद तैयार करेंगे। आप इस स्क्रीन पर और किताब में इसकी प्रगति देख सकते हैं।",
-  "Read now with instant translation": "तुरंत अनुवाद के साथ अभी पढ़ें",
   "Read the original ({{language}})": "मूल पाठ पढ़ें ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "तुरंत अनुवाद आपके डिवाइस पर मशीन द्वारा किया जाता है: यह तेज़ है, लेकिन अनुवाद थोड़ा कम सटीक हो सकता है। पहली बार इस्तेमाल करने पर लगभग 15 MB डाउनलोड होता है।",
   "Your requested translations": "आपके अनुरोधित अनुवाद",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "कतार में #{{position}} पर",
@@ -2706,7 +2704,6 @@
   "The high-quality translation hit a problem. We will retry it.": "उच्च-गुणवत्ता वाले अनुवाद में समस्या आई। हम फिर से कोशिश करेंगे।",
   "High-quality {{language}} translation requested.": "{{language}} में उच्च-गुणवत्ता वाले अनुवाद का अनुरोध किया गया।",
   "Translation ready": "अनुवाद तैयार है",
-  "Instant machine translation": "मशीन द्वारा तुरंत अनुवाद",
   "Hide details": "विवरण छिपाएँ",
   "Show details": "विवरण दिखाएँ",
   "Switch to the high-quality translation": "उच्च-गुणवत्ता वाले अनुवाद पर जाएँ",
@@ -2720,5 +2717,9 @@
   "Narration in progress: {{percent}}% of the book narrated": "नैरेशन जारी है: किताब का {{percent}}% सुनाया जा चुका है",
   "Preparing narration — it starts in a few seconds.": "नैरेशन तैयार किया जा रहा है — यह कुछ ही सेकंड में शुरू होगा।",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "नैरेशन अभी इस अध्याय तक नहीं पहुँचा है। यह जल्द ही यहाँ शुरू होगा।",
-  "Read-along voices": "साथ-साथ पढ़ने की आवाज़ें"
+  "Read-along voices": "साथ-साथ पढ़ने की आवाज़ें",
+  "Translate the first part now": "पहला भाग अभी अनुवाद करें",
+  "Preparing your translation…": "आपका अनुवाद तैयार किया जा रहा है…",
+  "Translation preview": "अनुवाद का पूर्वावलोकन",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "अभी तक केवल शुरुआत का अनुवाद हुआ है। पूरा अनुवाद तैयार होने तक बाकी हिस्सा मूल भाषा में रहेगा।"
 }

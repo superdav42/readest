@@ -2826,9 +2826,7 @@
   "Not yet translated": "Пока не переведено",
   "Not yet translated into {{language}}.": "Пока не переведено на {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Мы подготовим для вас качественный перевод на {{language}}. Вы можете следить за ходом перевода на этом экране и в книге.",
-  "Read now with instant translation": "Читать сейчас с мгновенным переводом",
   "Read the original ({{language}})": "Читать оригинал ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "Мгновенный перевод выполняется машиной на вашем устройстве: быстро, но менее точно. При первом использовании загрузится около 15 МБ.",
   "Your requested translations": "Запрошенные вами переводы",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "В очереди №{{position}}",
@@ -2844,7 +2842,6 @@
   "The high-quality translation hit a problem. We will retry it.": "При подготовке качественного перевода возникла проблема. Мы повторим попытку.",
   "High-quality {{language}} translation requested.": "Запрошен качественный перевод на {{language}}.",
   "Translation ready": "Перевод готов",
-  "Instant machine translation": "Мгновенный машинный перевод",
   "Hide details": "Скрыть подробности",
   "Show details": "Показать подробности",
   "Switch to the high-quality translation": "Переключиться на качественный перевод",
@@ -2858,5 +2855,9 @@
   "Narration in progress: {{percent}}% of the book narrated": "Идёт озвучивание: озвучено {{percent}}% книги",
   "Preparing narration — it starts in a few seconds.": "Подготавливаем аудиоверсию — она начнётся через несколько секунд.",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "Озвучивание ещё не дошло до этой главы. Скоро оно начнётся здесь.",
-  "Read-along voices": "Голоса для чтения вслух"
+  "Read-along voices": "Голоса для чтения вслух",
+  "Translate the first part now": "Перевести первую часть сейчас",
+  "Preparing your translation…": "Готовим ваш перевод…",
+  "Translation preview": "Предварительный перевод",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Пока переведено только начало. Остальное остаётся на языке оригинала, пока не будет готов полный перевод."
 }

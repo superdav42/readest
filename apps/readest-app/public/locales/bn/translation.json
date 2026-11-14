@@ -2688,9 +2688,7 @@
   "Not yet translated": "এখনও অনুবাদ করা হয়নি",
   "Not yet translated into {{language}}.": "এখনও {{language}} ভাষায় অনুবাদ করা হয়নি।",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "আমরা আপনার জন্য উচ্চমানের {{language}} অনুবাদ তৈরি করব। এই স্ক্রিনে এবং বইয়ের মধ্যে এর অগ্রগতি দেখতে পারবেন।",
-  "Read now with instant translation": "তাৎক্ষণিক অনুবাদসহ এখনই পড়ুন",
   "Read the original ({{language}})": "মূল বইটি পড়ুন ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "তাৎক্ষণিক অনুবাদ আপনার ডিভাইসের একটি মেশিন করে: দ্রুত, তবে কিছুটা অপরিশীলিত। প্রথমবার প্রায় ১৫ MB ডেটা ডাউনলোড হবে।",
   "Your requested translations": "আপনার অনুরোধ করা অনুবাদগুলো",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "সারিতে #{{position}}",
@@ -2706,7 +2704,6 @@
   "The high-quality translation hit a problem. We will retry it.": "উচ্চমানের অনুবাদে সমস্যা হয়েছে। আমরা আবার চেষ্টা করব।",
   "High-quality {{language}} translation requested.": "উচ্চমানের {{language}} অনুবাদের অনুরোধ করা হয়েছে।",
   "Translation ready": "অনুবাদ প্রস্তুত",
-  "Instant machine translation": "তাৎক্ষণিক মেশিন অনুবাদ",
   "Hide details": "বিস্তারিত লুকান",
   "Show details": "বিস্তারিত দেখান",
   "Switch to the high-quality translation": "উচ্চমানের অনুবাদে যান",
@@ -2719,5 +2716,9 @@
   "Preparing narration… it starts in a few seconds": "বর্ণনা প্রস্তুত করা হচ্ছে… কয়েক সেকেন্ডের মধ্যেই শুরু হবে",
   "Narration in progress: {{percent}}% of the book narrated": "বর্ণনা চলছে: বইয়ের {{percent}}% বর্ণিত হয়েছে",
   "Preparing narration — it starts in a few seconds.": "বর্ণনা প্রস্তুত করা হচ্ছে — কয়েক সেকেন্ডের মধ্যেই শুরু হবে।",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "বর্ণনা এখনও এই অধ্যায়ে পৌঁছায়নি। কিছুক্ষণের মধ্যেই এখান থেকে শুরু হবে।"
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "বর্ণনা এখনও এই অধ্যায়ে পৌঁছায়নি। কিছুক্ষণের মধ্যেই এখান থেকে শুরু হবে।",
+  "Translate the first part now": "এখনই প্রথম অংশ অনুবাদ করুন",
+  "Preparing your translation…": "আপনার অনুবাদ প্রস্তুত করা হচ্ছে…",
+  "Translation preview": "অনুবাদের পূর্বরূপ",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "এখন পর্যন্ত শুধু শুরুর অংশ অনুবাদ হয়েছে। সম্পূর্ণ অনুবাদ প্রস্তুত না হওয়া পর্যন্ত বাকিটা মূল ভাষায় থাকবে।"
 }

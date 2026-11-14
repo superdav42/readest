@@ -2757,9 +2757,7 @@
   "Not yet translated": "Încă netradusă",
   "Not yet translated into {{language}}.": "Încă netradusă în {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Vom pregăti pentru tine o traducere de înaltă calitate în {{language}}. Poți urmări progresul pe acest ecran și în carte.",
-  "Read now with instant translation": "Citește acum cu traducere instantanee",
   "Read the original ({{language}})": "Citește originalul ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "Traducerea instantanee este realizată de un program pe dispozitivul tău: este rapidă, dar mai puțin precisă. Prima dată se descarcă aproximativ 15 MB.",
   "Your requested translations": "Traducerile solicitate de tine",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "La rândul nr. {{position}}",
@@ -2775,7 +2773,6 @@
   "The high-quality translation hit a problem. We will retry it.": "A apărut o problemă la traducerea de înaltă calitate. Vom încerca din nou.",
   "High-quality {{language}} translation requested.": "Traducerea de înaltă calitate în {{language}} a fost solicitată.",
   "Translation ready": "Traducerea este gata",
-  "Instant machine translation": "Traducere instantanee automată",
   "Hide details": "Ascunde detaliile",
   "Show details": "Afișează detaliile",
   "Switch to the high-quality translation": "Treci la traducerea de înaltă calitate",
@@ -2788,5 +2785,9 @@
   "Preparing narration… it starts in a few seconds": "Se pregătește narațiunea… începe în câteva secunde",
   "Narration in progress: {{percent}}% of the book narrated": "Narațiune în curs: {{percent}}% din carte a fost narată",
   "Preparing narration — it starts in a few seconds.": "Se pregătește narațiunea — începe în câteva secunde.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "Narațiunea nu a ajuns încă la acest capitol. Va începe aici în curând."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Narațiunea nu a ajuns încă la acest capitol. Va începe aici în curând.",
+  "Translate the first part now": "Traduce acum prima parte",
+  "Preparing your translation…": "Se pregătește traducerea ta…",
+  "Translation preview": "Previzualizarea traducerii",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Deocamdată este tradus doar începutul. Restul rămâne în limba originală până când traducerea completă este gata."
 }

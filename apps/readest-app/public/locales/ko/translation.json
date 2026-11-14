@@ -2619,9 +2619,7 @@
   "Not yet translated": "아직 번역되지 않았습니다",
   "Not yet translated into {{language}}.": "아직 {{language}}(으)로 번역되지 않았습니다.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "고품질 {{language}} 번역을 준비해 드리겠습니다. 이 화면과 책에서 진행 상황을 확인할 수 있습니다.",
-  "Read now with instant translation": "즉석 번역으로 지금 읽기",
   "Read the original ({{language}})": "원문 읽기({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "즉석 번역은 기기에서 기계 번역으로 제공됩니다. 빠르지만 다소 부정확할 수 있습니다. 처음 사용할 때 약 15MB를 다운로드합니다.",
   "Your requested translations": "요청한 번역",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "{{position}}번째 대기 중",
@@ -2637,7 +2635,6 @@
   "The high-quality translation hit a problem. We will retry it.": "고품질 번역에 문제가 발생했습니다. 다시 시도하겠습니다.",
   "High-quality {{language}} translation requested.": "고품질 {{language}} 번역을 요청했습니다.",
   "Translation ready": "번역 준비 완료",
-  "Instant machine translation": "즉석 기계 번역",
   "Hide details": "세부 정보 숨기기",
   "Show details": "세부 정보 표시",
   "Switch to the high-quality translation": "고품질 번역으로 전환",
@@ -2651,5 +2648,9 @@
   "Narration in progress: {{percent}}% of the book narrated": "낭독 진행 중: 책의 {{percent}}% 낭독됨",
   "Preparing narration — it starts in a few seconds.": "낭독을 준비 중입니다 — 몇 초 후 시작됩니다.",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "낭독이 아직 이 장에 도달하지 않았습니다. 곧 여기서 시작됩니다.",
-  "Read-along voices": "함께 읽기 음성"
+  "Read-along voices": "함께 읽기 음성",
+  "Translate the first part now": "첫 부분을 지금 번역",
+  "Preparing your translation…": "번역을 준비하고 있습니다…",
+  "Translation preview": "번역 미리보기",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "지금은 앞부분만 번역되어 있습니다. 나머지는 전체 번역이 준비될 때까지 원어로 표시됩니다."
 }

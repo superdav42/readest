@@ -2964,9 +2964,7 @@
   "Not yet translated": "لم تُترجم بعد",
   "Not yet translated into {{language}}.": "لم تُترجم بعد إلى {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "سنُعِدّ لك ترجمة عالية الجودة إلى {{language}}. يمكنك متابعة تقدّمها على هذه الشاشة وفي الكتاب.",
-  "Read now with instant translation": "اقرأ الآن بترجمة فورية",
   "Read the original ({{language}})": "اقرأ النص الأصلي ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "تُنجَز الترجمة الفورية آليًا على جهازك: فهي سريعة، لكنها أقل دقة. عند استخدامها للمرة الأولى، سيُنزَّل نحو 15 ميغابايت.",
   "Your requested translations": "الترجمات التي طلبتها",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "عند السطر رقم {{position}}",
@@ -2982,7 +2980,6 @@
   "The high-quality translation hit a problem. We will retry it.": "واجهت الترجمة عالية الجودة مشكلة. سنعيد المحاولة.",
   "High-quality {{language}} translation requested.": "تم طلب ترجمة عالية الجودة إلى {{language}}.",
   "Translation ready": "الترجمة جاهزة",
-  "Instant machine translation": "ترجمة آلية فورية",
   "Hide details": "إخفاء التفاصيل",
   "Show details": "عرض التفاصيل",
   "Switch to the high-quality translation": "التبديل إلى الترجمة عالية الجودة",
@@ -2996,5 +2993,9 @@
   "Narration in progress: {{percent}}% of the book narrated": "السرد الصوتي جارٍ: تم سرد {{percent}}٪ من الكتاب",
   "Preparing narration — it starts in a few seconds.": "جارٍ تحضير السرد الصوتي — سيبدأ بعد بضع ثوانٍ.",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "لم يصل السرد الصوتي إلى هذا الفصل بعد. سيبدأ من هنا قريبًا.",
-  "Read-along voices": "أصوات القراءة المصاحبة"
+  "Read-along voices": "أصوات القراءة المصاحبة",
+  "Translate the first part now": "ترجم الجزء الأول الآن",
+  "Preparing your translation…": "جارٍ تجهيز ترجمتك…",
+  "Translation preview": "معاينة الترجمة",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "تمت ترجمة البداية فقط حتى الآن. يبقى الباقي بلغته الأصلية إلى أن تصبح الترجمة الكاملة جاهزة."
 }

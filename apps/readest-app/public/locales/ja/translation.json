@@ -2619,9 +2619,7 @@
   "Not yet translated": "まだ翻訳されていません",
   "Not yet translated into {{language}}.": "{{language}}にはまだ翻訳されていません。",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "高品質な{{language}}翻訳を準備します。進捗状況はこの画面と本の中で確認できます。",
-  "Read now with instant translation": "今すぐ機械翻訳で読む",
   "Read the original ({{language}})": "原文（{{language}}）を読む",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "機械翻訳はお使いのデバイス上で行われます。すぐに読めますが、翻訳の精度はやや劣ります。初回は約15 MBのデータをダウンロードします。",
   "Your requested translations": "リクエストした翻訳",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "{{position}}行目",
@@ -2637,7 +2635,6 @@
   "The high-quality translation hit a problem. We will retry it.": "高品質な翻訳で問題が発生しました。再試行します。",
   "High-quality {{language}} translation requested.": "高品質な{{language}}翻訳をリクエストしました。",
   "Translation ready": "翻訳ができました",
-  "Instant machine translation": "機械による即時翻訳",
   "Hide details": "詳細を隠す",
   "Show details": "詳細を表示",
   "Switch to the high-quality translation": "高品質な翻訳に切り替える",
@@ -2651,5 +2648,9 @@
   "Narration in progress: {{percent}}% of the book narrated": "ナレーション再生中：本の{{percent}}%を読み上げました",
   "Preparing narration — it starts in a few seconds.": "ナレーションを準備しています — 数秒後に始まります。",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "読み上げはまだこの章に達していません。まもなくここから開始します。",
-  "Read-along voices": "読み上げ音声"
+  "Read-along voices": "読み上げ音声",
+  "Translate the first part now": "最初の部分を今すぐ翻訳",
+  "Preparing your translation…": "翻訳を準備しています…",
+  "Translation preview": "翻訳プレビュー",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "今のところ冒頭だけが翻訳されています。残りは完全な翻訳が完成するまで原語のままです。"
 }

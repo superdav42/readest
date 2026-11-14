@@ -2688,9 +2688,7 @@
   "Not yet translated": "Henüz çevrilmedi",
   "Not yet translated into {{language}}.": "Henüz {{language}} diline çevrilmedi.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Sizin için yüksek kaliteli bir {{language}} çevirisi hazırlayacağız. İlerlemeyi bu ekranda ve kitapta takip edebilirsiniz.",
-  "Read now with instant translation": "Anında çeviriyle şimdi okuyun",
   "Read the original ({{language}})": "Orijinalini okuyun ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "Anında çeviri, cihazınızdaki bir makine tarafından yapılır: hızlıdır ama daha kabadır. İlk kullanımda yaklaşık 15 MB indirilir.",
   "Your requested translations": "İstediğiniz çeviriler",
   "{{percent}}% · {{eta}}": "%{{percent}} · {{eta}}",
   "In line #{{position}}": "Sırada #{{position}}",
@@ -2706,7 +2704,6 @@
   "The high-quality translation hit a problem. We will retry it.": "Yüksek kaliteli çeviride bir sorun oluştu. Yeniden deneyeceğiz.",
   "High-quality {{language}} translation requested.": "Yüksek kaliteli {{language}} çevirisi istendi.",
   "Translation ready": "Çeviri hazır",
-  "Instant machine translation": "Anında makine çevirisi",
   "Hide details": "Ayrıntıları gizle",
   "Show details": "Ayrıntıları göster",
   "Switch to the high-quality translation": "Yüksek kaliteli çeviriye geç",
@@ -2719,5 +2716,9 @@
   "Preparing narration… it starts in a few seconds": "Seslendirme hazırlanıyor… birkaç saniye içinde başlayacak",
   "Narration in progress: {{percent}}% of the book narrated": "Seslendirme devam ediyor: Kitabın %{{percent}}'i seslendirildi",
   "Preparing narration — it starts in a few seconds.": "Seslendirme hazırlanıyor — birkaç saniye içinde başlayacak.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "Seslendirme henüz bu bölüme ulaşmadı. Kısa süre içinde buradan başlayacak."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Seslendirme henüz bu bölüme ulaşmadı. Kısa süre içinde buradan başlayacak.",
+  "Translate the first part now": "İlk bölümü şimdi çevir",
+  "Preparing your translation…": "Çeviriniz hazırlanıyor…",
+  "Translation preview": "Çeviri önizlemesi",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Şimdilik yalnızca başlangıç çevrildi. Çevirinin tamamı hazır olana kadar geri kalanı özgün dilde kalır."
 }

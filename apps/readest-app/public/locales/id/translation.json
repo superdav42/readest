@@ -2619,9 +2619,7 @@
   "Not yet translated": "Belum diterjemahkan",
   "Not yet translated into {{language}}.": "Belum diterjemahkan ke dalam {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Kami akan menyiapkan terjemahan {{language}} berkualitas tinggi untuk Anda. Anda dapat memantau progresnya di layar ini dan di dalam buku.",
-  "Read now with instant translation": "Baca sekarang dengan terjemahan instan",
   "Read the original ({{language}})": "Baca teks asli ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "Terjemahan instan dilakukan oleh mesin di perangkat Anda: cepat, tetapi hasilnya kurang halus. Saat pertama kali digunakan, sekitar 15 MB data akan diunduh.",
   "Your requested translations": "Terjemahan yang Anda minta",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "Dalam antrean, posisi #{{position}}",
@@ -2637,7 +2635,6 @@
   "The high-quality translation hit a problem. We will retry it.": "Terjemahan berkualitas tinggi mengalami masalah. Kami akan mencoba lagi.",
   "High-quality {{language}} translation requested.": "Terjemahan {{language}} berkualitas tinggi diminta.",
   "Translation ready": "Terjemahan siap",
-  "Instant machine translation": "Terjemahan mesin instan",
   "Hide details": "Sembunyikan detail",
   "Show details": "Tampilkan detail",
   "Switch to the high-quality translation": "Beralih ke terjemahan berkualitas tinggi",
@@ -2650,5 +2647,9 @@
   "Preparing narration… it starts in a few seconds": "Menyiapkan narasi… akan dimulai dalam beberapa detik",
   "Narration in progress: {{percent}}% of the book narrated": "Narasi sedang berlangsung: {{percent}}% buku telah dibacakan",
   "Preparing narration — it starts in a few seconds.": "Menyiapkan narasi — akan dimulai dalam beberapa detik.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "Narasi belum mencapai bab ini. Narasi akan segera dimulai dari sini."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Narasi belum mencapai bab ini. Narasi akan segera dimulai dari sini.",
+  "Translate the first part now": "Terjemahkan bagian pertama sekarang",
+  "Preparing your translation…": "Menyiapkan terjemahan Anda…",
+  "Translation preview": "Pratinjau terjemahan",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Baru bagian awal yang diterjemahkan. Sisanya tetap dalam bahasa asli sampai terjemahan lengkap siap."
 }

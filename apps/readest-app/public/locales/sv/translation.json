@@ -2688,9 +2688,7 @@
   "Not yet translated": "Inte översatt än",
   "Not yet translated into {{language}}.": "Ännu inte översatt till {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Vi tar fram en högkvalitativ översättning till {{language}} åt dig. Du kan följa förloppet på den här skärmen och i boken.",
-  "Read now with instant translation": "Läs nu med direktöversättning",
   "Read the original ({{language}})": "Läs originalet ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "Direktöversättningen görs av en maskin på din enhet: snabbt, men med något sämre kvalitet. Första gången laddas cirka 15 MB ned.",
   "Your requested translations": "Dina beställda översättningar",
   "{{percent}}% · {{eta}}": "{{percent}} % · {{eta}}",
   "In line #{{position}}": "På köplats #{{position}}",
@@ -2706,7 +2704,6 @@
   "The high-quality translation hit a problem. We will retry it.": "Ett problem uppstod med den högkvalitativa översättningen. Vi försöker igen.",
   "High-quality {{language}} translation requested.": "Högkvalitativ översättning till {{language}} beställd.",
   "Translation ready": "Översättningen är klar",
-  "Instant machine translation": "Direktöversättning med maskin",
   "Hide details": "Dölj information",
   "Show details": "Visa information",
   "Switch to the high-quality translation": "Byt till den högkvalitativa översättningen",
@@ -2719,5 +2716,9 @@
   "Preparing narration… it starts in a few seconds": "Förbereder uppläsningen… den startar om några sekunder",
   "Narration in progress: {{percent}}% of the book narrated": "Uppläsning pågår: {{percent}} % av boken uppläst",
   "Preparing narration — it starts in a few seconds.": "Förbereder uppläsningen — den startar om några sekunder.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "Uppläsningen har inte nått det här kapitlet ännu. Den börjar här snart."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Uppläsningen har inte nått det här kapitlet ännu. Den börjar här snart.",
+  "Translate the first part now": "Översätt första delen nu",
+  "Preparing your translation…": "Din översättning förbereds…",
+  "Translation preview": "Förhandsvisning av översättningen",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Hittills är bara början översatt. Resten är på originalspråket tills hela översättningen är klar."
 }

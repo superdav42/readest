@@ -2688,9 +2688,7 @@
   "Not yet translated": "Még nincs lefordítva",
   "Not yet translated into {{language}}.": "Még nincs lefordítva erre a nyelvre: {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Kiváló minőségű {{language}} fordítást készítünk neked. A folyamatot ezen a képernyőn és a könyvben is nyomon követheted.",
-  "Read now with instant translation": "Olvasás azonnali fordítással",
   "Read the original ({{language}})": "Az eredeti olvasása ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "Az azonnali fordítást a készülékeden egy gép végzi: gyors, de kevésbé kifinomult. Első alkalommal körülbelül 15 MB adatot tölt le.",
   "Your requested translations": "Az általad kért fordítások",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "Sorban a(z) {{position}}. helyen",
@@ -2706,7 +2704,6 @@
   "The high-quality translation hit a problem. We will retry it.": "Hiba történt a kiváló minőségű fordítás készítésekor. Újra megpróbáljuk.",
   "High-quality {{language}} translation requested.": "Kérted a kiváló minőségű {{language}} fordítást.",
   "Translation ready": "A fordítás elkészült",
-  "Instant machine translation": "Azonnali gépi fordítás",
   "Hide details": "Részletek elrejtése",
   "Show details": "Részletek megjelenítése",
   "Switch to the high-quality translation": "Váltás a kiváló minőségű fordításra",
@@ -2719,5 +2716,9 @@
   "Preparing narration… it starts in a few seconds": "A felolvasás előkészítése… néhány másodperc múlva elkezdődik",
   "Narration in progress: {{percent}}% of the book narrated": "A felolvasás folyamatban: a könyv {{percent}}%-a felolvasva",
   "Preparing narration — it starts in a few seconds.": "A felolvasás előkészítése — néhány másodperc múlva elkezdődik.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "A felolvasás még nem érte el ezt a fejezetet. Hamarosan itt folytatódik."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "A felolvasás még nem érte el ezt a fejezetet. Hamarosan itt folytatódik.",
+  "Translate the first part now": "Az első rész fordítása most",
+  "Preparing your translation…": "A fordítás előkészítése…",
+  "Translation preview": "Fordítási előnézet",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Egyelőre csak az eleje van lefordítva. A többi az eredeti nyelven marad, amíg a teljes fordítás el nem készül."
 }

@@ -35,6 +35,15 @@ export interface LibraryJob {
   progress?: string | null;
   /** Server estimate: `measured` when the worker reports its own percentage. */
   estimate?: { percent?: number; eta_seconds?: number; measured?: boolean };
+  /** A translation job's preview: the book with only its opening translated (migration 0410). */
+  preview?: {
+    hash: string;
+    url: string;
+    cover?: string;
+    size?: number | null;
+    translated_chars?: number;
+    total_chars?: number;
+  };
 }
 
 export interface LibraryWork {
@@ -512,29 +521,59 @@ export const rememberNarrationRequest = (
   ]);
 };
 
-// ---------- Books opened with instant (on-device) machine translation ----------
+// ---------- Books opened from a translation preview ----------
 
-const INSTANT_KEY = 'librebooks-instant-books';
+const PREVIEW_KEY = 'librebooks-preview-books';
 
-const readInstantBooks = (): Record<string, { lang: string; work_id: number }> => {
+const readPreviewBooks = (): Record<string, { lang: string; work_id: number }> => {
   try {
-    return JSON.parse(localStorage.getItem(INSTANT_KEY) || '{}');
+    return JSON.parse(localStorage.getItem(PREVIEW_KEY) || '{}');
   } catch {
     return {};
   }
 };
 
-/** Mark a library book (by hash) as read with instant translation into `lang`. */
-export const setInstantTranslation = (hash: string, workId: number, lang: string | null) => {
-  const books = readInstantBooks();
-  if (lang) books[hash] = { lang, work_id: workId };
+/** Mark a library book (by hash) as a translation preview (only its opening is translated) or clear it. */
+export const setPreviewBook = (hash: string, workId: number, lang: string, preview = true) => {
+  const books = readPreviewBooks();
+  if (preview) books[hash] = { lang, work_id: workId };
   else delete books[hash];
   try {
-    localStorage.setItem(INSTANT_KEY, JSON.stringify(books));
+    localStorage.setItem(PREVIEW_KEY, JSON.stringify(books));
   } catch {
-    // Storage unavailable: the book opens untranslated.
+    // Storage unavailable: the book opens without its preview notice.
   }
 };
 
-export const getInstantTranslation = (hash: string): { lang: string; work_id: number } | null =>
-  readInstantBooks()[hash] ?? null;
+export const getPreviewBook = (hash: string): { lang: string; work_id: number } | null =>
+  readPreviewBooks()[hash] ?? null;
+
+export type TranslationWait =
+  | { kind: 'preview'; url: string; hash: string; size?: number | null }
+  | { kind: 'ready'; url: string; hash?: string }
+  | { kind: 'queued'; position: number; etaSeconds?: number }
+  | { kind: 'preparing'; percent?: number };
+
+/**
+ * Where a requested translation stands: the complete translation when it is published, else
+ * the preview (the book with its opening translated, attached to the running job), else the
+ * job's place in the queue.
+ */
+export const getTranslationWait = (work: LibraryWork, lang: string): TranslationWait => {
+  if (work.best && work.best.lang === lang && work.best.kind !== 'original') {
+    return { kind: 'ready', url: work.best.url, hash: work.best.hash };
+  }
+  const job = work.jobs.find((j) => j.kind === 'translation');
+  if (job?.preview) {
+    return {
+      kind: 'preview',
+      url: job.preview.url,
+      hash: job.preview.hash,
+      size: job.preview.size,
+    };
+  }
+  if (job?.status === 'queued' || job?.status === 'blocked') {
+    return { kind: 'queued', position: job.position ?? 1, etaSeconds: job.estimate?.eta_seconds };
+  }
+  return { kind: 'preparing', percent: job?.estimate?.percent };
+};

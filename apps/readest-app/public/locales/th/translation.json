@@ -2619,9 +2619,7 @@
   "Not yet translated": "ยังไม่ได้แปล",
   "Not yet translated into {{language}}.": "ยังไม่ได้แปลเป็น{{language}}",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "เราจะจัดทำคำแปล{{language}}คุณภาพสูงให้คุณ คุณติดตามความคืบหน้าได้ในหน้าจอนี้และในหนังสือ",
-  "Read now with instant translation": "อ่านตอนนี้ด้วยการแปลทันที",
   "Read the original ({{language}})": "อ่านต้นฉบับ ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "การแปลทันทีทำโดยเครื่องบนอุปกรณ์ของคุณ จึงรวดเร็วแต่คุณภาพอาจไม่ละเอียดเท่า ครั้งแรกจะดาวน์โหลดข้อมูลประมาณ 15 MB",
   "Your requested translations": "คำแปลที่คุณร้องขอ",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "อยู่ในคิวลำดับที่ {{position}}",
@@ -2637,7 +2635,6 @@
   "The high-quality translation hit a problem. We will retry it.": "เกิดปัญหากับคำแปลคุณภาพสูง เราจะลองอีกครั้ง",
   "High-quality {{language}} translation requested.": "ร้องขอคำแปล{{language}}คุณภาพสูงแล้ว",
   "Translation ready": "คำแปลพร้อมแล้ว",
-  "Instant machine translation": "คำแปลทันทีจากเครื่อง",
   "Hide details": "ซ่อนรายละเอียด",
   "Show details": "แสดงรายละเอียด",
   "Switch to the high-quality translation": "เปลี่ยนไปใช้คำแปลคุณภาพสูง",
@@ -2650,5 +2647,9 @@
   "Preparing narration… it starts in a few seconds": "กำลังเตรียมเสียงบรรยาย… จะเริ่มในอีกไม่กี่วินาที",
   "Narration in progress: {{percent}}% of the book narrated": "กำลังบรรยาย: บรรยายเนื้อหาไปแล้ว {{percent}}% ของหนังสือ",
   "Preparing narration — it starts in a few seconds.": "กำลังเตรียมเสียงบรรยาย — จะเริ่มในอีกไม่กี่วินาที",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "การบรรยายยังมาไม่ถึงบทนี้ อีกสักครู่จะเริ่มจากตรงนี้"
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "การบรรยายยังมาไม่ถึงบทนี้ อีกสักครู่จะเริ่มจากตรงนี้",
+  "Translate the first part now": "แปลส่วนแรกตอนนี้",
+  "Preparing your translation…": "กำลังเตรียมคำแปลของคุณ…",
+  "Translation preview": "ตัวอย่างคำแปล",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "ตอนนี้แปลเฉพาะช่วงต้นเรื่อง ส่วนที่เหลือจะเป็นภาษาต้นฉบับจนกว่าคำแปลฉบับสมบูรณ์จะพร้อม"
 }
