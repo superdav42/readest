@@ -32,7 +32,7 @@ import {
   type LibraryWork,
 } from '@/services/gutenbergLibrary';
 import { openCatalogBook } from '@/services/openCatalogBook';
-import { formatEta } from './InstantTranslationBanner';
+import { formatEta } from './TranslationPreviewBanner';
 
 /** Set by Speak when it asks for narration: { workId, lang, autoplay }. */
 export const NARRATION_WANTED_KEY = 'gai:narrationWanted';

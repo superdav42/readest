@@ -2688,9 +2688,7 @@
   "Not yet translated": "ჯერ არ არის ნათარგმნი",
   "Not yet translated into {{language}}.": "ჯერ არ არის ნათარგმნი ენაზე: {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "მოგიმზადებთ მაღალი ხარისხის თარგმანს ენაზე: {{language}}. მისი მიმდინარეობის ნახვა შეგიძლიათ ამ ეკრანზე და წიგნში.",
-  "Read now with instant translation": "წაიკითხეთ ახლავე მყისიერი თარგმანით",
   "Read the original ({{language}})": "წაიკითხეთ ორიგინალი ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "მყისიერ თარგმანს თქვენი მოწყობილობა ავტომატურად აკეთებს: სწრაფად, თუმცა ნაკლები სიზუსტით. პირველად ჩამოიტვირთება დაახლოებით 15 მბ.",
   "Your requested translations": "თქვენ მიერ მოთხოვნილი თარგმანები",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "რიგში №{{position}}",
@@ -2706,7 +2704,6 @@
   "The high-quality translation hit a problem. We will retry it.": "მაღალი ხარისხის თარგმნისას პრობლემა წარმოიშვა. ხელახლა ვცდით.",
   "High-quality {{language}} translation requested.": "მოთხოვნილია მაღალი ხარისხის თარგმანი ენაზე {{language}}.",
   "Translation ready": "თარგმანი მზად არის",
-  "Instant machine translation": "მყისიერი მანქანური თარგმანი",
   "Hide details": "დეტალების დამალვა",
   "Show details": "დეტალების ჩვენება",
   "Switch to the high-quality translation": "მაღალი ხარისხის თარგმანზე გადასვლა",
@@ -2719,5 +2716,9 @@
   "Preparing narration… it starts in a few seconds": "თხრობა მზადდება… რამდენიმე წამში დაიწყება",
   "Narration in progress: {{percent}}% of the book narrated": "თხრობა მიმდინარეობს: წიგნის {{percent}}% წაკითხულია",
   "Preparing narration — it starts in a few seconds.": "თხრობა მზადდება — რამდენიმე წამში დაიწყება.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "ხმოვან თხრობას ამ თავამდე ჯერ არ მიუღწევია. ის მალე აქ დაიწყება."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "ხმოვან თხრობას ამ თავამდე ჯერ არ მიუღწევია. ის მალე აქ დაიწყება.",
+  "Translate the first part now": "პირველი ნაწილის თარგმნა ახლავე",
+  "Preparing your translation…": "თქვენი თარგმანი მზადდება…",
+  "Translation preview": "თარგმანის წინასწარი ვერსია",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "ჯერ მხოლოდ დასაწყისია ნათარგმნი. დანარჩენი ორიგინალ ენაზე რჩება, სანამ სრული თარგმანი მზად არ იქნება."
 }

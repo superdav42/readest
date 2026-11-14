@@ -2688,9 +2688,7 @@
   "Not yet translated": "Δεν έχει μεταφραστεί ακόμη",
   "Not yet translated into {{language}}.": "Δεν έχει μεταφραστεί ακόμη στα {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Θα ετοιμάσουμε για εσάς μια μετάφραση υψηλής ποιότητας στα {{language}}. Μπορείτε να παρακολουθείτε την πρόοδό της σε αυτή την οθόνη και μέσα στο βιβλίο.",
-  "Read now with instant translation": "Διαβάστε τώρα με άμεση μετάφραση",
   "Read the original ({{language}})": "Διαβάστε το πρωτότυπο ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "Η άμεση μετάφραση γίνεται από μηχανή στη συσκευή σας: είναι γρήγορη, αλλά λιγότερο επιμελημένη. Την πρώτη φορά γίνεται λήψη περίπου 15 MB.",
   "Your requested translations": "Οι μεταφράσεις που ζητήσατε",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "Στην ουρά, θέση #{{position}}",
@@ -2706,7 +2704,6 @@
   "The high-quality translation hit a problem. We will retry it.": "Παρουσιάστηκε πρόβλημα με τη μετάφραση υψηλής ποιότητας. Θα δοκιμάσουμε ξανά.",
   "High-quality {{language}} translation requested.": "Ζητήθηκε μετάφραση υψηλής ποιότητας στα {{language}}.",
   "Translation ready": "Η μετάφραση είναι έτοιμη",
-  "Instant machine translation": "Άμεση μηχανική μετάφραση",
   "Hide details": "Απόκρυψη λεπτομερειών",
   "Show details": "Εμφάνιση λεπτομερειών",
   "Switch to the high-quality translation": "Μετάβαση στη μετάφραση υψηλής ποιότητας",
@@ -2719,5 +2716,9 @@
   "Preparing narration… it starts in a few seconds": "Προετοιμασία αφήγησης… ξεκινά σε λίγα δευτερόλεπτα",
   "Narration in progress: {{percent}}% of the book narrated": "Η αφήγηση είναι σε εξέλιξη: έχει αφηγηθεί το {{percent}}% του βιβλίου",
   "Preparing narration — it starts in a few seconds.": "Προετοιμασία αφήγησης — ξεκινά σε λίγα δευτερόλεπτα.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "Η αφήγηση δεν έχει φτάσει ακόμη σε αυτό το κεφάλαιο. Θα ξεκινήσει εδώ σύντομα."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Η αφήγηση δεν έχει φτάσει ακόμη σε αυτό το κεφάλαιο. Θα ξεκινήσει εδώ σύντομα.",
+  "Translate the first part now": "Μετάφραση του πρώτου μέρους τώρα",
+  "Preparing your translation…": "Προετοιμασία της μετάφρασής σας…",
+  "Translation preview": "Προεπισκόπηση μετάφρασης",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Μέχρι στιγμής έχει μεταφραστεί μόνο η αρχή. Το υπόλοιπο μένει στην αρχική γλώσσα μέχρι να ολοκληρωθεί η μετάφραση."
 }

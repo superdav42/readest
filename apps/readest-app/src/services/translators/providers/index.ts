@@ -7,7 +7,6 @@ import { deeplProvider } from './deepl';
 import { azureProvider } from './azure';
 import { googleProvider } from './google';
 import { yandexProvider } from './yandex';
-import { instantProvider } from './instant';
 
 function createTranslator<T extends string>(
   name: T,
@@ -39,12 +38,10 @@ export type TranslatorName = string;
 
 /** Built-in translators followed by the user's custom ones. */
 export const getTranslators = (): TranslationProvider[] => {
-  // Self-hosted library mode: books come pre-translated; no text goes to
-  // DeepL, Azure, Google, Yandex or custom AI translators. Instant translation
-  // runs on the device, so it is the one translator such a library offers.
-  if (getRuntimeConfig()?.onlineTranslationDisabled) {
-    return getRuntimeConfig()?.libraryFilesUrl ? [instantProvider] : [];
-  }
+  // Self-hosted library mode: books come translated by the library's own pipeline (a preview
+  // of the opening first, then the complete translation); no text goes to DeepL, Azure, Google,
+  // Yandex or custom AI translators, and nothing is translated on the device.
+  if (getRuntimeConfig()?.onlineTranslationDisabled) return [];
   const custom = useCustomTranslatorStore
     .getState()
     .getAvailableTranslators()

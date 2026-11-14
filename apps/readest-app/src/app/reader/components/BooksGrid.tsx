@@ -24,7 +24,7 @@ import FoliateViewer from './FoliateViewer';
 import HandwritingOverlay from './handwriting/HandwritingOverlay';
 import SectionInfo from './SectionInfo';
 import HeaderBar from './HeaderBar';
-import InstantTranslationBanner from './InstantTranslationBanner';
+import TranslationPreviewBanner from './TranslationPreviewBanner';
 import NarrationBanner from './NarrationBanner';
 import VoiceBanner from './VoiceBanner';
 import PageNavigationButtons from './PageNavigationButtons';
@@ -203,7 +203,7 @@ const BookCellInner: React.FC<BookCellProps> = ({
         appServiceHasRoundedWindow && 'rounded-window',
       )}
     >
-      <InstantTranslationBanner bookKey={bookKey} />
+      <TranslationPreviewBanner bookKey={bookKey} />
       <NarrationBanner bookKey={bookKey} />
       <VoiceBanner bookKey={bookKey} />
       <HeaderBar

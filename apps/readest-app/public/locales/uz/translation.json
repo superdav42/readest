@@ -2688,9 +2688,7 @@
   "Not yet translated": "Hali tarjima qilinmagan",
   "Not yet translated into {{language}}.": "Hali {{language}} tiliga tarjima qilinmagan.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Siz uchun {{language}} tiliga yuqori sifatli tarjima tayyorlaymiz. Uning jarayonini ushbu ekranda va kitob ichida kuzatib borishingiz mumkin.",
-  "Read now with instant translation": "Tezkor tarjima bilan hoziroq o‘qing",
   "Read the original ({{language}})": "Asl nusxasini o‘qing ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "Tezkor tarjima qurilmangizda mashina yordamida amalga oshiriladi: tez, ammo sifati pastroq. Birinchi marta taxminan 15 MB ma’lumot yuklab olinadi.",
   "Your requested translations": "Siz so‘ragan tarjimalar",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "Navbatda #{{position}}",
@@ -2706,7 +2704,6 @@
   "The high-quality translation hit a problem. We will retry it.": "Yuqori sifatli tarjimada muammo yuz berdi. Qayta urinib ko‘ramiz.",
   "High-quality {{language}} translation requested.": "{{language}} tiliga yuqori sifatli tarjima so‘raldi.",
   "Translation ready": "Tarjima tayyor",
-  "Instant machine translation": "Tezkor mashina tarjimasi",
   "Hide details": "Tafsilotlarni yashirish",
   "Show details": "Tafsilotlarni ko‘rsatish",
   "Switch to the high-quality translation": "Yuqori sifatli tarjimaga o‘tish",
@@ -2719,5 +2716,9 @@
   "Preparing narration… it starts in a few seconds": "Ovozli o‘qish tayyorlanmoqda… u bir necha soniyadan keyin boshlanadi",
   "Narration in progress: {{percent}}% of the book narrated": "Ovozli o‘qish davom etmoqda: kitobning {{percent}}% i o‘qildi",
   "Preparing narration — it starts in a few seconds.": "Ovozli o‘qish tayyorlanmoqda — u bir necha soniyadan keyin boshlanadi.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "Ovozli o‘qish hali bu bobga yetib kelmadi. Tez orada shu yerdan boshlanadi."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Ovozli o‘qish hali bu bobga yetib kelmadi. Tez orada shu yerdan boshlanadi.",
+  "Translate the first part now": "Birinchi qismni hozir tarjima qilish",
+  "Preparing your translation…": "Tarjimangiz tayyorlanmoqda…",
+  "Translation preview": "Tarjima ko‘rinishi",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Hozircha faqat boshlanishi tarjima qilingan. To‘liq tarjima tayyor bo‘lguncha qolgani asl tilda qoladi."
 }

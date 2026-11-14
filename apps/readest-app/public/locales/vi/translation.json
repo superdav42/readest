@@ -2619,9 +2619,7 @@
   "Not yet translated": "Chưa được dịch",
   "Not yet translated into {{language}}.": "Chưa được dịch sang {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Chúng tôi sẽ chuẩn bị bản dịch {{language}} chất lượng cao cho bạn. Bạn có thể theo dõi tiến độ trên màn hình này và trong sách.",
-  "Read now with instant translation": "Đọc ngay với bản dịch tức thì",
   "Read the original ({{language}})": "Đọc bản gốc ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "Bản dịch tức thì được dịch tự động trên thiết bị của bạn: nhanh nhưng kém trau chuốt hơn. Lần đầu sử dụng, ứng dụng sẽ tải xuống khoảng 15 MB.",
   "Your requested translations": "Các bản dịch bạn đã yêu cầu",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "Đang chờ ở vị trí #{{position}}",
@@ -2637,7 +2635,6 @@
   "The high-quality translation hit a problem. We will retry it.": "Đã xảy ra sự cố với bản dịch chất lượng cao. Chúng tôi sẽ thử lại.",
   "High-quality {{language}} translation requested.": "Đã yêu cầu bản dịch {{language}} chất lượng cao.",
   "Translation ready": "Bản dịch đã sẵn sàng",
-  "Instant machine translation": "Bản dịch máy tức thì",
   "Hide details": "Ẩn chi tiết",
   "Show details": "Hiện chi tiết",
   "Switch to the high-quality translation": "Chuyển sang bản dịch chất lượng cao",
@@ -2650,5 +2647,9 @@
   "Preparing narration… it starts in a few seconds": "Đang chuẩn bị bản đọc… sẽ bắt đầu sau vài giây",
   "Narration in progress: {{percent}}% of the book narrated": "Đang đọc: đã đọc {{percent}}% cuốn sách",
   "Preparing narration — it starts in a few seconds.": "Đang chuẩn bị bản đọc — sẽ bắt đầu sau vài giây.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "Lời tường thuật vẫn chưa đến chương này. Sẽ sớm bắt đầu từ đây."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Lời tường thuật vẫn chưa đến chương này. Sẽ sớm bắt đầu từ đây.",
+  "Translate the first part now": "Dịch ngay phần đầu",
+  "Preparing your translation…": "Đang chuẩn bị bản dịch của bạn…",
+  "Translation preview": "Xem trước bản dịch",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Hiện mới dịch phần mở đầu. Phần còn lại giữ nguyên ngôn ngữ gốc cho đến khi bản dịch đầy đủ sẵn sàng."
 }

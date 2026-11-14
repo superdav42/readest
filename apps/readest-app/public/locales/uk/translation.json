@@ -2826,9 +2826,7 @@
   "Not yet translated": "Ще не перекладено",
   "Not yet translated into {{language}}.": "Ще не перекладено мовою {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Ми підготуємо для вас якісний переклад мовою {{language}}. Стежити за перебігом перекладу можна на цьому екрані та в книзі.",
-  "Read now with instant translation": "Читати зараз із миттєвим перекладом",
   "Read the original ({{language}})": "Читати оригінал ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "Миттєвий переклад виконується програмою на вашому пристрої: швидко, але менш якісно. Під час першого використання завантажується приблизно 15 МБ.",
   "Your requested translations": "Переклади, які ви замовили",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "У черзі №{{position}}",
@@ -2844,7 +2842,6 @@
   "The high-quality translation hit a problem. We will retry it.": "Під час підготовки якісного перекладу сталася помилка. Ми повторимо спробу.",
   "High-quality {{language}} translation requested.": "Якісний переклад мовою {{language}} замовлено.",
   "Translation ready": "Переклад готовий",
-  "Instant machine translation": "Миттєвий машинний переклад",
   "Hide details": "Приховати деталі",
   "Show details": "Показати деталі",
   "Switch to the high-quality translation": "Перейти до якісного перекладу",
@@ -2857,5 +2854,9 @@
   "Preparing narration… it starts in a few seconds": "Готуємо озвучення… воно почнеться за кілька секунд",
   "Narration in progress: {{percent}}% of the book narrated": "Триває озвучення: озвучено {{percent}}% книжки",
   "Preparing narration — it starts in a few seconds.": "Готуємо озвучення — воно почнеться за кілька секунд.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "Озвучення ще не дійшло до цього розділу. Незабаром воно почнеться звідси."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "Озвучення ще не дійшло до цього розділу. Незабаром воно почнеться звідси.",
+  "Translate the first part now": "Перекласти першу частину зараз",
+  "Preparing your translation…": "Готуємо ваш переклад…",
+  "Translation preview": "Попередній перегляд перекладу",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Поки перекладено лише початок. Решта залишається мовою оригіналу, доки повний переклад не буде готовий."
 }

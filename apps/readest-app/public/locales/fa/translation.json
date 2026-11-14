@@ -2688,9 +2688,7 @@
   "Not yet translated": "هنوز ترجمه نشده",
   "Not yet translated into {{language}}.": "هنوز به {{language}} ترجمه نشده است.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "یک ترجمهٔ باکیفیت به {{language}} برایتان آماده می‌کنیم. می‌توانید روند آماده‌سازی آن را در این صفحه و در کتاب دنبال کنید.",
-  "Read now with instant translation": "همین حالا با ترجمهٔ فوری بخوانید",
   "Read the original ({{language}})": "متن اصلی را بخوانید ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "ترجمهٔ فوری به‌صورت ماشینی روی دستگاه شما انجام می‌شود: سریع است، اما کیفیت پایین‌تری دارد. بار اول حدود ۱۵ مگابایت دانلود می‌شود.",
   "Your requested translations": "ترجمه‌هایی که درخواست کرده‌اید",
   "{{percent}}% · {{eta}}": "{{percent}}٪ · {{eta}}",
   "In line #{{position}}": "در صف، جایگاه #{{position}}",
@@ -2706,7 +2704,6 @@
   "The high-quality translation hit a problem. We will retry it.": "در ترجمهٔ باکیفیت مشکلی پیش آمد. دوباره تلاش می‌کنیم.",
   "High-quality {{language}} translation requested.": "ترجمهٔ باکیفیت به {{language}} درخواست شد.",
   "Translation ready": "ترجمه آماده است",
-  "Instant machine translation": "ترجمهٔ ماشینی فوری",
   "Hide details": "پنهان کردن جزئیات",
   "Show details": "نمایش جزئیات",
   "Switch to the high-quality translation": "رفتن به ترجمهٔ باکیفیت",
@@ -2719,5 +2716,9 @@
   "Preparing narration… it starts in a few seconds": "در حال آماده‌سازی روایت… تا چند ثانیهٔ دیگر شروع می‌شود",
   "Narration in progress: {{percent}}% of the book narrated": "روایت در حال پخش است: {{percent}}٪ از کتاب روایت شده",
   "Preparing narration — it starts in a few seconds.": "در حال آماده‌سازی روایت — تا چند ثانیهٔ دیگر شروع می‌شود.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "روایت هنوز به این فصل نرسیده است. به‌زودی از اینجا شروع می‌شود."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "روایت هنوز به این فصل نرسیده است. به‌زودی از اینجا شروع می‌شود.",
+  "Translate the first part now": "ترجمهٔ بخش اول را همین حالا انجام بده",
+  "Preparing your translation…": "در حال آماده‌سازی ترجمهٔ شما…",
+  "Translation preview": "پیش‌نمایش ترجمه",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "فعلاً فقط آغاز کتاب ترجمه شده است. بقیه تا آماده شدن ترجمهٔ کامل به زبان اصلی باقی می‌ماند."
 }

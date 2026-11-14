@@ -2619,9 +2619,7 @@
   "Not yet translated": "尚未翻译",
   "Not yet translated into {{language}}.": "尚未翻译成{{language}}。",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "我们将为你准备高质量的{{language}}译文。你可以在此屏幕和书籍中查看翻译进度。",
-  "Read now with instant translation": "立即阅读机器翻译版",
   "Read the original ({{language}})": "阅读原文（{{language}}）",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "即时翻译由你设备上的机器完成：速度快，但翻译质量较粗糙。首次使用时会下载约 15 MB 的数据。",
   "Your requested translations": "你请求的翻译",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "排队中，位置 #{{position}}",
@@ -2637,7 +2635,6 @@
   "The high-quality translation hit a problem. We will retry it.": "高质量翻译遇到问题。我们会重试。",
   "High-quality {{language}} translation requested.": "已请求高质量{{language}}翻译。",
   "Translation ready": "译文已就绪",
-  "Instant machine translation": "即时机器翻译",
   "Hide details": "隐藏详情",
   "Show details": "显示详情",
   "Switch to the high-quality translation": "切换到高质量译文",
@@ -2651,5 +2648,9 @@
   "Narration in progress: {{percent}}% of the book narrated": "正在朗读：已朗读本书的 {{percent}}%",
   "Preparing narration — it starts in a few seconds.": "正在准备朗读——几秒后开始。",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "朗读内容尚未到达本章，请稍候，即将从这里开始。",
-  "Read-along voices": "伴读声音"
+  "Read-along voices": "伴读声音",
+  "Translate the first part now": "立即翻译开头部分",
+  "Preparing your translation…": "正在准备您的译文…",
+  "Translation preview": "译文预览",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "目前只翻译了开头部分。在完整译文就绪之前，其余部分保持原文。"
 }

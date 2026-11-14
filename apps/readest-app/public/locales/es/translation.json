@@ -2756,9 +2756,7 @@
   "Not yet translated": "Aún no se ha traducido",
   "Not yet translated into {{language}}.": "Aún no se ha traducido al {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "Prepararemos una traducción de alta calidad al {{language}}. Puedes seguir el progreso en esta pantalla y en el libro.",
-  "Read now with instant translation": "Leer ahora con traducción instantánea",
   "Read the original ({{language}})": "Leer el original ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "La traducción instantánea se realiza mediante una máquina en tu dispositivo: es rápida, pero menos precisa. La primera vez, se descargan unos 15 MB.",
   "Your requested translations": "Tus traducciones solicitadas",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "En la cola, puesto n.º {{position}}",
@@ -2774,7 +2772,6 @@
   "The high-quality translation hit a problem. We will retry it.": "Se produjo un problema con la traducción de alta calidad. Volveremos a intentarlo.",
   "High-quality {{language}} translation requested.": "Se ha solicitado una traducción de alta calidad al {{language}}.",
   "Translation ready": "Traducción lista",
-  "Instant machine translation": "Traducción automática instantánea",
   "Hide details": "Ocultar detalles",
   "Show details": "Mostrar detalles",
   "Switch to the high-quality translation": "Cambiar a la traducción de alta calidad",
@@ -2788,5 +2785,9 @@
   "Narration in progress: {{percent}}% of the book narrated": "Narración en curso: {{percent}}% del libro narrado",
   "Preparing narration — it starts in a few seconds.": "Preparando la narración: empezará en unos segundos.",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "La narración aún no ha llegado a este capítulo. Empezará aquí dentro de poco.",
-  "Read-along voices": "Voces para leer en voz alta"
+  "Read-along voices": "Voces para leer en voz alta",
+  "Translate the first part now": "Traducir ahora la primera parte",
+  "Preparing your translation…": "Preparando tu traducción…",
+  "Translation preview": "Vista previa de la traducción",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Por ahora solo está traducido el principio. El resto sigue en el idioma original hasta que la traducción completa esté lista."
 }

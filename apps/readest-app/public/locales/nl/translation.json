@@ -2688,9 +2688,7 @@
   "Not yet translated": "Nog niet vertaald",
   "Not yet translated into {{language}}.": "Nog niet vertaald naar het {{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "We maken een hoogwaardige vertaling naar het {{language}} voor je. Je kunt de voortgang volgen op dit scherm en in het boek.",
-  "Read now with instant translation": "Nu lezen met directe vertaling",
   "Read the original ({{language}})": "Het origineel lezen ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "De directe vertaling wordt op je apparaat door een machine gemaakt: snel, maar minder nauwkeurig. De eerste keer wordt er ongeveer 15 MB gedownload.",
   "Your requested translations": "Je aangevraagde vertalingen",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "In de wachtrij op plek #{{position}}",
@@ -2706,7 +2704,6 @@
   "The high-quality translation hit a problem. We will retry it.": "Er is een probleem opgetreden met de hoogwaardige vertaling. We proberen het opnieuw.",
   "High-quality {{language}} translation requested.": "Hoogwaardige vertaling naar het {{language}} aangevraagd.",
   "Translation ready": "Vertaling klaar",
-  "Instant machine translation": "Directe machinevertaling",
   "Hide details": "Details verbergen",
   "Show details": "Details weergeven",
   "Switch to the high-quality translation": "Overschakelen naar de hoogwaardige vertaling",
@@ -2720,5 +2717,9 @@
   "Narration in progress: {{percent}}% of the book narrated": "Voorlezing bezig: {{percent}}% van het boek voorgelezen",
   "Preparing narration — it starts in a few seconds.": "De voorlezing wordt voorbereid — deze begint over enkele seconden.",
   "Narration hasn't reached this chapter yet. It will start here shortly.": "De voorlezing is nog niet bij dit hoofdstuk aangekomen. Ze begint hier binnenkort.",
-  "Read-along voices": "Meeleesstemmen"
+  "Read-along voices": "Meeleesstemmen",
+  "Translate the first part now": "Eerste deel nu vertalen",
+  "Preparing your translation…": "Je vertaling wordt voorbereid…",
+  "Translation preview": "Voorvertoning van de vertaling",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "Tot nu toe is alleen het begin vertaald. De rest blijft in de oorspronkelijke taal tot de volledige vertaling klaar is."
 }

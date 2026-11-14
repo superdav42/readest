@@ -2688,9 +2688,7 @@
   "Not yet translated": "තවම පරිවර්තනය කර නැත",
   "Not yet translated into {{language}}.": "තවම {{language}} භාෂාවට පරිවර්තනය කර නැත.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "අපි ඔබ වෙනුවෙන් උසස් තත්ත්වයේ {{language}} පරිවර්තනයක් සූදානම් කරන්නෙමු. එහි ප්‍රගතිය මෙම තිරයෙන් සහ පොත තුළින් නිරීක්ෂණය කළ හැකිය.",
-  "Read now with instant translation": "ක්ෂණික පරිවර්තනය සමඟ දැන් කියවන්න",
   "Read the original ({{language}})": "මුල් පිටපත කියවන්න ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "ක්ෂණික පරිවර්තනය ඔබගේ උපාංගයේ යන්ත්‍රයක් මඟින් සිදු කරයි: එය ඉක්මන් වුවත්, පරිවර්තනයේ ගුණාත්මකභාවය අඩු විය හැකිය. පළමු වරට එය භාවිත කරන විට, දත්ත ප්‍රමාණයෙන් MB 15ක් පමණ බාගත වේ.",
   "Your requested translations": "ඔබ ඉල්ලා ඇති පරිවර්තන",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "පෝලිමේ #{{position}} වැනි ස්ථානයේ",
@@ -2706,7 +2704,6 @@
   "The high-quality translation hit a problem. We will retry it.": "උසස් තත්ත්වයේ පරිවර්තනයේ ගැටලුවක් ඇති විය. අපි එය නැවත උත්සාහ කරන්නෙමු.",
   "High-quality {{language}} translation requested.": "උසස් තත්ත්වයේ {{language}} පරිවර්තනය ඉල්ලා ඇත.",
   "Translation ready": "පරිවර්තනය සූදානම්",
-  "Instant machine translation": "ක්ෂණික යන්ත්‍ර පරිවර්තනය",
   "Hide details": "විස්තර සඟවන්න",
   "Show details": "විස්තර පෙන්වන්න",
   "Switch to the high-quality translation": "උසස් තත්ත්වයේ පරිවර්තනයට මාරු වන්න",
@@ -2719,5 +2716,9 @@
   "Preparing narration… it starts in a few seconds": "ශ්‍රව්‍ය කථනය සූදානම් කරමින්… තත්පර කිහිපයකින් ආරම්භ වේ",
   "Narration in progress: {{percent}}% of the book narrated": "ශ්‍රව්‍ය කථනය සිදුවෙමින් පවතී: පොතෙන් {{percent}}%ක් ශ්‍රවණය කර ඇත",
   "Preparing narration — it starts in a few seconds.": "ශ්‍රව්‍ය කථනය සූදානම් කරමින් — තත්පර කිහිපයකින් ආරම්භ වේ.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "කථනය තවමත් මෙම පරිච්ඡේදයට ළඟා වී නැත. එය ඉක්මනින් මෙතැනින් ආරම්භ වනු ඇත."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "කථනය තවමත් මෙම පරිච්ඡේදයට ළඟා වී නැත. එය ඉක්මනින් මෙතැනින් ආරම්භ වනු ඇත.",
+  "Translate the first part now": "පළමු කොටස දැන්ම පරිවර්තනය කරන්න",
+  "Preparing your translation…": "ඔබේ පරිවර්තනය සූදානම් කරමින්…",
+  "Translation preview": "පරිවර්තන පෙරදසුන",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "මෙතෙක් පරිවර්තනය වී ඇත්තේ ආරම්භය පමණි. සම්පූර්ණ පරිවර්තනය සූදානම් වන තුරු ඉතිරිය මුල් භාෂාවෙන් පවතී."
 }

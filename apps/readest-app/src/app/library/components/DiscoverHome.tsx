@@ -4,9 +4,10 @@
 // Discover: the first screen of a shared-library deployment (Librebooks). Rows of covers in
 // the reader's language — continue reading, translations they asked for, books related to the
 // last one read, popular, read-along and genre rows — and one tap opens a book in the reader.
-// A book not yet in the reader's language offers instant (on-device) machine translation or the
-// original, and either way asks for a high-quality translation, whose progress the
-// "Requested" row (and the reader) shows.
+// A book not yet in the reader's language offers to translate its first part now (our own fast
+// translation process: the preview opens in a few minutes) or to read the original, and either
+// way asks for the complete high-quality translation, whose progress the "Requested" row (and
+// the reader) shows.
 'use client';
 
 import clsx from 'clsx';
@@ -20,7 +21,7 @@ import {
   useState,
 } from 'react';
 import { PiHeadphones } from 'react-icons/pi';
-import { MdBolt, MdCheckCircle, MdChevronRight, MdClose } from 'react-icons/md';
+import { MdCheckCircle, MdChevronRight, MdClose, MdTranslate } from 'react-icons/md';
 import type { Book } from '@/types/book';
 import BookCover from '@/components/BookCover';
 import { useEnv } from '@/context/EnvContext';
@@ -29,8 +30,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { eventDispatcher } from '@/utils/event';
 import { navigateToReader } from '@/utils/nav';
 import { openCatalogBook } from '@/services/openCatalogBook';
-import { isInstantSupported } from '@/services/translators/providers/instant';
-import { formatEta } from '@/app/reader/components/InstantTranslationBanner';
+import { formatEta } from '@/app/reader/components/TranslationPreviewBanner';
 import { NARRATION_WANTED_KEY } from '@/app/reader/components/NarrationBanner';
 import {
   CONTENT_LANGUAGE_EVENT,
@@ -48,8 +48,9 @@ import {
   getContentLanguage,
   getLibraryFeedPath,
   getRequestedBooks,
+  getTranslationWait,
   requestTranslation,
-  setInstantTranslation,
+  setPreviewBook,
 } from '@/services/gutenbergLibrary';
 
 interface DiscoverHomeProps {
@@ -57,6 +58,12 @@ interface DiscoverHomeProps {
 }
 
 const POLL_MS = 30_000;
+/** Give up on opening a book when its download or import has not advanced for this long. */
+const OPEN_STALL_MS = 3 * 60_000;
+/** How often to ask whether a requested translation's preview (or the whole book) is ready. */
+const TRANSLATION_POLL_MS = 3_000;
+/** Stop waiting for a translation to start showing up after this long. */
+const TRANSLATION_WAIT_MS = 15 * 60_000;
 
 const isInProgress = (book: Book) =>
   !book.deletedAt && !!book.progress && book.progress[0] < book.progress[1];
@@ -340,11 +347,10 @@ const RequestedCard: React.FC<{
 const RequestSheet: React.FC<{
   card: DiscoverCard;
   lang: string;
-  instantAvailable: boolean;
-  onReadInstant: () => void;
+  onTranslate: () => void;
   onReadOriginal: () => void;
   onClose: () => void;
-}> = ({ card, lang, instantAvailable, onReadInstant, onReadOriginal, onClose }) => {
+}> = ({ card, lang, onTranslate, onReadOriginal, onClose }) => {
   const _ = useTranslation();
   const language = languageName(lang, lang);
   const original = languageName(card.lang, lang);
@@ -380,26 +386,13 @@ const RequestSheet: React.FC<{
             { language },
           )}
         </p>
-        {instantAvailable && (
-          <button type='button' className='btn btn-primary' onClick={onReadInstant}>
-            <MdBolt className='h-5 w-5' />
-            {_('Read now with instant translation')}
-          </button>
-        )}
-        <button
-          type='button'
-          className={clsx('btn', instantAvailable ? 'btn-ghost' : 'btn-primary')}
-          onClick={onReadOriginal}
-        >
+        <button type='button' className='btn btn-primary' onClick={onTranslate}>
+          <MdTranslate className='h-5 w-5' />
+          {_('Translate the first part now')}
+        </button>
+        <button type='button' className='btn btn-ghost' onClick={onReadOriginal}>
           {_('Read the original ({{language}})', { language: original })}
         </button>
-        {instantAvailable && (
-          <p className='text-base-content/75 text-xs'>
-            {_(
-              'Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.',
-            )}
-          </p>
-        )}
       </div>
     </div>
   );
@@ -417,11 +410,15 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
     title: string;
     cover: string;
     progress: number;
+    /** Set while waiting for a requested translation's preview: what the wait is on. */
+    waiting?: string;
+    /** The untranslated edition, offered while waiting. */
+    original?: { work_id: number; lang: string; url: string; size?: number | null };
   } | null>(null);
-  const [sheet, setSheet] = useState<{
-    card: DiscoverCard;
-    instant: boolean;
-  } | null>(null);
+  // Which open the overlay belongs to: cancelling (or a stall) invalidates it, so a late
+  // download or import never navigates away from where the reader went back to.
+  const openAttempt = useRef(0);
+  const [sheet, setSheet] = useState<{ card: DiscoverCard } | null>(null);
   const [requests, setRequests] = useState<RequestedBook[]>(getRequestedBooks);
   const [requestStatus, setRequestStatus] = useState<Record<string, LibraryWork>>({});
 
@@ -529,7 +526,7 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
     };
   }, [lastReadWorkId, lang]);
 
-  /** Download (or reuse) an edition and open it; optionally read it with instant translation. */
+  /** Download (or reuse) an edition and open it. */
   const openEdition = useCallback(
     async (
       edition: {
@@ -541,28 +538,135 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
         kind?: DiscoverCard['kind'];
       },
       display: { title: string; cover: string },
-      instantLang?: string,
+      options: { preview?: boolean; attempt?: number } = {},
     ) => {
-      if (!appService || opening) return;
+      if (!appService || (options.attempt === undefined && opening)) return;
+      const attempt = options.attempt ?? ++openAttempt.current;
+      const current = () => openAttempt.current === attempt;
       setOpening({ ...display, progress: 0 });
       try {
-        const book = await openCatalogBook(appService, edition, (progress) =>
-          setOpening((current) => (current ? { ...current, progress } : current)),
-        );
-        setInstantTranslation(book.hash, edition.work_id, instantLang ?? null);
+        const book = await openCatalogBook(appService, edition, (progress) => {
+          if (current()) setOpening((state) => (state ? { ...state, progress } : state));
+        });
+        // Cancelled meanwhile: the book stays in the library (My books), nothing opens.
+        if (!current()) return;
+        // A preview has only its opening translated; the reader shows where the rest stands.
+        if (options.preview) setPreviewBook(book.hash, edition.work_id, edition.lang);
         navigateToReader(router, [book.hash]);
       } catch (error) {
         console.warn('Discover: could not open', edition.url, error);
+        if (!current()) return;
         eventDispatcher.dispatch('toast', {
           message: _('Could not open this book. Check your connection and try again.'),
           type: 'error',
         });
       } finally {
-        setOpening(null);
+        if (current()) setOpening(null);
       }
     },
     [appService, opening, router, _],
   );
+
+  /** Dismiss the opening overlay; a download or import still running finishes in the background. */
+  const cancelOpening = useCallback(() => {
+    openAttempt.current++;
+    setOpening(null);
+  }, []);
+
+  /**
+   * Request the translation of a book that has none in the reader's language and open it as soon
+   * as its preview (the book with its opening translated by our fast process) or the complete
+   * translation is published. `card` is given for a new request; an earlier request is just
+   * followed.
+   */
+  const translateAndRead = useCallback(
+    async (target: {
+      work_id: number;
+      title: string;
+      cover: string;
+      original: { lang: string; url: string; size?: number | null };
+      card?: DiscoverCard;
+    }) => {
+      if (!appService || opening) return;
+      const attempt = ++openAttempt.current;
+      const current = () => openAttempt.current === attempt;
+      const display = { title: target.title, cover: target.cover };
+      setOpening({
+        ...display,
+        progress: 0,
+        waiting: _('Preparing your translation…'),
+        original: { work_id: target.work_id, ...target.original },
+      });
+      try {
+        if (target.card) await requestTranslation(target.card, lang);
+        const deadline = Date.now() + TRANSLATION_WAIT_MS;
+        for (;;) {
+          const work = await fetchWork(target.work_id, lang).catch(() => null);
+          if (!current()) return;
+          if (work) {
+            const wait = getTranslationWait(work, lang);
+            if (wait.kind === 'ready' || wait.kind === 'preview') {
+              await openEdition(
+                {
+                  work_id: target.work_id,
+                  lang,
+                  url: wait.url,
+                  hash: wait.hash,
+                  size: wait.kind === 'preview' ? wait.size : undefined,
+                },
+                display,
+                { preview: wait.kind === 'preview', attempt },
+              );
+              return;
+            }
+            const waiting =
+              wait.kind === 'queued'
+                ? _('In line #{{position}}', { position: wait.position })
+                : _('Preparing your translation…');
+            setOpening((state) => (state && current() ? { ...state, waiting } : state));
+          }
+          if (Date.now() > deadline) throw new Error('translation_wait_timeout');
+          await new Promise((resolve) => setTimeout(resolve, TRANSLATION_POLL_MS));
+          if (!current()) return;
+        }
+      } catch (error) {
+        console.warn('Discover: translation did not start', target.work_id, error);
+        if (!current()) return;
+        setOpening(null);
+        eventDispatcher.dispatch('toast', {
+          message: _('Could not open this book. Check your connection and try again.'),
+          type: 'error',
+        });
+      }
+    },
+    [appService, opening, lang, openEdition, _],
+  );
+
+  /** Give up waiting for the translation and read the original edition now. */
+  const readOriginalInstead = useCallback(() => {
+    const original = opening?.original;
+    const display = opening ? { title: opening.title, cover: opening.cover } : null;
+    cancelOpening();
+    if (original && display) void openEdition(original, display);
+  }, [opening, cancelOpening, openEdition]);
+
+  // A download or import that makes no progress for this long is given up on, so the full-screen
+  // overlay can never trap the reader (it used to stay on screen until the app was restarted).
+  // Waiting for a translation to be prepared can take longer and has its own limit.
+  const isDownloading = opening !== null && !opening.waiting;
+  const openingProgress = opening?.progress;
+  const openingPercent = Math.round((openingProgress ?? 0) * 100);
+  useEffect(() => {
+    if (!isDownloading) return;
+    const timer = setTimeout(() => {
+      cancelOpening();
+      eventDispatcher.dispatch('toast', {
+        message: _('Could not open this book. Check your connection and try again.'),
+        type: 'error',
+      });
+    }, OPEN_STALL_MS);
+    return () => clearTimeout(timer);
+  }, [isDownloading, openingProgress, cancelOpening, _]);
 
   const openCard = useCallback(
     async (card: DiscoverCard) => {
@@ -570,23 +674,34 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
         await openEdition(card, card);
         return;
       }
-      setSheet({ card, instant: await isInstantSupported(card.lang, lang) });
+      setSheet({ card });
     },
     [lang, openEdition],
   );
 
-  const chooseFromSheet = useCallback(
-    async (instant: boolean) => {
-      if (!sheet) return;
-      const { card } = sheet;
-      setSheet(null);
-      requestTranslation(card, lang).catch((error) =>
-        console.warn('Discover: translation request failed', error),
-      );
-      await openEdition(card, card, instant ? lang : undefined);
-    },
-    [sheet, lang, openEdition],
-  );
+  const translateFromSheet = useCallback(async () => {
+    if (!sheet) return;
+    const { card } = sheet;
+    setSheet(null);
+    await translateAndRead({
+      work_id: card.work_id,
+      title: card.title,
+      cover: card.cover,
+      original: { lang: card.lang, url: card.url, size: card.size },
+      card,
+    });
+  }, [sheet, translateAndRead]);
+
+  const readOriginalFromSheet = useCallback(async () => {
+    if (!sheet) return;
+    const { card } = sheet;
+    setSheet(null);
+    // Still ask for the translation: the reader follows it and offers the switch when it is ready.
+    requestTranslation(card, lang).catch((error) =>
+      console.warn('Discover: translation request failed', error),
+    );
+    await openEdition(card, card);
+  }, [sheet, lang, openEdition]);
 
   const openRequested = useCallback(
     async (request: RequestedBook, work: LibraryWork | undefined) => {
@@ -620,21 +735,26 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
       const ready = isRequestReady(request, work);
       if (ready && work?.best) {
         await openEdition(
-          { work_id: request.work_id, lang: request.lang, url: work.best.url },
+          {
+            work_id: request.work_id,
+            lang: request.lang,
+            url: work.best.url,
+            hash: work.best.hash,
+          },
           request,
         );
         forgetRequestedBook(request.work_id, request.lang);
         return;
       }
-      // Not ready yet: keep reading the interim edition, with instant translation when possible.
-      const instant = await isInstantSupported(request.original.lang, request.lang);
-      await openEdition(
-        { work_id: request.work_id, ...request.original },
-        request,
-        instant ? request.lang : undefined,
-      );
+      // Not ready yet: open its preview, or wait for one.
+      await translateAndRead({
+        work_id: request.work_id,
+        title: request.title,
+        cover: request.cover,
+        original: request.original,
+      });
     },
-    [openEdition],
+    [openEdition, translateAndRead],
   );
 
   const sectionTitle = (kind: string, title?: string) =>
@@ -755,9 +875,8 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
         <RequestSheet
           card={sheet.card}
           lang={lang}
-          instantAvailable={sheet.instant}
-          onReadInstant={() => chooseFromSheet(true)}
-          onReadOriginal={() => chooseFromSheet(false)}
+          onTranslate={translateFromSheet}
+          onReadOriginal={readOriginalFromSheet}
           onClose={() => setSheet(null)}
         />
       )}
@@ -784,7 +903,23 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
               }}
             />
           </div>
-          <p className='text-base-content/75 text-sm'>{_('Opening book…')}</p>
+          <p className='text-base-content/75 text-sm'>
+            {opening.waiting ?? _('Opening book…')}
+            {!opening.waiting &&
+              openingPercent > 0 &&
+              openingPercent < 100 &&
+              ` ${openingPercent}%`}
+          </p>
+          {opening.original && (
+            <button type='button' className='btn btn-outline btn-sm' onClick={readOriginalInstead}>
+              {_('Read the original ({{language}})', {
+                language: languageName(opening.original.lang, lang),
+              })}
+            </button>
+          )}
+          <button type='button' className='btn btn-ghost btn-sm' onClick={cancelOpening}>
+            {_('Cancel')}
+          </button>
         </div>
       )}
     </div>

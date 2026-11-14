@@ -2756,9 +2756,7 @@
   "Not yet translated": "עדיין לא תורגם",
   "Not yet translated into {{language}}.": "עדיין לא תורגם ל{{language}}.",
   "We will prepare a high-quality {{language}} translation for you. You can follow its progress on this screen and in the book.": "נכין עבורך תרגום איכותי ל{{language}}. אפשר לעקוב אחר ההתקדמות שלו במסך הזה ובספר.",
-  "Read now with instant translation": "לקרוא עכשיו עם תרגום מיידי",
   "Read the original ({{language}})": "לקרוא את המקור ({{language}})",
-  "Instant translation is done by a machine on your device: quick, but rougher. The first time, it downloads about 15 MB.": "התרגום המיידי מתבצע באמצעות מנגנון אוטומטי במכשיר שלך: הוא מהיר, אך פחות מלוטש. בפעם הראשונה יורדו כ־15 MB.",
   "Your requested translations": "התרגומים שביקשת",
   "{{percent}}% · {{eta}}": "{{percent}}% · {{eta}}",
   "In line #{{position}}": "בתור מס׳ {{position}}",
@@ -2774,7 +2772,6 @@
   "The high-quality translation hit a problem. We will retry it.": "אירעה בעיה בתרגום האיכותי. ננסה שוב.",
   "High-quality {{language}} translation requested.": "התרגום האיכותי ל{{language}} התבקש.",
   "Translation ready": "התרגום מוכן",
-  "Instant machine translation": "תרגום מכונה מיידי",
   "Hide details": "הסתרת פרטים",
   "Show details": "הצגת פרטים",
   "Switch to the high-quality translation": "מעבר לתרגום האיכותי",
@@ -2787,5 +2784,9 @@
   "Preparing narration… it starts in a few seconds": "מכינים את הקריינות… היא תתחיל בעוד כמה שניות",
   "Narration in progress: {{percent}}% of the book narrated": "הקריינות מתבצעת: {{percent}}% מהספר הוקראו",
   "Preparing narration — it starts in a few seconds.": "מכינים את הקריינות — היא תתחיל בעוד כמה שניות.",
-  "Narration hasn't reached this chapter yet. It will start here shortly.": "הקריינות עדיין לא הגיעה לפרק הזה. היא תתחיל כאן בקרוב."
+  "Narration hasn't reached this chapter yet. It will start here shortly.": "הקריינות עדיין לא הגיעה לפרק הזה. היא תתחיל כאן בקרוב.",
+  "Translate the first part now": "תרגום החלק הראשון עכשיו",
+  "Preparing your translation…": "התרגום שלך בהכנה…",
+  "Translation preview": "תצוגה מקדימה של התרגום",
+  "Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.": "עד כה תורגמה רק ההתחלה. השאר נשאר בשפת המקור עד שהתרגום המלא יהיה מוכן."
 }

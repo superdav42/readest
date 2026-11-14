@@ -1,27 +1,26 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Added 2026-10-31 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
+// Added 2026-10-31, rewritten 2026-11-13 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
 //
-// A book opened with instant (on-device) machine translation: turn the translation view on
-// for it, and keep the reader informed about the high-quality translation being prepared —
-// queue position or progress with time left, then a "Switch" button once it is published.
+// A book opened from a translation preview: only the beginning is translated (by our own fast
+// translation process); the rest is in the original language. Keeps the reader informed about
+// the complete translation being prepared — queue position or progress with time left — and
+// offers a "Switch" button once it is published.
 'use client';
 
 import clsx from 'clsx';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { MdBolt, MdCheckCircle, MdExpandLess, MdExpandMore } from 'react-icons/md';
+import { useCallback, useEffect, useState } from 'react';
+import { MdCheckCircle, MdExpandLess, MdExpandMore, MdTranslate } from 'react-icons/md';
 import { useEnv } from '@/context/EnvContext';
 import { useAppRouter } from '@/hooks/useAppRouter';
 import { useTranslation } from '@/hooks/useTranslation';
-import { saveViewSettings } from '@/helpers/settings';
 import { useBookDataStore } from '@/store/bookDataStore';
-import { useReaderStore } from '@/store/readerStore';
 import { eventDispatcher } from '@/utils/event';
 import { navigateToReader } from '@/utils/nav';
 import {
   fetchWork,
   forgetRequestedBook,
-  getInstantTranslation,
-  setInstantTranslation,
+  getPreviewBook,
+  setPreviewBook,
   type LibraryWork,
 } from '@/services/gutenbergLibrary';
 import { openCatalogBook } from '@/services/openCatalogBook';
@@ -43,44 +42,22 @@ const languageName = (code: string, uiLang: string) => {
   }
 };
 
-const InstantTranslationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
+const TranslationPreviewBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
   const _ = useTranslation();
   const router = useAppRouter();
-  const { envConfig, appService } = useEnv();
+  const { appService } = useEnv();
   const book = useBookDataStore((s) => s.booksData[bookKey.split('-')[0]!]?.book);
-  const getViewSettings = useReaderStore((s) => s.getViewSettings);
-  const setViewSettings = useReaderStore((s) => s.setViewSettings);
-  const instant = book ? getInstantTranslation(book.hash) : null;
+  const preview = book ? getPreviewBook(book.hash) : null;
   const [work, setWork] = useState<LibraryWork | null>(null);
   const [expanded, setExpanded] = useState(true);
   const [switching, setSwitching] = useState(false);
-  const applied = useRef(false);
 
-  // Turn the translation view on for this book (once): on-device engine, reader's language,
-  // translated text only.
+  // Follow the complete translation.
   useEffect(() => {
-    if (!instant || applied.current) return;
-    const viewSettings = getViewSettings(bookKey);
-    if (!viewSettings) return;
-    applied.current = true;
-    void (async () => {
-      await saveViewSettings(envConfig, bookKey, 'translationProvider', 'instant', true, false);
-      await saveViewSettings(envConfig, bookKey, 'translateTargetLang', instant.lang, true, false);
-      await saveViewSettings(envConfig, bookKey, 'showTranslateSource', false, true, false);
-      await saveViewSettings(envConfig, bookKey, 'translationEnabled', true, true, false);
-      // saveViewSettings edits the object in place; the translation hook reacts to a new one
-      // (as TranslationToggler does).
-      const updated = getViewSettings(bookKey);
-      if (updated) setViewSettings(bookKey, { ...updated });
-    })();
-  }, [instant, bookKey, envConfig, getViewSettings, setViewSettings]);
-
-  // Follow the high-quality translation.
-  useEffect(() => {
-    if (!instant) return;
+    if (!preview) return;
     let cancelled = false;
     const poll = () =>
-      fetchWork(instant.work_id, instant.lang)
+      fetchWork(preview.work_id, preview.lang)
         .then((w) => !cancelled && setWork(w))
         .catch(() => undefined);
     void poll();
@@ -89,9 +66,9 @@ const InstantTranslationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) =>
       cancelled = true;
       clearInterval(timer);
     };
-  }, [instant?.work_id, instant?.lang]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [preview?.work_id, preview?.lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const ready = !!work?.best && work.best.lang === instant?.lang && work.best.kind !== 'original';
+  const ready = !!work?.best && work.best.lang === preview?.lang && work.best.kind !== 'original';
   const job = work?.jobs.find((j) => j.kind === 'translation');
 
   useEffect(() => {
@@ -99,16 +76,18 @@ const InstantTranslationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) =>
   }, [ready]);
 
   const switchToTranslation = useCallback(async () => {
-    if (!appService || !instant || !work?.best || !book) return;
+    if (!appService || !preview || !work?.best || !book) return;
     setSwitching(true);
     try {
+      // By hash: the preview and the complete translation are different files of the same work.
       const opened = await openCatalogBook(appService, {
-        work_id: instant.work_id,
-        lang: instant.lang,
+        work_id: preview.work_id,
+        lang: preview.lang,
         url: work.best.url,
+        hash: work.best.hash,
       });
-      setInstantTranslation(book.hash, instant.work_id, null);
-      forgetRequestedBook(instant.work_id, instant.lang);
+      setPreviewBook(book.hash, preview.work_id, preview.lang, false);
+      forgetRequestedBook(preview.work_id, preview.lang);
       navigateToReader(router, [opened.hash]);
     } catch (error) {
       console.warn('Could not open the translation', error);
@@ -119,10 +98,10 @@ const InstantTranslationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) =>
     } finally {
       setSwitching(false);
     }
-  }, [appService, instant, work, book, router, _]);
+  }, [appService, preview, work, book, router, _]);
 
-  if (!instant || !book) return null;
-  const language = languageName(instant.lang, instant.lang);
+  if (!preview || !book) return null;
+  const language = languageName(preview.lang, preview.lang);
   const percent = job?.status === 'running' ? (job.estimate?.percent ?? 0) : 0;
   const status = ready
     ? _('The high-quality {{language}} translation is ready.', { language })
@@ -159,10 +138,10 @@ const InstantTranslationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) =>
           {ready ? (
             <MdCheckCircle className='h-4 w-4 shrink-0' />
           ) : (
-            <MdBolt className='h-4 w-4 shrink-0 text-amber-500' />
+            <MdTranslate className='h-4 w-4 shrink-0 text-amber-500' />
           )}
           <span className='font-medium'>
-            {ready ? _('Translation ready') : _('Instant machine translation')}
+            {ready ? _('Translation ready') : _('Translation preview')}
           </span>
           <button
             type='button'
@@ -175,6 +154,13 @@ const InstantTranslationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) =>
         </div>
         {expanded && (
           <>
+            {!ready && (
+              <p className='text-xs leading-snug opacity-80'>
+                {_(
+                  'Only the beginning is translated so far. The rest is in the original language until the complete translation is ready.',
+                )}
+              </p>
+            )}
             <p className='text-xs leading-snug opacity-80'>{status}</p>
             {!ready && (
               <div className='bg-base-300 h-1 w-full overflow-hidden rounded-full'>
@@ -204,4 +190,4 @@ const InstantTranslationBanner: React.FC<{ bookKey: string }> = ({ bookKey }) =>
   );
 };
 
-export default InstantTranslationBanner;
+export default TranslationPreviewBanner;
