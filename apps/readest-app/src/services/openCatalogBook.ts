@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Modified 2026-11-04 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-04, 2026-11-14 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 // Added 2026-10-31 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
 //
 // Bring a catalog edition (an EPUB on the library CDN) into the library so it can be read:
@@ -8,7 +8,11 @@ import type { Book } from '@/types/book';
 import type { AppService } from '@/types/system';
 import { downloadFile } from '@/libs/storage';
 import { isTauriAppPlatform } from '@/services/environment';
-import { findLibraryEdition, type DiscoverCard } from '@/services/gutenbergLibrary';
+import {
+  fetchTextEdition,
+  findLibraryEdition,
+  type DiscoverCard,
+} from '@/services/gutenbergLibrary';
 import { useLibraryStore } from '@/store/libraryStore';
 import { getLocalBookFilename } from '@/utils/book';
 import { configureZip } from '@/utils/zip';
@@ -96,6 +100,35 @@ const downloadEpub = async (url: string, onProgress: (fraction: number) => void)
   }
   const name = url.split('/').pop() || 'book.epub';
   return new File(chunks as BlobPart[], name, { type: 'application/epub+zip' });
+};
+
+/**
+ * Open the text first. A read-along edition carries every audio clip (up to hundreds of MB),
+ * and importing one freezes a slow phone for many seconds. For a read-along edition this
+ * device does not hold yet, return the text-only edition of the same work and language (its
+ * translation or original, a fraction of the size): the reader shows it at once and offers the
+ * narration, which is then fetched on request (NarrationBanner). Any other edition, one the
+ * device already has, or a failed lookup returns the edition unchanged.
+ */
+export const preferTextEdition = async (
+  appService: AppService,
+  edition: Edition,
+): Promise<Edition> => {
+  if (edition.kind !== 'readalong') return edition;
+  const local = findLibraryEdition(useLibraryStore.getState().library, {
+    work_id: edition.work_id,
+    lang: edition.lang,
+  });
+  if (local && (await appService.isBookAvailable(local))) return edition;
+  const text = await fetchTextEdition(edition.work_id, edition.lang);
+  if (!text) return edition;
+  return {
+    work_id: text.work_id,
+    lang: text.lang,
+    url: text.url,
+    size: text.size,
+    kind: text.kind,
+  };
 };
 
 export const openCatalogBook = async (

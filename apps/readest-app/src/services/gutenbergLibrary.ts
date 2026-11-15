@@ -224,6 +224,49 @@ export const fetchEditionsByHash = async (hashes: string[]): Promise<CatalogEdit
   return (await res.json()) as CatalogEdition[];
 };
 
+/** Give up on the text-edition lookup after this long: the read-along then opens as before. */
+const TEXT_EDITION_TIMEOUT_MS = 5000;
+
+/**
+ * The text-only edition of a work in a language: its current translation, else its original
+ * (the same text a read-along edition narrates, without the audio: a few hundred KB against
+ * tens of MB, which freezes a slow phone while it opens). Null when there is none, the
+ * catalog is not the Supabase one, or the lookup fails: the caller keeps the edition it has.
+ */
+export const fetchTextEdition = async (
+  workId: number,
+  lang: string,
+): Promise<(CatalogEdition & { kind: 'original' | 'translation'; url: string }) | null> => {
+  const base = getCatalogBase();
+  const filesUrl = getRuntimeConfig()?.libraryFilesUrl;
+  if (!base || !isRpcCatalog(base) || !filesUrl) return null;
+  const abort = new AbortController();
+  const timer = setTimeout(() => abort.abort(), TEXT_EDITION_TIMEOUT_MS);
+  try {
+    const query = new URLSearchParams({
+      select: 'hash,work_id,kind,lang,title,authors,size',
+      work_id: `eq.${workId}`,
+      lang: `eq.${lang}`,
+      current: 'is.true',
+      kind: 'in.(translation,original)',
+    });
+    const res = await fetch(`${base.replace(/\/rpc$/, '')}/editions?${query}`, {
+      signal: abort.signal,
+    });
+    if (!res.ok) return null;
+    const rows = ((await res.json()) as CatalogEdition[]).filter(
+      (row): row is CatalogEdition & { kind: 'original' | 'translation' } =>
+        !!row.hash && (row.kind === 'translation' || row.kind === 'original'),
+    );
+    const text = rows.find((row) => row.kind === 'translation') ?? rows[0];
+    return text ? { ...text, url: `${filesUrl}/${text.hash}.epub` } : null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timer);
+  }
+};
+
 export type RequestResult =
   | (LibraryJob & { status: LibraryJob['status'] })
   | { status: 'available' | 'unsupported'; kind?: string };
@@ -401,14 +444,17 @@ export const fetchRelatedBooks = (workId: number, lang = getContentLanguage(), l
 export const findLibraryEdition = (
   books: Book[],
   card: Pick<DiscoverCard, 'work_id' | 'lang'> & { hash?: string },
-): Book | undefined =>
-  books.find(
+): Book | undefined => {
+  const matches = books.filter(
     (book) =>
       !book.deletedAt &&
       (card.hash
         ? book.hash === card.hash
         : getBookWorkId(book) === card.work_id && getBookLanguage(book) === card.lang),
   );
+  // A work opened text-first can later gain a narrated copy: prefer that one.
+  return matches.find((book) => book.hasNarration) ?? matches[0];
+};
 
 /** App route for a full catalog feed (`popular`, `readalong` or a genre shelf), or null. */
 export const getLibraryFeedPath = (

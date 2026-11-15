@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// Added 2026-10-31, modified 2026-11-03 for the Gutenberg AI fork of Readest; see MODIFICATIONS.md.
+// Added 2026-10-31, modified 2026-11-03, 2026-11-14 for the Gutenberg AI fork of Readest; see
+// MODIFICATIONS.md.
 //
 // Discover: the first screen of a shared-library deployment (Librebooks). Rows of covers in
 // the reader's language — continue reading, translations they asked for, books related to the
@@ -7,7 +8,9 @@
 // A book not yet in the reader's language offers to translate its first part now (our own fast
 // translation process: the preview opens in a few minutes) or to read the original, and either
 // way asks for the complete high-quality translation, whose progress the "Requested" row (and
-// the reader) shows.
+// the reader) shows. A read-along card opens the book's text-only edition (the audio makes the
+// read-along many times larger and freezes a slow phone while it opens); the reader offers the
+// narration once the text is open.
 'use client';
 
 import clsx from 'clsx';
@@ -29,7 +32,7 @@ import { useAppRouter } from '@/hooks/useAppRouter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { eventDispatcher } from '@/utils/event';
 import { navigateToReader } from '@/utils/nav';
-import { openCatalogBook } from '@/services/openCatalogBook';
+import { openCatalogBook, preferTextEdition } from '@/services/openCatalogBook';
 import { formatEta } from '@/app/reader/components/TranslationPreviewBanner';
 import { NARRATION_WANTED_KEY } from '@/app/reader/components/NarrationBanner';
 import {
@@ -538,14 +541,20 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
         kind?: DiscoverCard['kind'];
       },
       display: { title: string; cover: string },
-      options: { preview?: boolean; attempt?: number } = {},
+      options: { preview?: boolean; attempt?: number; keepNarration?: boolean } = {},
     ) => {
       if (!appService || (options.attempt === undefined && opening)) return;
       const attempt = options.attempt ?? ++openAttempt.current;
       const current = () => openAttempt.current === attempt;
       setOpening({ ...display, progress: 0 });
       try {
-        const book = await openCatalogBook(appService, edition, (progress) => {
+        // A read-along opens as its text-only edition (unless the listener asked to listen
+        // or already has the narration here); the narration is offered in the reader.
+        const target = options.keepNarration
+          ? edition
+          : await preferTextEdition(appService, edition);
+        if (!current()) return;
+        const book = await openCatalogBook(appService, target, (progress) => {
           if (current()) setOpening((state) => (state ? { ...state, progress } : state));
         });
         // Cancelled meanwhile: the book stays in the library (My books), nothing opens.
@@ -729,6 +738,8 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
               }
             : { work_id: request.work_id, ...request.original },
           request,
+          // The listener asked for the narration: it opens (and starts playing) as before.
+          { keepNarration: true },
         );
         return;
       }
