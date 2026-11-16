@@ -50,6 +50,7 @@ import {
   getCachedDiscoverHome,
   getContentLanguage,
   getLibraryFeedPath,
+  getRequestDisplay,
   getRequestedBooks,
   getTranslationWait,
   requestTranslation,
@@ -273,6 +274,7 @@ const RequestedCard: React.FC<{
 }> = ({ request, work, onOpen, onForget }) => {
   const _ = useTranslation();
   const narration = request.kind === 'readalong';
+  const shown = getRequestDisplay(request, work);
   const ready = isRequestReady(request, work);
   const job = work?.jobs.find((j) => j.kind === (request.kind ?? 'translation'));
   // Narration reports its own measured percentage, which stays on the job between turns.
@@ -305,9 +307,9 @@ const RequestedCard: React.FC<{
         type='button'
         className='group flex flex-col gap-1.5 text-left'
         onClick={() => onOpen(request, work)}
-        aria-label={`${request.title}: ${label}`}
+        aria-label={`${shown.title}: ${label}`}
       >
-        <Cover src={request.cover}>
+        <Cover src={shown.cover}>
           <div
             className={clsx(
               'absolute inset-x-0 bottom-0 flex flex-col gap-1 px-1.5 pb-1.5 pt-4 text-[11px] font-semibold',
@@ -331,7 +333,7 @@ const RequestedCard: React.FC<{
           </div>
         </Cover>
         <p className='text-base-content line-clamp-2 text-sm font-medium leading-tight'>
-          {request.title}
+          {shown.title}
         </p>
       </button>
       <button
@@ -714,6 +716,7 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
 
   const openRequested = useCallback(
     async (request: RequestedBook, work: LibraryWork | undefined) => {
+      const display = getRequestDisplay(request, work);
       if (request.kind === 'readalong') {
         // Open the narration as far as it goes (the reader moves on to larger editions and
         // starts playing), or the book itself while the first part is being made.
@@ -737,7 +740,7 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
                 kind: 'readalong' as const,
               }
             : { work_id: request.work_id, ...request.original },
-          request,
+          display,
           // The listener asked for the narration: it opens (and starts playing) as before.
           { keepNarration: true },
         );
@@ -752,7 +755,7 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
             url: work.best.url,
             hash: work.best.hash,
           },
-          request,
+          display,
         );
         forgetRequestedBook(request.work_id, request.lang);
         return;
@@ -760,8 +763,8 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
       // Not ready yet: open its preview, or wait for one.
       await translateAndRead({
         work_id: request.work_id,
-        title: request.title,
-        cover: request.cover,
+        title: display.title,
+        cover: display.cover,
         original: request.original,
       });
     },
