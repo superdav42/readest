@@ -346,6 +346,30 @@ export const getSharedBookUrl = (book: Book, part: 'book' | 'cover' = 'book'): s
   return `${base}/api/files/by-hash/${book.hash}${part === 'cover' ? '/cover' : ''}?${query}`;
 };
 
+/** Cover of a published edition on the library host (covers are named by the edition's hash). */
+export const getEditionCoverUrl = (hash: string): string | null => {
+  const base = getRuntimeConfig()?.libraryCoversUrl;
+  return base ? `${base}/${hash}.jpg` : null;
+};
+
+/**
+ * What to show for a requested book. A request keeps the title and cover of the book it was made
+ * from, which is the original-language edition when the reader asked from it (an English title and
+ * cover in a Spanish interface), so prefer what the catalog says now: the title in the request's
+ * language and, once an edition in that language is published, its cover.
+ */
+export const getRequestDisplay = (
+  request: Pick<RequestedBook, 'lang' | 'title' | 'cover'>,
+  work?: LibraryWork | null,
+): { title: string; cover: string } => {
+  const best = work?.best;
+  const edition = best && best.lang === request.lang && best.hash ? best.hash : null;
+  return {
+    title: work?.title || request.title,
+    cover: (edition && getEditionCoverUrl(edition)) || request.cover,
+  };
+};
+
 export const getBookLanguage = (book: Book): string => {
   const lang = book.metadata?.language;
   return toContentLanguage((Array.isArray(lang) ? lang[0] : lang) || book.primaryLanguage);
