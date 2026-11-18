@@ -4,6 +4,9 @@ import posthog from 'posthog-js';
 import { useEffect, useState } from 'react';
 import { useEnv } from '@/context/EnvContext';
 import { useTranslation } from '@/hooks/useTranslation';
+import Link from '@/components/Link';
+import { getRuntimeConfig } from '@/services/runtimeConfig';
+import { isIndependentDeployment } from '@/utils/appBrand';
 import { parseWebViewInfo } from '@/utils/ua';
 import { handleGlobalError } from '@/utils/error';
 
@@ -15,6 +18,10 @@ interface ErrorPageProps {
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
   const _ = useTranslation();
   const { appService } = useEnv();
+  // An independent deployment points to its own help page, never to Readest's support address.
+  const supportUrl = isIndependentDeployment()
+    ? getRuntimeConfig()?.supportUrl
+    : 'mailto:support@readest.com';
   const [browserInfo, setBrowserInfo] = useState('');
 
   useEffect(() => {
@@ -118,14 +125,16 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
             </div>
           </div>
 
-          <div className='border-base-300 mt-8 border-t pt-6'>
-            <p className='text-base-content/60 text-sm'>
-              {_('Need help?')}{' '}
-              <a href='mailto:support@readest.com' className='link link-primary'>
-                {_('Contact Support')}
-              </a>
-            </p>
-          </div>
+          {supportUrl && (
+            <div className='border-base-300 mt-8 border-t pt-6'>
+              <p className='text-base-content/60 text-sm'>
+                {_('Need help?')}{' '}
+                <Link href={supportUrl} className='link link-primary'>
+                  {_('Contact Support')}
+                </Link>
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

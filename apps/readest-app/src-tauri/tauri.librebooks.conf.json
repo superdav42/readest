@@ -9,8 +9,8 @@
     "security": {
       "csp": {
         "connect-src": "'self' blob: data: asset: http://asset.localhost http://rangefile.localhost ipc: http://ipc.localhost http://*:* https://*:*",
-        "style-src": "'self' 'unsafe-inline' blob: asset: http://asset.localhost https://cdn.jsdelivr.net https://fonts.googleapis.com https://cdnjs.cloudflare.com",
-        "font-src": "'self' blob: data: asset: http://asset.localhost tauri: https://cdn.jsdelivr.net https://fonts.gstatic.com https://cdnjs.cloudflare.com",
+        "style-src": "'self' 'unsafe-inline' blob: asset: http://asset.localhost https://cdn.mygratis.site",
+        "font-src": "'self' blob: data: asset: http://asset.localhost tauri: https://cdn.mygratis.site",
         "frame-src": "'self' blob: asset: http://asset.localhost",
         "script-src": "'self' 'unsafe-inline' 'unsafe-eval' data: blob: asset: http://asset.localhost"
       }

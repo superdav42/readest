@@ -303,6 +303,7 @@ export type PassageReportCategory =
   | 'grammar'
   | 'untranslated'
   | 'formatting'
+  | 'offensive'
   | 'other';
 
 export interface PassageReport {

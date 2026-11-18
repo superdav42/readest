@@ -26,6 +26,7 @@ const CATEGORIES: { value: PassageReportCategory; label: string }[] = [
   { value: 'grammar', label: __('Grammar or spelling') },
   { value: 'untranslated', label: __('Not translated') },
   { value: 'formatting', label: __('Formatting') },
+  { value: 'offensive', label: __('Offensive or inappropriate') },
   { value: 'other', label: __('Other') },
 ];
 
@@ -38,7 +39,11 @@ export default function ReportPassageDialog({
 }: ReportPassageDialogProps) {
   const _ = useTranslation();
   const id = useId();
-  const [category, setCategory] = useState<PassageReportCategory>('meaning');
+  // No selected passage: the reader reports the whole edition (translation or narration).
+  const wholeEdition = quote.trim() === '';
+  const [category, setCategory] = useState<PassageReportCategory>(
+    wholeEdition ? 'other' : 'meaning',
+  );
   const [comment, setComment] = useState('');
   const [sending, setSending] = useState(false);
   const shown = quote.length > 280 ? `${quote.slice(0, 280)}…` : quote;
@@ -49,7 +54,9 @@ export default function ReportPassageDialog({
       await reportPassage({ workId, lang, quote, category, comment, hash });
       eventDispatcher.dispatch('toast', {
         type: 'info',
-        message: _('Thank you. This passage will be checked again.'),
+        message: wholeEdition
+          ? _('Thank you. Your report was sent.')
+          : _('Thank you. This passage will be checked again.'),
         timeout: 3000,
       });
       onClose();
@@ -71,16 +78,18 @@ export default function ReportPassageDialog({
       <dialog className='modal modal-open' aria-labelledby={`${id}-title`} onCancel={onClose}>
         <div className='modal-box bg-base-100 w-[min(460px,calc(100vw-2rem))] rounded-2xl'>
           <h3 id={`${id}-title`} className='text-base-content text-base font-semibold'>
-            {_('Report a translation problem')}
+            {wholeEdition ? _('Report a problem') : _('Report a translation problem')}
           </h3>
-          <figure className='mt-3'>
-            <figcaption className='text-base-content/75 text-sm'>
-              {_('Selected passage')}
-            </figcaption>
-            <blockquote className='bg-base-200 text-base-content mt-1 max-h-32 overflow-y-auto rounded-lg px-3 py-2 text-sm'>
-              {shown}
-            </blockquote>
-          </figure>
+          {!wholeEdition && (
+            <figure className='mt-3'>
+              <figcaption className='text-base-content/75 text-sm'>
+                {_('Selected passage')}
+              </figcaption>
+              <blockquote className='bg-base-200 text-base-content mt-1 max-h-32 overflow-y-auto rounded-lg px-3 py-2 text-sm'>
+                {shown}
+              </blockquote>
+            </figure>
+          )}
           <fieldset className='mt-4'>
             <legend className='text-base-content/75 mb-1 text-sm'>{_('What is wrong?')}</legend>
             <div className='grid grid-cols-1 gap-1 sm:grid-cols-2'>

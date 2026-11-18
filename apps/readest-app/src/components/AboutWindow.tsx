@@ -223,7 +223,7 @@ export const AboutWindow = () => {
               .
             </p>
 
-            {!independent && <LegalLinks />}
+            <LegalLinks />
           </div>
           {!independent && <SupportLinks />}
         </div>

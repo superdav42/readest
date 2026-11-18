@@ -9,7 +9,8 @@ import { ProviderLogin, type OAuthProvider } from './ProviderLogin';
 import EmailPasswordAuth from './EmailPasswordAuth';
 import ReadestCloudOptIn from './ReadestCloudOptIn';
 import { useAuthProviders } from '../hooks/useAuthProviders';
-import { APP_NAME } from '@/utils/appBrand';
+import LegalLinks from '@/components/LegalLinks';
+import { APP_NAME, isIndependentDeployment } from '@/utils/appBrand';
 
 const PROVIDERS: Partial<Record<OAuthProvider, { Icon: React.ElementType; name: string }>> = {
   google: { Icon: FcGoogle, name: 'Google' },
@@ -88,11 +89,15 @@ export default function AuthPanel({
         redirectTo={redirectTo}
         magicLink={magicLink}
       />
-      <ReadestCloudOptIn
-        onPendingWrite={(write) => {
-          pendingCloudChoice.current = write;
-        }}
-      />
+      {/* Readest Cloud is a separate service: an independent deployment has one sync backend. */}
+      {!isIndependentDeployment() && (
+        <ReadestCloudOptIn
+          onPendingWrite={(write) => {
+            pendingCloudChoice.current = write;
+          }}
+        />
+      )}
+      <LegalLinks />
     </div>
   );
 }
