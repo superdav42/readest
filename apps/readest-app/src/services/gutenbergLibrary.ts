@@ -320,17 +320,25 @@ export interface PassageReport {
 export const isTranslatedLibraryBook = (book: Pick<Book, 'metadata'>): boolean =>
   isSharedLibraryOnly() && /urn:gutenberg-ai:\d+:[a-z]{2}/.test(book.metadata?.identifier ?? '');
 
+/** Collapse whitespace and cut to `max` characters without splitting a surrogate pair. */
+const clipReportText = (text: string, max: number): string =>
+  Array.from(text.replace(/\s+/g, ' ').trim()).slice(0, max).join('');
+
 /**
- * Report a faulty passage of a translated edition. The library routes it to a
- * stronger re-translation in its next background review. Throws `library_api_<status>`
- * (429: too many reports; 404: not a translated edition).
+ * Report a problem with an edition: a selected passage, or (empty quote) the whole translation
+ * or narration, including offensive content. The library stores the report for its operator.
+ * Throws `library_api_<status>` (429: too many reports; 404: no such edition) and
+ * `library_report_rejected` when the library answers without `ok`.
  */
-export const reportPassage = (report: PassageReport) => {
-  const quote = report.quote.replace(/\s+/g, ' ').trim().slice(0, 1000);
-  const comment = report.comment?.replace(/\s+/g, ' ').trim().slice(0, 1000) || undefined;
+export const reportPassage = async (report: PassageReport) => {
+  const quote = clipReportText(report.quote, 1000);
+  const comment = clipReportText(report.comment ?? '', 1000) || undefined;
   const hash = report.hash && /^[0-9a-f]{32}$/.test(report.hash) ? report.hash : undefined;
-  return rpcBase()
-    ? api<{ ok: boolean }>('/report_passage', {
+  // A stalled connection must not leave the report dialog waiting for ever.
+  const signal =
+    typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(20_000) : undefined;
+  const result = rpcBase()
+    ? await api<{ ok: boolean }>('/report_passage', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -341,8 +349,9 @@ export const reportPassage = (report: PassageReport) => {
           p_comment: comment ?? null,
           p_hash: hash ?? null,
         }),
+        signal,
       })
-    : api<{ ok: boolean }>('/reports', {
+    : await api<{ ok: boolean }>('/reports', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -353,7 +362,10 @@ export const reportPassage = (report: PassageReport) => {
           comment,
           hash,
         }),
+        signal,
       });
+  if (!result?.ok) throw new Error('library_report_rejected');
+  return result;
 };
 
 /** App route that opens the operator's catalog (in the reader's language), or null. */

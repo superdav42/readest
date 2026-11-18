@@ -513,6 +513,7 @@ const ReaderContent: React.FC<{
           if (!reportedBook || workId === null) return null;
           return (
             <ReportPassageDialog
+              key={reportBookKey}
               workId={workId}
               lang={getBookLanguage(reportedBook)}
               quote=''

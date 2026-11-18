@@ -97,7 +97,7 @@ export default function AuthPanel({
           }}
         />
       )}
-      <LegalLinks />
+      {isIndependentDeployment() && <LegalLinks />}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-18 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { invoke } from '@tauri-apps/api/core';
@@ -7,6 +7,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useSettingsStore } from '@/store/settingsStore';
 import { checkForAppUpdates, checkAppReleaseNotes } from '@/helpers/updater';
 import { isTauriAppPlatform } from '@/services/environment';
+import { getRuntimeConfig } from '@/services/runtimeConfig';
 import { parseWebViewInfo } from '@/utils/ua';
 import { getAppVersion } from '@/utils/version';
 import { writeTextToClipboard } from '@/utils/clipboard';
@@ -224,6 +225,16 @@ export const AboutWindow = () => {
             </p>
 
             <LegalLinks />
+            {independent && getRuntimeConfig()?.supportUrl && (
+              <div className='my-2 flex justify-center text-sm sm:text-xs'>
+                <Link
+                  href={getRuntimeConfig()!.supportUrl!}
+                  className='text-blue-500 underline hover:text-blue-600'
+                >
+                  {_('Contact Support')}
+                </Link>
+              </div>
+            )}
           </div>
           {!independent && <SupportLinks />}
         </div>
