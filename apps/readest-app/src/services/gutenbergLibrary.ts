@@ -297,6 +297,77 @@ export const requestEdition = (
         body: JSON.stringify({ work_id: workId, lang, kind }),
       });
 
+export type PassageReportCategory =
+  | 'meaning'
+  | 'missing'
+  | 'grammar'
+  | 'untranslated'
+  | 'formatting'
+  | 'offensive'
+  | 'other';
+
+export interface PassageReport {
+  workId: number;
+  lang: string;
+  quote: string;
+  category: PassageReportCategory;
+  comment?: string;
+  /** Content hash of the edition being read, when known. */
+  hash?: string;
+}
+
+/** A library edition that is a translation (its identifier carries a target language). */
+export const isTranslatedLibraryBook = (book: Pick<Book, 'metadata'>): boolean =>
+  isSharedLibraryOnly() && /urn:gutenberg-ai:\d+:[a-z]{2}/.test(book.metadata?.identifier ?? '');
+
+/** Collapse whitespace and cut to `max` characters without splitting a surrogate pair. */
+const clipReportText = (text: string, max: number): string =>
+  Array.from(text.replace(/\s+/g, ' ').trim()).slice(0, max).join('');
+
+/**
+ * Report a problem with an edition: a selected passage, or (empty quote) the whole translation
+ * or narration, including offensive content. The library stores the report for its operator.
+ * Throws `library_api_<status>` (429: too many reports; 404: no such edition) and
+ * `library_report_rejected` when the library answers without `ok`.
+ */
+export const reportPassage = async (report: PassageReport) => {
+  const quote = clipReportText(report.quote, 1000);
+  const comment = clipReportText(report.comment ?? '', 1000) || undefined;
+  const hash = report.hash && /^[0-9a-f]{32}$/.test(report.hash) ? report.hash : undefined;
+  // A stalled connection must not leave the report dialog waiting for ever.
+  const signal =
+    typeof AbortSignal.timeout === 'function' ? AbortSignal.timeout(20_000) : undefined;
+  const result = rpcBase()
+    ? await api<{ ok: boolean }>('/report_passage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          p_work_id: report.workId,
+          p_lang: report.lang,
+          p_quote: quote,
+          p_category: report.category,
+          p_comment: comment ?? null,
+          p_hash: hash ?? null,
+        }),
+        signal,
+      })
+    : await api<{ ok: boolean }>('/reports', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          work_id: report.workId,
+          lang: report.lang,
+          quote,
+          category: report.category,
+          comment,
+          hash,
+        }),
+        signal,
+      });
+  if (!result?.ok) throw new Error('library_report_rejected');
+  return result;
+};
+
 /** App route that opens the operator's catalog (in the reader's language), or null. */
 export const getLibraryBrowsePath = (): string | null => {
   const url = getRuntimeConfig()?.featuredCatalogUrl;

@@ -1,4 +1,4 @@
-// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-18 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 'use client';
 
 import dynamic from 'next/dynamic';
@@ -61,6 +61,8 @@ const SettingsDialog = dynamic(() => import('@/components/settings/SettingsDialo
 import AudiobookPairingDialog from './audiobook/AudiobookPairingDialog';
 import HardcoverLinkDialog from './hardcover/HardcoverLinkDialog';
 import PageboundLinkDialog from './pagebound/PageboundLinkDialog';
+import ReportPassageDialog from './annotator/ReportPassageDialog';
+import { getBookLanguage, getBookWorkId } from '@/services/gutenbergLibrary';
 import ModalPortal from '@/components/ModalPortal';
 import NotebookTransitionAlert from './notebook/NotebookTransitionAlert';
 
@@ -96,6 +98,7 @@ const ReaderContent: React.FC<{
   const [audiobookBookKey, setAudiobookBookKey] = useState<string | null>(null);
   const [hardcoverLinkBookKey, setHardcoverLinkBookKey] = useState<string | null>(null);
   const [pageboundLinkBookKey, setPageboundLinkBookKey] = useState<string | null>(null);
+  const [reportBookKey, setReportBookKey] = useState<string | null>(null);
   const [shareDialogState, setShareDialogState] = useState<{
     book: Book;
     cfi: string | null;
@@ -189,13 +192,19 @@ const ReaderContent: React.FC<{
       const detail = event.detail as { bookKey?: string } | undefined;
       if (detail?.bookKey) setPageboundLinkBookKey(detail.bookKey);
     };
+    const handleReportBook = (event: CustomEvent) => {
+      const detail = event.detail as { bookKey?: string } | undefined;
+      if (detail?.bookKey) setReportBookKey(detail.bookKey);
+    };
     eventDispatcher.on('manage-audiobook', handleManageAudiobook);
     eventDispatcher.on('hardcover-link-book', handleLinkHardcoverBook);
     eventDispatcher.on('pagebound-link-book', handleLinkPageboundBook);
+    eventDispatcher.on('report-book', handleReportBook);
     return () => {
       eventDispatcher.off('manage-audiobook', handleManageAudiobook);
       eventDispatcher.off('hardcover-link-book', handleLinkHardcoverBook);
       eventDispatcher.off('pagebound-link-book', handleLinkPageboundBook);
+      eventDispatcher.off('report-book', handleReportBook);
     };
   }, []);
 
@@ -496,6 +505,23 @@ const ReaderContent: React.FC<{
           onClose={() => setPageboundLinkBookKey(null)}
         />
       )}
+      {reportBookKey &&
+        (() => {
+          // A whole-edition report: no selected passage, the same dialog and library endpoint.
+          const reportedBook = getBookData(reportBookKey)?.book;
+          const workId = reportedBook ? getBookWorkId(reportedBook) : null;
+          if (!reportedBook || workId === null) return null;
+          return (
+            <ReportPassageDialog
+              key={reportBookKey}
+              workId={workId}
+              lang={getBookLanguage(reportedBook)}
+              quote=''
+              hash={reportedBook.hash}
+              onClose={() => setReportBookKey(null)}
+            />
+          );
+        })()}
       <Notebook />
       <LocalSendManager />
       {showDetailsBook && (

@@ -1,4 +1,4 @@
-// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-18 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React from 'react';
 
@@ -12,6 +12,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useSettingsStore } from '@/store/settingsStore';
 import { useParallelViewStore } from '@/store/parallelViewStore';
 import { isWebAppPlatform } from '@/services/environment';
+import { isSharedLibraryBook } from '@/services/gutenbergLibrary';
 import { eventDispatcher } from '@/utils/event';
 import { canPairAudiobook } from '@/utils/audiobook';
 import { FIXED_LAYOUT_FORMATS } from '@/types/book';
@@ -174,6 +175,13 @@ const BookMenu: React.FC<BookMenuProps> = ({ menuClassName, setIsDropdownOpen })
     eventDispatcher.dispatch('manage-audiobook', { bookKey: sideBarBookKey });
     setIsDropdownOpen?.(false);
   };
+  // Gutenberg AI fork: AI translations and narrations can be flagged from inside the book.
+  // Routed through ReaderContent so the dialog outlives this dropdown.
+  const canReportBook = !!bookData?.book && isSharedLibraryBook(bookData.book);
+  const handleReportBook = () => {
+    eventDispatcher.dispatch('report-book', { bookKey: sideBarBookKey });
+    setIsDropdownOpen?.(false);
+  };
 
   return (
     <Menu
@@ -326,6 +334,9 @@ const BookMenu: React.FC<BookMenuProps> = ({ menuClassName, setIsDropdownOpen })
         />
       )}
       <MenuItem label={_('Reload Page')} shortcut='Shift+R' onClick={handleReloadPage} />
+      {canReportBook && (
+        <MenuItem label={_('Report a problem with this book')} onClick={handleReportBook} />
+      )}
       <hr aria-hidden='true' className='border-base-200 my-1' />
       {isWebAppPlatform() && !isIndependentDeployment() && (
         <MenuItem label={_('Download Readest')} onClick={downloadReadest} />

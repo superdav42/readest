@@ -32,6 +32,18 @@ export interface ReadestRuntimeConfig {
   /** Content-addressed library files (`<hash>.epub`) and covers (`<hash>.jpg`). */
   libraryFilesUrl?: string;
   libraryCoversUrl?: string;
+  /** The operator's privacy policy: shown instead of Readest's in an independent deployment. */
+  privacyPolicyUrl?: string;
+  /** The operator's terms of use (optional; nothing is shown when unset). */
+  termsUrl?: string;
+  /** The operator's help or contact page: replaces Readest's support address. */
+  supportUrl?: string;
+  /**
+   * One stylesheet of `@font-face` rules the operator serves itself. When set, the reader
+   * loads it instead of Google Fonts and the CJK font CDNs, so no third-party font host is
+   * ever contacted.
+   */
+  fontStylesheetUrl?: string;
 }
 
 /** Parse the comma-separated OPDS_TRUSTED_HOSTS env value. */
@@ -103,4 +115,8 @@ export const getServerRuntimeConfig = (): ReadestRuntimeConfig => ({
   serverless: process.env['SERVERLESS_WEB'] === 'true' || undefined,
   libraryFilesUrl: process.env['LIBRARY_FILES_URL'] || undefined,
   libraryCoversUrl: process.env['LIBRARY_COVERS_URL'] || undefined,
+  privacyPolicyUrl: process.env['PRIVACY_POLICY_URL'] || undefined,
+  termsUrl: process.env['TERMS_URL'] || undefined,
+  supportUrl: process.env['SUPPORT_URL'] || undefined,
+  fontStylesheetUrl: process.env['FONT_STYLESHEET_URL'] || undefined,
 });

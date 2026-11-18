@@ -117,6 +117,20 @@ const getAdditionalCJKFontFaces = () => `
 export const mountAdditionalFonts = async (document: Document, isCJK = false) => {
   // An SVG spine item has no <head> to mount into.
   if (!document.head) return;
+
+  // An operator that serves its own fonts supplies one stylesheet: nothing is requested from
+  // Google Fonts, jsDelivr, cdnjs, onlinewebfonts or Readest's font storage, so the reader
+  // contacts no third-party font host. Scripts without a bundled face use the system fonts.
+  const stylesheetUrl = getRuntimeConfig()?.fontStylesheetUrl;
+  if (stylesheetUrl) {
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = stylesheetUrl;
+    link.crossOrigin = 'anonymous';
+    document.head.appendChild(link);
+    return;
+  }
+
   const mountCJKFonts = isCJK || isCJKEnv();
 
   // Mount font stylesheets and @font-face rules

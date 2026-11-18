@@ -28,6 +28,7 @@ import { AnnotationToolType } from '@/types/annotator';
 import { annotationToolButtons } from '@/app/reader/components/annotator/AnnotationTools';
 import {
   ALL_ANNOTATION_TOOL_TYPES,
+  AUTOMATIC_TOOL_TYPES,
   getAvailableToolTypes,
   getToolbarToolTypes,
   addToolToToolbar,
@@ -254,7 +255,10 @@ const AnnotationToolbarCustomizer: React.FC<AnnotationToolbarCustomizerProps> = 
   // user's prior arrangement); "Clear all" empties it.
   const addAll = () =>
     commit(
-      ALL_ANNOTATION_TOOL_TYPES.filter((type) => showTool(type) && (canShare || type !== 'share')),
+      ALL_ANNOTATION_TOOL_TYPES.filter(
+        (type) =>
+          showTool(type) && !AUTOMATIC_TOOL_TYPES.has(type) && (canShare || type !== 'share'),
+      ),
     );
   const clearAll = () => commit([]);
 

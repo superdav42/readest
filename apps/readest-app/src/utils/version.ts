@@ -1,8 +1,10 @@
 import semver from 'semver';
 import packageJson from '../../package.json';
 
+// Modified 2026-11-18 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 export const getAppVersion = () => {
-  return packageJson.version;
+  // A build with its own version (the Librebooks Android app is built with --version) shows that one.
+  return process.env['NEXT_PUBLIC_APP_VERSION'] || packageJson.version;
 };
 
 export interface ParsedUpdateVersion {
