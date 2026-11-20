@@ -1,4 +1,5 @@
 'use client';
+// Modified 2026-11-20 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 
 import clsx from 'clsx';
 import { useState, useEffect, useCallback } from 'react';
@@ -37,6 +38,7 @@ import {
   type StripePortalFlow,
 } from '@/libs/payment/stripe/client';
 import LegalLinks from '@/components/LegalLinks';
+import { isIndependentDeployment } from '@/utils/appBrand';
 import Spinner from '@/components/Spinner';
 import ProfileHeader from './components/Header';
 import UserInfo from './components/UserInfo';
@@ -348,12 +350,13 @@ const ProfilePage = () => {
                     avatarUrl={avatarUrl}
                     userFullName={userFullName}
                     userEmail={userEmail}
-                    planDetails={userPlanDetails}
+                    planDetails={isIndependentDeployment() ? undefined : userPlanDetails}
                   />
 
-                  {!showStorageManager && !showSharedLinksManager && !showSyncManager && (
-                    <UsageStats quotas={quotas} />
-                  )}
+                  {!isIndependentDeployment() &&
+                    !showStorageManager &&
+                    !showSharedLinksManager &&
+                    !showSyncManager && <UsageStats quotas={quotas} />}
                 </div>
 
                 {showStorageManager ? (
@@ -371,18 +374,20 @@ const ProfilePage = () => {
                   </div>
                 ) : (
                   <>
-                    <div className='flex flex-col gap-y-8 px-2 sm:px-6'>
-                      <PlansComparison
-                        availablePlans={availablePlans}
-                        userPlan={userProfilePlan}
-                        customizationPurchased={customizationPurchased}
-                        onSubscribe={
-                          appService.hasIAP && iapAvailable
-                            ? handleIAPSubscribe
-                            : handleStripeSubscribe
-                        }
-                      />
-                    </div>
+                    {!isIndependentDeployment() && (
+                      <div className='flex flex-col gap-y-8 px-2 sm:px-6'>
+                        <PlansComparison
+                          availablePlans={availablePlans}
+                          userPlan={userProfilePlan}
+                          customizationPurchased={customizationPurchased}
+                          onSubscribe={
+                            appService.hasIAP && iapAvailable
+                              ? handleIAPSubscribe
+                              : handleStripeSubscribe
+                          }
+                        />
+                      </div>
+                    )}
                     <div className='flex flex-col gap-y-8 px-6'>
                       <AccountActions
                         userPlan={userProfilePlan}
@@ -397,6 +402,7 @@ const ProfilePage = () => {
                         onManageStorage={handleManageStorage}
                         onManageSharedLinks={handleManageSharedLinks}
                         onManageSync={handleManageSync}
+                        independent={isIndependentDeployment()}
                       />
                     </div>
                   </>
