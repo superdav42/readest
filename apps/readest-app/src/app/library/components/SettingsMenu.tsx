@@ -1,4 +1,4 @@
-// Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-20 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import { PiUserCircle, PiUserCircleCheck, PiGear, PiChartBar } from 'react-icons/pi';
@@ -325,21 +325,23 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({ onPullLibrary, setIsDropdow
           }
         >
           <ul className='ms-0 flex flex-col ps-0 before:hidden'>
-            <MenuItem
-              label={_('Cloud File Transfers')}
-              Icon={MdCloudSync}
-              description={
-                hasActiveTransfers
-                  ? _('{{activeCount}} active, {{pendingCount}} pending', {
-                      activeCount: stats.active,
-                      pendingCount: stats.pending,
-                    })
-                  : stats.failed > 0
-                    ? _('{{failedCount}} failed', { failedCount: stats.failed })
-                    : ''
-              }
-              onClick={openTransferQueue}
-            />
+            {!isIndependentDeployment() && (
+              <MenuItem
+                label={_('Cloud File Transfers')}
+                Icon={MdCloudSync}
+                description={
+                  hasActiveTransfers
+                    ? _('{{activeCount}} active, {{pendingCount}} pending', {
+                        activeCount: stats.active,
+                        pendingCount: stats.pending,
+                      })
+                    : stats.failed > 0
+                      ? _('{{failedCount}} failed', { failedCount: stats.failed })
+                      : ''
+                }
+                onClick={openTransferQueue}
+              />
+            )}
             <MenuItem
               label={syncStatus.label}
               Icon={syncStatus.needsSignIn || syncStatus.failed ? MdSyncProblem : MdSync}
@@ -364,7 +366,7 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({ onPullLibrary, setIsDropdow
                       })
               }
             />
-            {readestEnabled ? (
+            {readestEnabled && !isIndependentDeployment() ? (
               <button
                 onClick={handleUserProfile}
                 className='hover:bg-base-300 w-full rounded-md'

@@ -1,3 +1,4 @@
+// Modified 2026-11-20 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useState } from 'react';
 import { useEnv } from '@/context/EnvContext';
 import { useTranslation } from '@/hooks/useTranslation';
@@ -61,6 +62,8 @@ interface AccountActionsProps {
   onManageStorage?: () => void;
   onManageSharedLinks?: () => void;
   onManageSync?: () => void;
+  /** Independent deployment: no plans, purchases, cloud storage or share links; only the account. */
+  independent?: boolean;
 }
 
 const AccountActions: React.FC<AccountActionsProps> = ({
@@ -76,6 +79,7 @@ const AccountActions: React.FC<AccountActionsProps> = ({
   onManageStorage,
   onManageSharedLinks,
   onManageSync,
+  independent = false,
 }) => {
   const _ = useTranslation();
   const { appService } = useEnv();
@@ -112,7 +116,7 @@ const AccountActions: React.FC<AccountActionsProps> = ({
         }}
       />
       <div className='flex flex-col gap-4 md:grid md:grid-cols-2 lg:grid-cols-3'>
-        {appService?.hasIAP && iapAvailable ? (
+        {independent ? null : appService?.hasIAP && iapAvailable ? (
           <button
             onClick={onRestorePurchase}
             className='bg-base-300 hover:bg-base-content/15 text-base-content border-base-content/10 eink-bordered w-full rounded-lg border px-6 py-3 font-medium transition-colors duration-150 md:w-auto'
@@ -137,7 +141,7 @@ const AccountActions: React.FC<AccountActionsProps> = ({
             {_('Manage Sync')}
           </button>
         )}
-        {onManageStorage && (
+        {!independent && onManageStorage && (
           <button
             onClick={onManageStorage}
             className='bg-base-300 hover:bg-base-content/15 text-base-content border-base-content/10 eink-bordered w-full rounded-lg border px-6 py-3 font-medium transition-colors duration-150 md:w-auto'
@@ -145,7 +149,7 @@ const AccountActions: React.FC<AccountActionsProps> = ({
             {_('Manage Storage')}
           </button>
         )}
-        {onManageSharedLinks && (
+        {!independent && onManageSharedLinks && (
           <button
             onClick={onManageSharedLinks}
             className='bg-base-300 hover:bg-base-content/15 text-base-content border-base-content/10 eink-bordered w-full rounded-lg border px-6 py-3 font-medium transition-colors duration-150 md:w-auto'
@@ -177,12 +181,14 @@ const AccountActions: React.FC<AccountActionsProps> = ({
           {_('Danger Zone')}
         </h3>
         <div className='flex flex-col gap-4 md:grid md:grid-cols-2 lg:grid-cols-3'>
-          <button
-            onClick={() => setPendingAction('books')}
-            className='eink-bordered w-full rounded-lg px-6 py-3 font-medium transition-colors duration-150 border not-eink:border-rose-300 not-eink:bg-rose-100 not-eink:text-rose-900 not-eink:hover:bg-rose-200 md:w-auto'
-          >
-            {_('Delete All Books')}
-          </button>
+          {!independent && (
+            <button
+              onClick={() => setPendingAction('books')}
+              className='eink-bordered w-full rounded-lg px-6 py-3 font-medium transition-colors duration-150 border not-eink:border-rose-300 not-eink:bg-rose-100 not-eink:text-rose-900 not-eink:hover:bg-rose-200 md:w-auto'
+            >
+              {_('Delete All Books')}
+            </button>
+          )}
           <button
             onClick={() => setPendingAction('account')}
             className='eink-bordered w-full rounded-lg px-6 py-3 font-medium transition-colors duration-150 border not-eink:border-rose-300 not-eink:bg-rose-100 not-eink:text-rose-900 not-eink:hover:bg-rose-200 md:w-auto'
