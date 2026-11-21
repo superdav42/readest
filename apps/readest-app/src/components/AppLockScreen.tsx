@@ -1,4 +1,5 @@
 'use client';
+// Modified 2026-11-20 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
@@ -8,6 +9,7 @@ import { useEnv } from '@/context/EnvContext';
 import { PIN_LENGTH, verifyPin } from '@/libs/crypto/applock';
 import { useAppLockStore } from '@/store/appLockStore';
 import { useTranslation } from '@/hooks/useTranslation';
+import { brandText } from '@/utils/brandText';
 import {
   authenticateWithBiometrics,
   getBiometricStatus,
@@ -42,7 +44,7 @@ export default function AppLockScreen() {
     biometricInFlightRef.current = true;
     setBiometricBusy(true);
     try {
-      const ok = await authenticateWithBiometrics(_('Unlock Readest'));
+      const ok = await authenticateWithBiometrics(brandText(_('Unlock Readest')));
       if (ok) unlock();
     } finally {
       biometricInFlightRef.current = false;
@@ -145,7 +147,7 @@ export default function AppLockScreen() {
             {_('Enter your PIN')}
           </h1>
           <p className='text-base-content/60 mb-8 text-sm leading-relaxed'>
-            {_('Readest is locked. Enter your 4-digit PIN to continue.')}
+            {brandText(_('Readest is locked. Enter your 4-digit PIN to continue.'))}
           </p>
 
           <PinInput

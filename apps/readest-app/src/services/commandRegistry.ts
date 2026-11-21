@@ -1,4 +1,4 @@
-// Modified 2026-11-06 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-20 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { Fzf, FzfResultItem, byLengthAsc } from 'fzf';
 import { SettingsPanelType } from '@/components/settings/SettingsDialog';
 import { RiFontSize, RiDashboardLine, RiTranslate, RiShareLine } from 'react-icons/ri';
@@ -10,6 +10,7 @@ import { TbSunMoon } from 'react-icons/tb';
 import { MdRefresh } from 'react-icons/md';
 import { IconType } from 'react-icons';
 import { stubTranslation as _ } from '@/utils/misc';
+import { brandText } from '@/utils/brandText';
 
 export type CommandCategory = 'settings' | 'actions' | 'navigation';
 
@@ -769,6 +770,8 @@ export interface CommandRegistryOptions {
   toggleTelemetry: () => void;
   isDesktop: boolean;
   customTTSAvailable?: boolean;
+  /** False in an independent deployment, which records no analytics. */
+  telemetryAvailable?: boolean;
   // TODO: add reader-specific actions when reader is open (tts, bookmark, etc.)
 }
 
@@ -850,7 +853,7 @@ export const buildCommandRegistry = (options: CommandRegistryOptions): CommandIt
     return {
       id: def.id,
       labelKey: item.labelKey,
-      localizedLabel: _(item.labelKey),
+      localizedLabel: brandText(_(item.labelKey)),
       keywords: item.keywords,
       icon: def.icon ?? getThemeIcon(),
       category: 'actions',
@@ -912,12 +915,14 @@ export const buildCommandRegistry = (options: CommandRegistryOptions): CommandIt
     }),
   );
 
-  items.push(
-    createActionItem({
-      id: 'action.telemetry',
-      action: options.toggleTelemetry,
-    }),
-  );
+  if (options.telemetryAvailable !== false) {
+    items.push(
+      createActionItem({
+        id: 'action.telemetry',
+        action: options.toggleTelemetry,
+      }),
+    );
+  }
 
   return items;
 };

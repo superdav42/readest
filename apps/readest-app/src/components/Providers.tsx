@@ -1,4 +1,5 @@
 'use client';
+// Modified 2026-11-20 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 
 import '@/utils/polyfill';
 import i18n from '@/i18n/i18n';
@@ -42,6 +43,7 @@ import FileSyncReport from '@/components/FileSyncReport';
 import AppLockDialog from '@/components/settings/AppLockDialog';
 import PassphrasePrompt from '@/components/PassphrasePrompt';
 import TelemetryConsentDialog from '@/components/TelemetryConsentDialog';
+import { isIndependentDeployment } from '@/utils/appBrand';
 import { upgradeToKeychainIfAvailable } from '@/libs/crypto/passphrase';
 import { cryptoSession } from '@/libs/crypto/session';
 import { useAppLockStore } from '@/store/appLockStore';
@@ -68,6 +70,17 @@ const finalizeTelemetryDecision = ({
   onShowPrompt: () => void;
 }) => {
   const existing = getTelemetryDecision();
+  if (isIndependentDeployment()) {
+    // An independent deployment records no analytics (the PostHog SDK is replaced by a stub, and
+    // its privacy policy says nothing is collected), so there is nothing to ask: no "Help improve
+    // Readest" prompt. Record the opt-out once, and keep the settings file in step with it.
+    if (existing !== 'opt-out') optOutTelemetry();
+    if (settings.telemetryEnabled) {
+      settings.telemetryEnabled = false;
+      void appService.saveSettings(settings);
+    }
+    return;
+  }
   if (existing === 'pending') {
     onShowPrompt();
     return;
