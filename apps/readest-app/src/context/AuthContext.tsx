@@ -1,4 +1,5 @@
 'use client';
+// Modified 2026-11-20 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 
 import {
   createContext,
@@ -17,7 +18,7 @@ interface AuthContextType {
   token: string | null;
   user: User | null;
   login: (token: string, user: User) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   refresh: () => void;
 }
 
