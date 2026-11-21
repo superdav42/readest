@@ -1,4 +1,4 @@
-// Modified 2026-11-05 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+// Modified 2026-11-20 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import React, { useEffect, useRef, useState } from 'react';
 import ModalPortal from '@/components/ModalPortal';
 import {
@@ -19,6 +19,7 @@ import { useKeyDownActions } from '@/hooks/useKeyDownActions';
 import { useTranslation } from '@/hooks/useTranslation';
 import { isMacPlatform } from '@/services/environment';
 import { isIndependentDeployment } from '@/utils/appBrand';
+import { brandText } from '@/utils/brandText';
 import {
   formatKeyForDisplay,
   getShortcutFromKeyboardEvent,
@@ -242,7 +243,9 @@ const KeyboardShortcutsSettings: React.FC<KeyboardShortcutsSettingsProps> = ({ o
       <SubPageHeader
         parentLabel={_('Behavior')}
         currentLabel={_('Keyboard Shortcuts')}
-        description={_('Choose the keyboard keys or mouse buttons that control Readest.')}
+        description={brandText(
+          _('Choose the keyboard keys or mouse buttons that control Readest.'),
+        )}
         onBack={onBack}
         rightSlot={
           <button

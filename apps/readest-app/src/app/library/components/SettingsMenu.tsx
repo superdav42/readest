@@ -28,6 +28,7 @@ import { canToggleFullScreen, tauriHandleSetAlwaysOnTop, toggleFullScreen } from
 import { setAboutDialogVisible } from '@/components/AboutWindow';
 import { getSourceCodeUrl } from '@/utils/sourceOffer';
 import { APP_NAME, isIndependentDeployment } from '@/utils/appBrand';
+import { brandText } from '@/utils/brandText';
 import { setMigrateDataDirDialogVisible } from '@/app/library/components/MigrateDataWindow';
 import { requestStoragePermission } from '@/utils/permission';
 import { saveSysSettings } from '@/helpers/settings';
@@ -456,8 +457,8 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({ onPullLibrary, setIsDropdow
               label={_('Set PIN…')}
               tooltip={
                 appService?.isMobileApp
-                  ? _('Require a PIN (and biometrics, if available) to open Readest')
-                  : _('Require a 4-digit PIN to open Readest')
+                  ? brandText(_('Require a PIN (and biometrics, if available) to open Readest'))
+                  : brandText(_('Require a 4-digit PIN to open Readest'))
               }
               onClick={() => openAppLockDialog('set')}
             />

@@ -1,3 +1,4 @@
+// Modified 2026-11-20 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import React, { useEffect, useRef, useState } from 'react';
 import { useEnv } from '@/context/EnvContext';
 import { useReaderStore } from '@/store/readerStore';
@@ -30,6 +31,7 @@ import { canShareText } from '@/utils/share';
 import { useEinkRefreshSupported } from '@/hooks/useEinkRefreshSupported';
 import { optInTelemetry, optOutTelemetry } from '@/utils/telemetry';
 import KeyboardShortcutsSettings from './KeyboardShortcutsSettings';
+import { isIndependentDeployment } from '@/utils/appBrand';
 
 const ControlPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterReset }) => {
   const _ = useTranslation();
@@ -733,14 +735,16 @@ const ControlPanel: React.FC<SettingsPanelPanelProp> = ({ bookKey, onRegisterRes
         />
       </BoxedList>
 
-      <BoxedList title={_('Privacy')} data-setting-id='settings.control.telemetry'>
-        <SettingsSwitchRow
-          label={_('Help improve Readest')}
-          description={isTelemetryEnabled ? _('Sharing anonymized statistics') : ''}
-          checked={isTelemetryEnabled}
-          onChange={toggleTelemetry}
-        />
-      </BoxedList>
+      {!isIndependentDeployment() && (
+        <BoxedList title={_('Privacy')} data-setting-id='settings.control.telemetry'>
+          <SettingsSwitchRow
+            label={_('Help improve Readest')}
+            description={isTelemetryEnabled ? _('Sharing anonymized statistics') : ''}
+            checked={isTelemetryEnabled}
+            onChange={toggleTelemetry}
+          />
+        </BoxedList>
+      )}
     </div>
   );
 };

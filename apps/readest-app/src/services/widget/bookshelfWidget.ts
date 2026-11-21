@@ -1,3 +1,4 @@
+// Modified 2026-11-20 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import type { Book, BooksGroup } from '@/types/book';
 import type { AppService } from '@/types/system';
 import type { BookshelfDefinition } from '@/types/bookshelf';
@@ -24,6 +25,7 @@ import { resolveBookshelfGroupBy } from '@/services/bookshelves/grouping';
 import { presentBookshelf } from '@/services/bookshelves/presentation';
 import { getGlobalBookshelfSort, resolveBookshelfSort } from '@/services/bookshelves/sorting';
 import { readBookshelves } from '@/services/bookshelves/state';
+import { brandText } from '@/utils/brandText';
 
 type Translate = (key: string) => string;
 
@@ -182,7 +184,7 @@ export const buildBookshelfWidgetCatalog = (
     cancel: _('Cancel'),
     save: _('Save'),
     edit: _('Edit'),
-    openApp: _('Open Readest to show this bookshelf'),
+    openApp: brandText(_('Open Readest to show this bookshelf')),
   },
 });
 
