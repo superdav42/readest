@@ -1,3 +1,4 @@
+// Modified 2026-11-20 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
 import { useRouter } from 'next/navigation';
 import { useEnv } from '@/context/EnvContext';
 import { useAuth } from '@/context/AuthContext';
@@ -13,9 +14,12 @@ export const useUserActions = () => {
   const { envConfig, appService } = useEnv();
   const { logout } = useAuth();
 
-  const handleLogout = () => {
-    logout();
-    saveSysSettings(envConfig, 'keepLogin', false);
+  const handleLogout = async () => {
+    // Finish signing out before leaving: the library page reads the token and user on mount and turns
+    // "keep me signed in" back on while it still sees them, so the next cold start would open the
+    // sign-in page after a sign-out or an account deletion.
+    await logout();
+    await saveSysSettings(envConfig, 'keepLogin', false);
     navigateToLibrary(router);
   };
 
@@ -30,7 +34,7 @@ export const useUserActions = () => {
   const handleConfirmDelete = async (errorMessage: string) => {
     try {
       await deleteUser();
-      handleLogout();
+      await handleLogout();
     } catch (error) {
       console.error('Error deleting user:', error);
       eventDispatcher.dispatch('toast', {
