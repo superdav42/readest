@@ -5,6 +5,7 @@ import { useReaderStore } from '@/store/readerStore';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useTTSControl } from '@/app/reader/hooks/useTTSControl';
 import { useTTSDownloads } from '@/app/reader/hooks/useTTSDownloads';
+import { useOfflineNarration } from '@/app/reader/hooks/useOfflineNarration';
 import { Insets } from '@/types/misc';
 import { eventDispatcher } from '@/utils/event';
 import TTSMiniPlayer from './TTSMiniPlayer';
@@ -36,6 +37,11 @@ const TTSControl: React.FC<TTSControlProps> = ({ bookKey, gridInsets }) => {
     tts.getController,
     showPlayerSheet,
     tts.ttsClientsInited,
+  );
+  const offline = useOfflineNarration(
+    bookKey,
+    tts.getController,
+    showPlayerSheet && tts.ttsClientsInited,
   );
   const activeSectionIndex = tts.ttsSectionIndex;
 
@@ -165,6 +171,7 @@ const TTSControl: React.FC<TTSControlProps> = ({ bookKey, gridInsets }) => {
           onGetLyricPage={tts.handleGetLyricPage}
           onPlayFromLyric={tts.handlePlayFromLyric}
           downloads={downloads}
+          offline={offline}
           activeSectionIndex={activeSectionIndex}
         />
       )}

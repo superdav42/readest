@@ -87,6 +87,7 @@ import {
   type LibraryVoice,
   type LibraryVoiceInfo,
 } from './libraryVoice';
+import { savedTrackSource } from './voiceOffline';
 import { SKIP_BACKWARD_SEC, SKIP_FORWARD_SEC } from '@/services/playback/playbackSource';
 import {
   stripInlineReadingAnnotations,
@@ -715,11 +716,16 @@ export class TTSController extends EventTarget {
   #attachNarrationSource(book: FoliateView['book']): void {
     const voice = this.#libraryVoice;
     if (voice && this.#libraryVoiceAvailable(book)) {
-      // Streamed from the library CDN, one track per file (CORS-enabled, range requests).
+      // Played from the copy saved on this device when there is one (voiceOffline), else
+      // streamed from the library CDN, one track per file (CORS-enabled, range requests).
       this.ttsMediaOverlayClient.attachSource({
         narrator: libraryVoiceName(voice.info),
         resolveTracks: async (href) => [
-          { url: href, startOffset: 0, duration: voice.trackSeconds(href) },
+          {
+            url: (await savedTrackSource(href)) ?? href,
+            startOffset: 0,
+            duration: voice.trackSeconds(href),
+          },
         ],
         loadBlob: async (href) => {
           const res = await fetch(href);

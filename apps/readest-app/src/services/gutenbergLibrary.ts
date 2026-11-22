@@ -14,6 +14,7 @@ import i18n from '@/i18n/i18n';
 import type { Book } from '@/types/book';
 import { getRuntimeConfig } from '@/services/runtimeConfig';
 import type { LibraryVoices } from '@/services/tts/libraryVoice';
+import { isOffline, savedVoicesListing } from '@/services/tts/voiceOffline';
 import { eventDispatcher } from '@/utils/event';
 
 export const CONTENT_LANGUAGE_EVENT = 'content-language-changed';
@@ -151,11 +152,17 @@ export const fetchWorkVoices = (
   if (fresh) voicesCache.delete(key);
   let pending = voicesCache.get(key);
   if (!pending) {
-    pending = api<LibraryVoices | null>(
-      `/work_voices?p_work=${workId}&p_lang=${encodeURIComponent(lang)}`,
+    // Without a connection (or when the catalog cannot be reached) the voices saved on this
+    // device are the listing (voiceOffline).
+    pending = (
+      isOffline()
+        ? Promise.reject(new Error('offline'))
+        : api<LibraryVoices | null>(
+            `/work_voices?p_work=${workId}&p_lang=${encodeURIComponent(lang)}`,
+          )
     ).catch(() => {
       voicesCache.delete(key);
-      return null;
+      return savedVoicesListing(workId, lang).catch(() => null);
     });
     voicesCache.set(key, pending);
   }
@@ -184,18 +191,25 @@ export interface VoiceRequest {
  * called again and again while listening; `source` carries the original recording once a
  * worker has fetched it.
  */
-export const requestVoice = (
+export const requestVoice = async (
   workId: number,
   lang: string,
   track = 0,
   ahead = 2,
 ): Promise<VoiceRequest> => {
-  if (!rpcBase()) return Promise.resolve({ status: 'unavailable' });
-  return api<VoiceRequest>('/request_voice', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ p_work: workId, p_lang: lang, p_track: track, p_ahead: ahead }),
-  });
+  if (!rpcBase()) return { status: 'unavailable' };
+  try {
+    if (isOffline()) throw new Error('offline');
+    return await api<VoiceRequest>('/request_voice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_work: workId, p_lang: lang, p_track: track, p_ahead: ahead }),
+    });
+  } catch (error) {
+    // The catalog cannot be reached: a voice saved on this device (voiceOffline) is ready.
+    if (await savedVoicesListing(workId, lang).catch(() => null)) return { status: 'ready' };
+    throw error;
+  }
 };
 
 /** Catalog metadata of one published edition file. */

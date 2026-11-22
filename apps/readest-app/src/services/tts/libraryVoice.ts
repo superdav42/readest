@@ -15,6 +15,7 @@ import {
   textRangeOf,
   type NarrationPar,
 } from './mediaOverlay/MediaOverlaySection';
+import { savedText } from './voiceOffline';
 
 export const LIBRARY_VOICE_PREFIX = 'library-voice:';
 
@@ -59,6 +60,15 @@ interface SyncMap {
   sections: { n: number; href: string; pars: SyncPar[] }[];
 }
 
+/** A sync map: the copy saved on this device (voiceOffline) when there is one, else the library's. */
+export const fetchSyncMap = async (url: string): Promise<SyncMap> => {
+  const saved = await savedText(url);
+  if (saved) return JSON.parse(saved) as SyncMap;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`voice_sync_${res.status}`);
+  return (await res.json()) as SyncMap;
+};
+
 export const libraryVoiceId = (key: string): string => `${LIBRARY_VOICE_PREFIX}${key}`;
 export const isLibraryVoiceId = (id: string | null | undefined): boolean =>
   !!id && id.startsWith(LIBRARY_VOICE_PREFIX);
@@ -99,11 +109,7 @@ export class LibraryVoice {
 
   async load(): Promise<SyncMap> {
     if (this.#sync) return this.#sync;
-    this.#loading ??= fetch(this.info.sync_url)
-      .then((res) => {
-        if (!res.ok) throw new Error(`voice_sync_${res.status}`);
-        return res.json() as Promise<SyncMap>;
-      })
+    this.#loading ??= fetchSyncMap(this.info.sync_url)
       .then((sync) => (this.#sync = sync))
       .catch((error) => {
         this.#loading = null;
@@ -138,9 +144,7 @@ export class LibraryVoice {
    */
   async update(next: LibraryVoiceInfo): Promise<boolean> {
     if (next.sync_url === this.info.sync_url) return false;
-    const res = await fetch(next.sync_url);
-    if (!res.ok) throw new Error(`voice_sync_${res.status}`);
-    const sync = (await res.json()) as SyncMap;
+    const sync = await fetchSyncMap(next.sync_url);
     this.info = next;
     this.#sync = sync;
     this.#loading = Promise.resolve(sync);

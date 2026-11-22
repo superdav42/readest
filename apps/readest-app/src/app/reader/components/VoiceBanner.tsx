@@ -25,7 +25,8 @@ import {
   type VoiceSource,
 } from '@/services/gutenbergLibrary';
 import { openCatalogBook } from '@/services/openCatalogBook';
-import { sectionIndexForHref } from '@/services/tts/libraryVoice';
+import { fetchSyncMap, sectionIndexForHref } from '@/services/tts/libraryVoice';
+import { isOffline } from '@/services/tts/voiceOffline';
 import { pollDelay, VOICE_PREPARING_EVENT } from '../hooks/useVoiceOnDemand';
 
 /** Set by Speak when it asks for a voice: { workId, lang, since }. */
@@ -213,7 +214,11 @@ const VoiceBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
         void playTrack(answer.source, 0);
       }
       const listing = await fetchWorkVoices(workId, lang, true).catch(() => null);
-      const info = listing?.voices?.find((v) => v.kind === 'human') ?? null;
+      // With no connection the listing is what is saved on this device: any saved voice will do.
+      const info =
+        listing?.voices?.find((v) => v.kind === 'human') ??
+        (isOffline() ? listing?.voices?.[0] : null) ??
+        null;
       if (cancelled || !listing || !info) return;
       // The voice exists.
       switched.current = true;
@@ -231,7 +236,7 @@ const VoiceBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
       if (!appService) return;
       setSwitching(true);
       try {
-        const sync = (await (await fetch(info.sync_url)).json()) as SyncMap;
+        const sync = await fetchSyncMap(info.sync_url);
         const place = sentenceAt(sync, atTrack, seconds);
         const opened = await openCatalogBook(appService, {
           work_id: workId,
@@ -245,7 +250,9 @@ const VoiceBanner: React.FC<{ bookKey: string }> = ({ bookKey }) => {
           JSON.stringify({
             hash: opened.hash,
             ...(place ?? {}),
-            autoplay: wasPlaying || playing,
+            // The listener asked to listen: carry on even when no original recording was
+            // playing (a voice that was ready already, or one saved on this device).
+            autoplay: wasPlaying || playing || !answer.source,
           } satisfies Landing),
         );
         if (isTauriAppPlatform()) reloadReaderWith(opened.hash);
