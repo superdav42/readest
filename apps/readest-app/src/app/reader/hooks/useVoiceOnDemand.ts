@@ -19,6 +19,7 @@ import {
   toContentLanguage,
 } from '@/services/gutenbergLibrary';
 import { LibraryVoice } from '@/services/tts/libraryVoice';
+import { isOffline } from '@/services/tts/voiceOffline';
 import type { TTSController } from '@/services/tts/TTSController';
 
 /** Tracks asked for after the one being listened to. */
@@ -93,7 +94,8 @@ export const useVoiceOnDemand = (
     const follow = async () => {
       const controller = controllerRef.current;
       const voice = controller?.activeLibraryVoice;
-      if (busy || !controller || !voice || voice.info.kind !== 'human') return;
+      // Nothing to ask the catalog without a connection (a saved voice plays on its own).
+      if (busy || isOffline() || !controller || !voice || voice.info.kind !== 'human') return;
       const track = controller.currentLibraryTrack();
       if (track === null) return;
       identity ??= identityOf(bookKey);

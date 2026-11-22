@@ -40,6 +40,10 @@ vi.mock('@/app/reader/hooks/useTTSDownloads', () => ({
   }),
 }));
 
+vi.mock('@/app/reader/hooks/useOfflineNarration', () => ({
+  useOfflineNarration: () => ({ kind: null }),
+}));
+
 vi.mock('@/store/readerProgressStore', () => ({
   useBookProgress: () => ({ index: 0 }),
 }));

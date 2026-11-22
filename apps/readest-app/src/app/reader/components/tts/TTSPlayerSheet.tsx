@@ -52,6 +52,8 @@ import SpeedRuler, { formatRate } from './SpeedRuler';
 import TTSChaptersView from './TTSChaptersView';
 import { TTS_STOP_AT_CHAPTER_END } from '@/services/tts/TTSSessionManager';
 import type { UseTTSDownloadsResult } from '@/app/reader/hooks/useTTSDownloads';
+import type { OfflineNarration } from '@/app/reader/hooks/useOfflineNarration';
+import OfflineNarrationRow from './OfflineNarrationRow';
 
 // Gutenberg AI fork: library read-along voices are recordings too.
 const isNarrationVoice = (id: string): boolean =>
@@ -121,6 +123,8 @@ type TTSPlayerSheetProps = {
   onGetLyricPage: (index: number) => Promise<PageInfo | null>;
   onPlayFromLyric: (index: number) => Promise<void>;
   downloads: UseTTSDownloadsResult;
+  /** Gutenberg AI fork: saving the narration (a library voice or a read-along edition) offline. */
+  offline?: OfflineNarration;
   activeSectionIndex: number | null;
 };
 
@@ -165,6 +169,7 @@ const TTSPlayerSheet = ({
   onGetLyricPage,
   onPlayFromLyric,
   downloads,
+  offline,
   activeSectionIndex,
 }: TTSPlayerSheetProps) => {
   const _ = useTranslation();
@@ -744,6 +749,7 @@ const TTSPlayerSheet = ({
               <MdChevronRight size={iconSize24} className='shrink-0 rtl:rotate-180' />
             </button>
           )}
+          {offline && <OfflineNarrationRow offline={offline} iconSize={iconSize24} />}
         </div>
       )}
       {view === 'chapters' && (
