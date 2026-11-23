@@ -12,6 +12,7 @@ import { DOWNLOAD_READEST_URL } from '@/services/constants';
 import { setReadingStatsDialogVisible } from '@/components/stats/ReadingStatsDialog';
 import { setBackupDialogVisible } from '@/app/library/components/BackupWindow';
 import { setCacheManagerDialogVisible } from '@/app/library/components/CacheManagerWindow';
+import { setDownloadsDialogVisible } from '@/app/library/components/DownloadsWindow';
 import { useAuth } from '@/context/AuthContext';
 import { useEnv } from '@/context/EnvContext';
 import { useThemeStore } from '@/store/themeStore';
@@ -190,6 +191,11 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({ onPullLibrary, setIsDropdow
   const handleBackupRestore = () => {
     setIsDropdownOpen?.(false);
     setBackupDialogVisible(true);
+  };
+
+  const handleDownloads = () => {
+    setIsDropdownOpen?.(false);
+    setDownloadsDialogVisible(true);
   };
 
   const handleManageCache = () => {
@@ -449,6 +455,7 @@ const SettingsMenu: React.FC<SettingsMenuProps> = ({ onPullLibrary, setIsDropdow
             onClick={handleRefreshMetadata}
             disabled={isRefreshingMetadata}
           />
+          <MenuItem label={_('Downloads')} onClick={handleDownloads} />
           {appService?.isMobileApp && (
             <MenuItem label={_('Manage Cache')} onClick={handleManageCache} />
           )}

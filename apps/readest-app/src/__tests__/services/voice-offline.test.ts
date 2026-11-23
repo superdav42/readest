@@ -2,6 +2,8 @@ import { Blob as NodeBlob } from 'node:buffer';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { LibraryVoiceInfo, LibraryVoices } from '@/services/tts/libraryVoice';
 import {
+  listSavedVoices,
+  removeAllVoicesOffline,
   removeVoiceOffline,
   savedText,
   savedTrackSource,
@@ -115,6 +117,18 @@ describe('voice offline', () => {
     expect(offline?.voices.map((v) => [v.key, v.default])).toEqual([['librivox-20840', true]]);
     await removeVoiceOffline(1727, 'en', 'librivox-20840');
     expect(await savedVoicesListing(1727, 'en')).toBeNull();
+    expect(entries.size).toBe(0);
+  });
+
+  it('lists every saved voice with its size, and removes them all', async () => {
+    expect(listSavedVoices()).toEqual([]);
+    const voice = info('a', [true]);
+    await saveVoiceOffline(listing(voice), voice);
+    const saved = listSavedVoices();
+    expect(saved.map((s) => [s.workId, s.lang, s.key])).toEqual([[1727, 'en', 'librivox-20840']]);
+    expect(saved[0]!.bytes).toBeGreaterThan(0);
+    await removeAllVoicesOffline();
+    expect(listSavedVoices()).toEqual([]);
     expect(entries.size).toBe(0);
   });
 });

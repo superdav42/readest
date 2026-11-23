@@ -16,23 +16,15 @@ const OfflineNarrationRow: React.FC<{ offline: OfflineNarration; iconSize: numbe
 }) => {
   const _ = useTranslation();
   if (!offline.kind) return null;
-  const { state, busy, failed, saved, total, built } = offline;
-  const percent = Math.round(offline.progress * 100);
+  const { state, busy, failed } = offline;
   const saveable = !busy && !offline.offline && state !== 'saved';
 
   let detail: string;
-  if (busy) detail = percent > 0 ? _('Saving… {{percent}}%', { percent }) : _('Saving…');
+  if (busy) detail = _('Saving…');
   else if (failed) detail = _('Could not save. Tap to try again.');
   else if (state === 'saved') detail = _('Saved on this device');
-  else if (state === 'partial') {
-    detail =
-      built < total
-        ? _('{{saved}} of {{total}} parts saved. The rest is still being prepared.', {
-            saved,
-            total,
-          })
-        : _('{{saved}} of {{total}} parts saved', { saved, total });
-  } else if (offline.offline) detail = _('Not saved on this device. Connect to save it.');
+  else if (state === 'partial') detail = _('Preparing…');
+  else if (offline.offline) detail = _('Not saved on this device. Connect to save it.');
   else
     detail =
       offline.kind === 'voice'
@@ -61,6 +53,17 @@ const OfflineNarrationRow: React.FC<{ offline: OfflineNarration; iconSize: numbe
           <span className='text-base-content/60 line-clamp-2 text-start text-xs'>{detail}</span>
         </div>
       </button>
+      {offline.keep && (
+        <label className='flex shrink-0 cursor-pointer items-center gap-1.5 text-xs'>
+          <input
+            type='checkbox'
+            className='checkbox checkbox-sm'
+            checked={offline.keep.kept}
+            onChange={offline.keep.toggle}
+          />
+          {_('Keep')}
+        </label>
+      )}
       {offline.remove && !busy && (
         <button
           type='button'

@@ -26,6 +26,7 @@ import {
   type VoiceOfflineState,
 } from '@/services/tts/voiceOffline';
 import type { Book } from '@/types/book';
+import { isVoiceKept, setVoiceKept } from '@/services/listen/finished';
 import { identityOf } from './useVoiceOnDemand';
 
 export type OfflineKind = 'voice' | 'edition';
@@ -39,10 +40,6 @@ export interface DownloadPrompt {
 export interface OfflineNarration {
   kind: OfflineKind | null;
   state: VoiceOfflineState;
-  saved: number;
-  total: number;
-  /** Tracks the catalog has built so far (a voice made as people listen is not complete). */
-  built: number;
   busy: boolean;
   /** 0..1 while saving. */
   progress: number;
@@ -55,13 +52,15 @@ export interface OfflineNarration {
   cancelSave: () => void;
   /** Only a saved library voice can be removed here; books are removed from the library. */
   remove?: () => void;
+  /** Keep this narration when finished (a library voice only). */
+  keep?: { kept: boolean; toggle: () => void };
 }
 
 type Target =
   | { kind: 'voice'; workId: number; lang: string; info: LibraryVoiceInfo; listing: LibraryVoices }
   | { kind: 'edition'; book: Book };
 
-const IDLE = { state: 'none' as VoiceOfflineState, saved: 0, total: 0, built: 0 };
+const IDLE = { state: 'none' as VoiceOfflineState };
 
 export const useOfflineNarration = (
   bookKey: string,
@@ -78,6 +77,7 @@ export const useOfflineNarration = (
   const [failed, setFailed] = useState(false);
   const [offline, setOffline] = useState(isOffline());
   const [prompt, setPrompt] = useState<DownloadPrompt | null>(null);
+  const [kept, setKept] = useState(false);
   const { listening } = useListeningSettings();
 
   useEffect(() => {
@@ -101,10 +101,11 @@ export const useOfflineNarration = (
     const found = await resolveTarget();
     target.current = found;
     setKind(found?.kind ?? null);
+    setKept(found?.kind === 'voice' && isVoiceKept(found.workId, found.lang));
     if (!found) return;
     if (found.kind === 'voice') {
       const next = await voiceOfflineStatus(found.workId, found.lang, found.info);
-      setStatus({ state: next.state, saved: next.saved, total: next.total, built: next.built });
+      setStatus({ state: next.state });
     } else {
       setStatus({ ...IDLE, state: (await localCopy(found.book)) ? 'saved' : 'none' });
     }
@@ -183,6 +184,14 @@ export const useOfflineNarration = (
 
   const cancelSave = useCallback(() => setPrompt(null), []);
 
+  const toggleKeep = useCallback(() => {
+    const found = target.current;
+    if (found?.kind !== 'voice') return;
+    const next = !isVoiceKept(found.workId, found.lang);
+    setVoiceKept(found.workId, found.lang, next);
+    setKept(next);
+  }, []);
+
   const remove = useCallback(() => {
     const found = target.current;
     if (found?.kind !== 'voice') return;
@@ -201,5 +210,6 @@ export const useOfflineNarration = (
     confirmSave,
     cancelSave,
     remove: kind === 'voice' && status.state !== 'none' ? remove : undefined,
+    keep: kind === 'voice' ? { kept, toggle: toggleKeep } : undefined,
   };
 };
