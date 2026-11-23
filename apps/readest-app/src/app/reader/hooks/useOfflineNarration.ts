@@ -9,6 +9,9 @@
 //            is saved when the book file is on this device; a streamed copy is downloaded
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useEnv } from '@/context/EnvContext';
+import { useListeningSettings } from '@/hooks/useListeningSettings';
+import { connectionKind, type ConnectionKind } from '@/services/listen/connection';
+import { estimateVoiceBytes, shouldAskBeforeDownload } from '@/services/listen/downloadGuard';
 import { useBookDataStore } from '@/store/bookDataStore';
 import { fetchWorkVoices } from '@/services/gutenbergLibrary';
 import { hasMediaOverlays } from '@/services/tts/mediaOverlay/narratedSections';
@@ -27,6 +30,12 @@ import { identityOf } from './useVoiceOnDemand';
 
 export type OfflineKind = 'voice' | 'edition';
 
+/** The guard is asking: the size (0 when unknown) and the connection the download would use. */
+export interface DownloadPrompt {
+  bytes: number;
+  connection: ConnectionKind;
+}
+
 export interface OfflineNarration {
   kind: OfflineKind | null;
   state: VoiceOfflineState;
@@ -39,7 +48,11 @@ export interface OfflineNarration {
   progress: number;
   failed: boolean;
   offline: boolean;
+  /** Starts the download, or sets `prompt` when the guard asks first. */
   save: () => void;
+  prompt: DownloadPrompt | null;
+  confirmSave: () => void;
+  cancelSave: () => void;
   /** Only a saved library voice can be removed here; books are removed from the library. */
   remove?: () => void;
 }
@@ -64,6 +77,8 @@ export const useOfflineNarration = (
   const [progress, setProgress] = useState(0);
   const [failed, setFailed] = useState(false);
   const [offline, setOffline] = useState(isOffline());
+  const [prompt, setPrompt] = useState<DownloadPrompt | null>(null);
+  const { listening } = useListeningSettings();
 
   useEffect(() => {
     const update = () => setOffline(isOffline());
@@ -123,7 +138,7 @@ export const useOfflineNarration = (
   const saving = useRef<AbortController | null>(null);
   useEffect(() => () => saving.current?.abort(), []);
 
-  const save = useCallback(() => {
+  const start = useCallback(() => {
     const found = target.current;
     if (!found || !appService || busy) return;
     const controller = new AbortController();
@@ -151,6 +166,23 @@ export const useOfflineNarration = (
       });
   }, [appService, busy, refresh]);
 
+  // An explicit download asks first on cellular/unknown or above the size (unless turned off).
+  const save = useCallback(() => {
+    const found = target.current;
+    if (!found || busy) return;
+    const bytes = found.kind === 'voice' ? estimateVoiceBytes(found.info) : 0;
+    const connection = connectionKind();
+    if (shouldAskBeforeDownload(listening, connection, bytes)) setPrompt({ bytes, connection });
+    else start();
+  }, [busy, listening, start]);
+
+  const confirmSave = useCallback(() => {
+    setPrompt(null);
+    start();
+  }, [start]);
+
+  const cancelSave = useCallback(() => setPrompt(null), []);
+
   const remove = useCallback(() => {
     const found = target.current;
     if (found?.kind !== 'voice') return;
@@ -165,6 +197,9 @@ export const useOfflineNarration = (
     failed,
     offline,
     save,
+    prompt,
+    confirmSave,
+    cancelSave,
     remove: kind === 'voice' && status.state !== 'none' ? remove : undefined,
   };
 };

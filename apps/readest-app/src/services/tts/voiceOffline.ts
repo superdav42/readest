@@ -249,8 +249,15 @@ const requestPersistence = async (): Promise<void> => {
   }
 };
 
+/** Tracks from the one being heard to the end, then the earlier ones. */
+export const downloadOrder = <T>(tracks: T[], startTrack: number): T[] => {
+  const start = Math.min(Math.max(Math.trunc(startTrack) || 0, 0), tracks.length);
+  return [...tracks.slice(start), ...tracks.slice(0, start)];
+};
+
 /**
- * Store a voice: its sync map and every track the catalog has built. Tracks already stored are
+ * Store a voice: its sync map and every track the catalog has built, starting at startTrack and
+ * wrapping to the earlier ones. Tracks already stored are
  * kept, so saving again after more tracks were built (or after an update) adds what is new, and
  * files of an older build are removed. Progress is reported in audio seconds, 0..1.
  */
@@ -259,12 +266,13 @@ export const saveVoiceOffline = async (
   info: LibraryVoiceInfo,
   onProgress: (fraction: number, savedTracks: number) => void = () => undefined,
   signal?: AbortSignal,
+  startTrack = 0,
 ): Promise<VoiceOfflineStatus> => {
   if (!voiceOfflineSupported()) throw new Error('voice_offline_unsupported');
   await requestPersistence();
   const id = manifestKey(listing.work_id, listing.lang, info.key);
   const previous = readManifest()[id];
-  const built = builtTracks(info);
+  const built = downloadOrder(info.tracks, startTrack).filter((track) => track.ready !== false);
   const wanted = new Set([info.sync_url, ...built.map((track) => track.href)]);
   const before = new Set(previous?.files ?? []);
   const kept = new Set<string>();
@@ -321,6 +329,61 @@ export const saveVoiceOffline = async (
     if (!wanted.has(url)) await files.remove(url).catch(() => undefined);
   }
   return await voiceOfflineStatus(listing.work_id, listing.lang, info);
+};
+
+// ---- background download (Play on an unmetered connection) -------------------------------
+
+interface ActiveDownload {
+  listing: LibraryVoices;
+  info: LibraryVoiceInfo;
+  /** A newer build arrived while this one was running. */
+  dirty: boolean;
+  promise: Promise<void>;
+}
+
+const activeDownloads = new Map<string, ActiveDownload>();
+
+/**
+ * Save a voice beside playback, from startTrack on. One download runs per voice: a second call
+ * while it runs returns the running one. It is not tied to the reader, so closing the book does
+ * not stop it.
+ */
+export const startVoiceDownload = (
+  listing: LibraryVoices,
+  info: LibraryVoiceInfo,
+  startTrack = 0,
+): Promise<void> => {
+  const id = manifestKey(listing.work_id, listing.lang, info.key);
+  const running = activeDownloads.get(id);
+  if (running) return running.promise;
+  const entry: ActiveDownload = { listing, info, dirty: false, promise: Promise.resolve() };
+  activeDownloads.set(id, entry);
+  entry.promise = (async () => {
+    try {
+      do {
+        entry.dirty = false;
+        await saveVoiceOffline(entry.listing, entry.info, undefined, undefined, startTrack);
+      } while (entry.dirty);
+    } catch (error) {
+      console.warn('Voice offline: the background download stopped', error);
+    } finally {
+      activeDownloads.delete(id);
+    }
+  })();
+  return entry.promise;
+};
+
+/** A voice that grew: add its new tracks to a download that is running. */
+export const topUpVoiceDownload = (
+  workId: number,
+  lang: string,
+  info: LibraryVoiceInfo,
+): boolean => {
+  const entry = activeDownloads.get(manifestKey(workId, lang, info.key));
+  if (!entry) return false;
+  entry.info = info;
+  entry.dirty = true;
+  return true;
 };
 
 /** Delete a saved voice from the device. */

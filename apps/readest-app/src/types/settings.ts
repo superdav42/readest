@@ -481,6 +481,15 @@ export interface SystemSettings {
   alwaysOnTop: boolean;
   openBookInNewWindow: boolean;
   autoCheckUpdates: boolean;
+  /** Listening to library voices. Optional: an absent value reads as its default. */
+  listening?: {
+    /** Ask before an explicit download on cellular/unknown or above guardMegabytes. Default true. */
+    guardDownloads?: boolean;
+    /** Default 100. */
+    guardMegabytes?: number;
+    /** Default true (used by the Downloads page). */
+    deleteWhenFinished?: boolean;
+  };
   updateChannel: 'stable' | 'nightly';
   screenWakeLock: boolean;
   autohideCursor: boolean;
