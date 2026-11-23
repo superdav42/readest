@@ -6,6 +6,7 @@
 import clsx from 'clsx';
 import React from 'react';
 import { MdCheckCircleOutline, MdDeleteOutline, MdOutlineFileDownload } from 'react-icons/md';
+import Dialog from '@/components/Dialog';
 import { useTranslation } from '@/hooks/useTranslation';
 import type { OfflineNarration } from '../../hooks/useOfflineNarration';
 
@@ -71,6 +72,38 @@ const OfflineNarrationRow: React.FC<{ offline: OfflineNarration; iconSize: numbe
           <MdDeleteOutline size={iconSize} />
         </button>
       )}
+      <Dialog
+        isOpen={!!offline.prompt}
+        onClose={offline.cancelSave}
+        title={_('Download for offline listening?')}
+        snapHeight={0.4}
+        boxClassName='sm:min-w-[420px]! sm:h-auto'
+      >
+        {offline.prompt && (
+          <div className='flex flex-col gap-4 p-4'>
+            <p className='text-sm'>
+              {offline.prompt.bytes > 0
+                ? _('This download is about {{megabytes}} MB.', {
+                    megabytes: Math.max(1, Math.round(offline.prompt.bytes / (1024 * 1024))),
+                  })
+                : _('This download may be large.')}{' '}
+              {offline.prompt.connection === 'unmetered'
+                ? _('You are on Wi-Fi.')
+                : offline.prompt.connection === 'cellular'
+                  ? _('You are on mobile data.')
+                  : _('The connection type is unknown; it may be mobile data.')}
+            </p>
+            <div className='flex justify-end gap-2'>
+              <button type='button' className='btn eink-bordered' onClick={offline.cancelSave}>
+                {_('Cancel')}
+              </button>
+              <button type='button' className='btn btn-contrast' onClick={offline.confirmSave}>
+                {_('Download')}
+              </button>
+            </div>
+          </div>
+        )}
+      </Dialog>
     </div>
   );
 };

@@ -5,9 +5,11 @@
 // text, choose that voice and start playing when the reader opens.
 import type { AppService } from '@/types/system';
 import type { useAppRouter } from '@/hooks/useAppRouter';
-import { fetchWork, type ListenOptions } from '@/services/gutenbergLibrary';
+import { fetchWork, fetchWorkVoices, type ListenOptions } from '@/services/gutenbergLibrary';
 import { openCatalogBook, preferTextEdition } from '@/services/openCatalogBook';
 import { setChosenLibraryVoice } from '@/services/tts/libraryVoice';
+import { startVoiceDownload, voiceOfflineSupported } from '@/services/tts/voiceOffline';
+import { connectionKind } from './connection';
 import { navigateToReader } from '@/utils/nav';
 import { setPendingTTSAutoplay } from '@/utils/ttsAutoplay';
 
@@ -48,4 +50,20 @@ export const playListenOption = async (ctx: PlayContext, option: PlayOption): Pr
   if (text) setChosenLibraryVoice(workId, lang, option.key);
   setPendingTTSAutoplay(book.hash);
   navigateToReader(router, [book.hash]);
+  // Streaming starts at once; on an unmetered connection the voice is also saved while it plays.
+  // Cellular or unknown: stream only. Never awaited, so playback is never blocked by it.
+  if (text && connectionKind() === 'unmetered') {
+    void downloadWhilePlaying(workId, lang, option.key);
+  }
+};
+
+const downloadWhilePlaying = async (workId: number, lang: string, key: string): Promise<void> => {
+  try {
+    if (!voiceOfflineSupported()) return;
+    const listing = await fetchWorkVoices(workId, lang);
+    const info = listing?.voices.find((voice) => voice.key === key);
+    if (listing && info) await startVoiceDownload(listing, info, 0);
+  } catch (error) {
+    console.warn('Play: could not save the voice while playing', error);
+  }
 };

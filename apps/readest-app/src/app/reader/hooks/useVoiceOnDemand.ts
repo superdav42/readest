@@ -19,7 +19,7 @@ import {
   toContentLanguage,
 } from '@/services/gutenbergLibrary';
 import { LibraryVoice } from '@/services/tts/libraryVoice';
-import { isOffline } from '@/services/tts/voiceOffline';
+import { isOffline, topUpVoiceDownload } from '@/services/tts/voiceOffline';
 import type { TTSController } from '@/services/tts/TTSController';
 
 /** Tracks asked for after the one being listened to. */
@@ -110,7 +110,9 @@ export const useVoiceOnDemand = (
         if (building || wasBuilding) {
           const listing = await fetchWorkVoices(identity.workId, identity.lang, true);
           const info = listing?.voices.find((v) => v.key === voice.info.key);
-          if (info) await controller.refreshLibraryVoice(info);
+          if (info && (await controller.refreshLibraryVoice(info))) {
+            topUpVoiceDownload(identity.workId, identity.lang, info);
+          }
         }
       } catch (error) {
         console.warn('Voice on demand: could not follow the listener', error);

@@ -210,6 +210,7 @@ export const DEFAULT_SYSTEM_SETTINGS: Partial<SystemSettings> = {
   openBookInNewWindow: true,
   alwaysShowStatusBar: false,
   autoCheckUpdates: true,
+  listening: { guardDownloads: true, guardMegabytes: 100, deleteWhenFinished: true },
   updateChannel: 'stable',
   screenWakeLock: false,
   autohideCursor: true,
