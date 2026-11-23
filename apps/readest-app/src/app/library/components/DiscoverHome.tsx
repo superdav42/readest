@@ -411,18 +411,7 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
   const [home, setHome] = useState<DiscoverHomeData | null>(() => getCachedDiscoverHome(lang));
   const [failed, setFailed] = useState(false);
   const [related, setRelated] = useState<DiscoverCard[]>([]);
-  const [opening, setOpening] = useState<{
-    title: string;
-    cover: string;
-    progress: number;
-    /** Set while waiting for a requested translation's preview: what the wait is on. */
-    waiting?: string;
-    /** The untranslated edition, offered while waiting. */
-    original?: { work_id: number; lang: string; url: string; size?: number | null };
-  } | null>(null);
-  // Which open the overlay belongs to: cancelling (or a stall) invalidates it, so a late
-  // download or import never navigates away from where the reader went back to.
-  const openAttempt = useRef(0);
+  const { opening, setOpening, openAttempt, openEdition, cancelOpening } = useOpenEdition();
   const [sheet, setSheet] = useState<{ card: DiscoverCard } | null>(null);
   const [requests, setRequests] = useState<RequestedBook[]>(getRequestedBooks);
   const [requestStatus, setRequestStatus] = useState<Record<string, LibraryWork>>({});
@@ -531,59 +520,6 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
     };
   }, [lastReadWorkId, lang]);
 
-  /** Download (or reuse) an edition and open it. */
-  const openEdition = useCallback(
-    async (
-      edition: {
-        work_id: number;
-        lang: string;
-        url: string;
-        size?: number | null;
-        hash?: string;
-        kind?: DiscoverCard['kind'];
-      },
-      display: { title: string; cover: string },
-      options: { preview?: boolean; attempt?: number; keepNarration?: boolean } = {},
-    ) => {
-      if (!appService || (options.attempt === undefined && opening)) return;
-      const attempt = options.attempt ?? ++openAttempt.current;
-      const current = () => openAttempt.current === attempt;
-      setOpening({ ...display, progress: 0 });
-      try {
-        // A read-along opens as its text-only edition (unless the listener asked to listen
-        // or already has the narration here); the narration is offered in the reader.
-        const target = options.keepNarration
-          ? edition
-          : await preferTextEdition(appService, edition);
-        if (!current()) return;
-        const book = await openCatalogBook(appService, target, (progress) => {
-          if (current()) setOpening((state) => (state ? { ...state, progress } : state));
-        });
-        // Cancelled meanwhile: the book stays in the library (My books), nothing opens.
-        if (!current()) return;
-        // A preview has only its opening translated; the reader shows where the rest stands.
-        if (options.preview) setPreviewBook(book.hash, edition.work_id, edition.lang);
-        navigateToReader(router, [book.hash]);
-      } catch (error) {
-        console.warn('Discover: could not open', edition.url, error);
-        if (!current()) return;
-        eventDispatcher.dispatch('toast', {
-          message: _('Could not open this book. Check your connection and try again.'),
-          type: 'error',
-        });
-      } finally {
-        if (current()) setOpening(null);
-      }
-    },
-    [appService, opening, router, _],
-  );
-
-  /** Dismiss the opening overlay; a download or import still running finishes in the background. */
-  const cancelOpening = useCallback(() => {
-    openAttempt.current++;
-    setOpening(null);
-  }, []);
-
   /**
    * Request the translation of a book that has none in the reader's language and open it as soon
    * as its preview (the book with its opening translated by our fast process) or the complete
@@ -661,33 +597,18 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
     if (original && display) void openEdition(original, display);
   }, [opening, cancelOpening, openEdition]);
 
-  // A download or import that makes no progress for this long is given up on, so the full-screen
-  // overlay can never trap the reader (it used to stay on screen until the app was restarted).
-  // Waiting for a translation to be prepared can take longer and has its own limit.
-  const isDownloading = opening !== null && !opening.waiting;
-  const openingProgress = opening?.progress;
-  const openingPercent = Math.round((openingProgress ?? 0) * 100);
-  useEffect(() => {
-    if (!isDownloading) return;
-    const timer = setTimeout(() => {
-      cancelOpening();
-      eventDispatcher.dispatch('toast', {
-        message: _('Could not open this book. Check your connection and try again.'),
-        type: 'error',
-      });
-    }, OPEN_STALL_MS);
-    return () => clearTimeout(timer);
-  }, [isDownloading, openingProgress, cancelOpening, _]);
+  const openingPercent = Math.round((opening?.progress ?? 0) * 100);
 
   const openCard = useCallback(
     async (card: DiscoverCard) => {
       if (card.lang === lang) {
-        await openEdition(card, card);
+        // The book page lists every way to listen, plus Read now.
+        router.push(`/book?work=${card.work_id}&lang=${encodeURIComponent(card.lang)}`);
         return;
       }
       setSheet({ card });
     },
-    [lang, openEdition],
+    [lang, router],
   );
 
   const translateFromSheet = useCallback(async () => {

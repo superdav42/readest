@@ -169,6 +169,114 @@ export const fetchWorkVoices = (
   return pending;
 };
 
+/** One way to listen to a work: a LibriVox recording (migration 0420, `work_listen_options`). */
+export interface ListenRecording {
+  /** 'librivox-13477' (the library voice key once built). */
+  key: string;
+  librivox_id: number;
+  title: string;
+  /** Reader name, 'LibriVox volunteers', 'Dramatic reading'; null until readers are looked up. */
+  label: string | null;
+  readers: string[];
+  solo: boolean | null;
+  dramatic: boolean;
+  year: number | null;
+  /** Length of the whole recording. */
+  seconds: number;
+  sections: number;
+  /** The LibriVox page. */
+  url: string | null;
+  /** Read from this very ebook (else same title and author, another text). */
+  own: boolean;
+  /** ready: built, playable with text; unchecked: not built yet. */
+  status: 'ready' | 'unchecked';
+  /** 15 s of the cleaned audio; null until made. */
+  sample_url: string | null;
+}
+
+export interface ListenOptions {
+  work_id: number;
+  lang: string;
+  title: string;
+  /** The voices text edition (null until a voice is built). */
+  text: { hash: string; url: string } | null;
+  /** Built ones first. */
+  recordings: ListenRecording[];
+  ai: {
+    available: boolean;
+    status: 'ready' | 'preparing' | 'none';
+    key: string;
+    label: string;
+    sample_url: string | null;
+  };
+}
+
+/** The voices saved on this device, as listen options (catalog unreachable). */
+const savedListenOptions = (
+  workId: number,
+  lang: string,
+  saved: LibraryVoices,
+): ListenOptions => {
+  const human = saved.voices.filter((voice) => voice.kind !== 'ai');
+  const ai = saved.voices.find((voice) => voice.kind === 'ai');
+  return {
+    work_id: workId,
+    lang,
+    title: '',
+    text: { hash: saved.text.hash, url: saved.text.url },
+    recordings: human.map((voice) => ({
+      key: voice.key,
+      librivox_id: Number(voice.key.match(/(\d+)$/)?.[1] ?? 0),
+      title: voice.label,
+      label: voice.label,
+      readers: voice.narrators,
+      solo: voice.info?.solo ?? null,
+      dramatic: voice.kind === 'dramatized' || !!voice.info?.dramatic,
+      year: null,
+      seconds: voice.duration_seconds ?? voice.tracks.reduce((sum, t) => sum + t.seconds, 0),
+      sections: voice.tracks.length,
+      url: voice.info?.url ?? null,
+      own: true,
+      status: 'ready',
+      sample_url: null,
+    })),
+    ai: {
+      available: !!ai,
+      status: ai ? 'ready' : 'none',
+      key: ai?.key ?? '',
+      label: ai?.label ?? '',
+      sample_url: null,
+    },
+  };
+};
+
+/**
+ * Every way to listen to a work in a language: its LibriVox recordings and the AI narration.
+ * When the catalog cannot be reached, what is saved on this device is the listing (or an
+ * empty one: Read now is always offered).
+ */
+export const fetchListenOptions = async (workId: number, lang: string): Promise<ListenOptions> => {
+  try {
+    if (!rpcBase()) throw new Error('library_not_rpc');
+    if (isOffline()) throw new Error('offline');
+    const options = await api<ListenOptions>(
+      `/work_listen_options?p_work=${workId}&p_lang=${encodeURIComponent(lang)}`,
+    );
+    return { ...options, recordings: options.recordings ?? [] };
+  } catch {
+    const saved = await savedVoicesListing(workId, lang).catch(() => null);
+    if (saved) return savedListenOptions(workId, lang, saved);
+    return {
+      work_id: workId,
+      lang,
+      title: '',
+      text: null,
+      recordings: [],
+      ai: { available: false, status: 'none', key: '', label: '', sample_url: null },
+    };
+  }
+};
+
 /** The original LibriVox recording of a work, to play while its read-along voice is made. */
 export interface VoiceSource {
   key: string;
