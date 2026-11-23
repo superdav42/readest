@@ -87,6 +87,7 @@ import {
   type LibraryVoice,
   type LibraryVoiceInfo,
 } from './libraryVoice';
+import { playedShare } from '@/services/listen/finished';
 import { savedTrackSource } from './voiceOffline';
 import { SKIP_BACKWARD_SEC, SKIP_FORWARD_SEC } from '@/services/playback/playbackSource';
 import {
@@ -662,6 +663,19 @@ export class TTSController extends EventTarget {
     const position = voice && this.narrationActive ? this.#narrationPosition() : null;
     const track = position ? voice!.trackIndexOf(position.audioHref) : -1;
     return track >= 0 ? track : null;
+  }
+
+  /** Share (0..1) of the library voice's recording played so far, or null when none plays. */
+  libraryPlayedShare(): number | null {
+    const voice = this.#libraryVoice;
+    const position = voice && this.narrationActive ? this.#narrationPosition() : null;
+    const track = position ? voice!.trackIndexOf(position.audioHref) : -1;
+    if (!voice || !position || track < 0) return null;
+    return playedShare(
+      voice.info.tracks.map((t) => t.seconds),
+      track,
+      position.seconds,
+    );
   }
 
   /** Take a newer published state of a library voice (more tracks built, or cleaned again). */

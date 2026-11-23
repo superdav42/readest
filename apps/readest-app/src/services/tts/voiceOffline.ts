@@ -404,6 +404,17 @@ export const removeVoiceOffline = async (
   writeManifest(manifest);
 };
 
+/** Every voice saved on this device, newest first (the Downloads page). */
+export const listSavedVoices = (): SavedVoice[] =>
+  Object.values(readManifest()).sort((a, b) => b.savedAt - a.savedAt);
+
+/** Delete every saved voice from the device. */
+export const removeAllVoicesOffline = async (): Promise<void> => {
+  for (const entry of listSavedVoices()) {
+    await removeVoiceOffline(entry.workId, entry.lang, entry.key);
+  }
+};
+
 /**
  * The voices saved for a work and language, as a listing: what the reader shows with no
  * connection (or when the catalog cannot be reached). The saved voice that was the default stays

@@ -11,6 +11,7 @@ import { isTauriAppPlatform } from '@/services/environment';
 import {
   fetchTextEdition,
   findLibraryEdition,
+  getSharedBookUrl,
   type DiscoverCard,
 } from '@/services/gutenbergLibrary';
 import { useLibraryStore } from '@/store/libraryStore';
@@ -140,6 +141,8 @@ export const openCatalogBook = async (
   // Catalog metadata can seed a shelf row before its EPUB exists on this device. Reuse only
   // a readable local or streaming source; importing below fills that row with the real file.
   if (existing && (await appService.isBookAvailable(existing))) return existing;
+  // A deleted copy comes back at its own content hash, so its notes and place still belong to it.
+  const sourceUrl = (existing && getSharedBookUrl(existing)) || edition.url;
   const { library, setLibrary } = useLibraryStore.getState();
   let book: Book | null = null;
   let streaming = false;
@@ -155,7 +158,7 @@ export const openCatalogBook = async (
       appService,
       dst: path,
       cfp: '',
-      url: edition.url,
+      url: sourceUrl,
       onProgress: ({ progress, total }) => total > 0 && onProgress(progress / total),
     });
     book = await appService.importBook(path, library);
@@ -164,12 +167,12 @@ export const openCatalogBook = async (
     // Web, large books: read while it downloads. Importing from the URL without copying
     // lets the reader fetch only the parts it shows (range requests); the whole book
     // then downloads in the background.
-    book = await appService.importBook(edition.url, library, { saveBook: false }).catch(() => null);
+    book = await appService.importBook(sourceUrl, library, { saveBook: false }).catch(() => null);
     streaming = !!book;
   }
   if (!book) {
     // Small books on the web (most are under 1 MB), or a host without range support.
-    book = await appService.importBook(await downloadEpub(edition.url, onProgress), library);
+    book = await appService.importBook(await downloadEpub(sourceUrl, onProgress), library);
   }
   if (!book) throw new Error('import_failed');
   setLibrary([...library]);

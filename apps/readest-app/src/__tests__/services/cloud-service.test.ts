@@ -105,6 +105,16 @@ describe('cloudService', () => {
         expect(book.downloadedAt).toBeNull();
       });
 
+      test('keeps config.json (notes, bookmarks, position) and the book directory', async () => {
+        const book = createMockBook();
+        await deleteBook(mockFs, book, 'local');
+
+        expect(mockFs.removeDir).not.toHaveBeenCalled();
+        for (const [path] of vi.mocked(mockFs.removeFile).mock.calls) {
+          expect(path).not.toContain('config.json');
+        }
+      });
+
       test('does not set deletedAt for local-only delete', async () => {
         const book = createMockBook({ deletedAt: null });
         await deleteBook(mockFs, book, 'local');

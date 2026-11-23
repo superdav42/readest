@@ -35,6 +35,7 @@ import {
   toContentLanguage,
 } from '@/services/gutenbergLibrary';
 import { prepareLibraryVoices, setChosenLibraryVoice } from '@/services/tts/libraryVoice';
+import { useFinishedCleanup } from './useFinishedCleanup';
 import { useVoiceOnDemand, VOICE_WAIT_EVENT } from './useVoiceOnDemand';
 import { VOICE_REQUESTED_EVENT, VOICE_WANTED_KEY } from '../components/VoiceBanner';
 import { hasMediaOverlays } from '@/services/tts/mediaOverlay';
@@ -128,6 +129,8 @@ export const useTTSControl = ({ bookKey, onRequestHidePanel }: UseTTSControlProp
   const playbackStateRef = useRef<'playing' | 'paused' | 'stopped'>('stopped');
   const [ttsController, setTtsController] = useState<TTSController | null>(null);
   const [ttsClientsInited, setTtsClientsInitialized] = useState(false);
+  // Gutenberg AI fork: delete a finished audiobook (not its notes) when the reader leaves it.
+  useFinishedCleanup(bookKey, ttsController);
   // Whether the transport steps by recording time and audiobook chapter
   // (paired audiobook) rather than by sentence and paragraph. State, not a
   // per-render read of the controller: an adopted session flips
