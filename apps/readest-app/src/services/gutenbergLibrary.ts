@@ -212,11 +212,7 @@ export interface ListenOptions {
 }
 
 /** The voices saved on this device, as listen options (catalog unreachable). */
-const savedListenOptions = (
-  workId: number,
-  lang: string,
-  saved: LibraryVoices,
-): ListenOptions => {
+const savedListenOptions = (workId: number, lang: string, saved: LibraryVoices): ListenOptions => {
   const human = saved.voices.filter((voice) => voice.kind !== 'ai');
   const ai = saved.voices.find((voice) => voice.kind === 'ai');
   return {
