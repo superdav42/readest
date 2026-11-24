@@ -35,10 +35,11 @@ export const toggleSample = async (url: string): Promise<void> => {
   }
   audio ??= new Audio();
   audio.pause();
-  audio.onended = () => {
+  const end = () => {
     if (playingUrl === url) stopSample();
   };
-  audio.onerror = audio.onended;
+  audio.onended = end;
+  audio.onerror = end;
   audio.src = url;
   playingUrl = url;
   notify();

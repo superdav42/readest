@@ -32,7 +32,7 @@ import { useAppRouter } from '@/hooks/useAppRouter';
 import { useTranslation } from '@/hooks/useTranslation';
 import { eventDispatcher } from '@/utils/event';
 import { navigateToReader } from '@/utils/nav';
-import { openCatalogBook, preferTextEdition } from '@/services/openCatalogBook';
+import { useOpenEdition } from '@/app/library/hooks/useOpenEdition';
 import { formatEta } from '@/app/reader/components/TranslationPreviewBanner';
 import { NARRATION_WANTED_KEY } from '@/app/reader/components/NarrationBanner';
 import {
@@ -54,7 +54,6 @@ import {
   getRequestedBooks,
   getTranslationWait,
   requestTranslation,
-  setPreviewBook,
 } from '@/services/gutenbergLibrary';
 
 interface DiscoverHomeProps {
@@ -62,8 +61,6 @@ interface DiscoverHomeProps {
 }
 
 const POLL_MS = 30_000;
-/** Give up on opening a book when its download or import has not advanced for this long. */
-const OPEN_STALL_MS = 3 * 60_000;
 /** How often to ask whether a requested translation's preview (or the whole book) is ready. */
 const TRANSLATION_POLL_MS = 3_000;
 /** Stop waiting for a translation to start showing up after this long. */
