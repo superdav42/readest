@@ -12,6 +12,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEnv } from '@/context/EnvContext';
 import { useAppRouter } from '@/hooks/useAppRouter';
 import { useKeyDownActions } from '@/hooks/useKeyDownActions';
+import { useLibrary } from '@/hooks/useLibrary';
 import { useTheme } from '@/hooks/useTheme';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useThemeStore } from '@/store/themeStore';
@@ -49,6 +50,9 @@ const BookRoute = () => {
   const [work, setWork] = useState<LibraryWork | null>(null);
   const [playing, setPlaying] = useState<string | null>(null);
   const { opening, openEdition } = useOpenEdition();
+  // The reader finds the book in the library store: when this page is the first one loaded (a
+  // reload or a link), the library and settings must be read before Play or Read now navigates.
+  const { libraryLoaded } = useLibrary();
 
   const validWork = Number.isInteger(workId) && workId > 0;
   useEffect(() => {
@@ -80,7 +84,7 @@ const BookRoute = () => {
   const title = work?.title || options?.title || '';
 
   const play = async (key: string) => {
-    if (!appService || !options || playing) return;
+    if (!appService || !libraryLoaded || !options || playing) return;
     stopSample();
     setPlaying(key);
     try {
@@ -153,7 +157,7 @@ const BookRoute = () => {
         <button
           type='button'
           className='btn btn-contrast self-start'
-          disabled={!!opening}
+          disabled={!!opening || !libraryLoaded}
           onClick={readNow}
         >
           {_('Read now')}
@@ -169,7 +173,7 @@ const BookRoute = () => {
                 details={row.details}
                 sampleUrl={row.sampleUrl}
                 busy={playing === row.key}
-                disabled={!!playing || !!opening}
+                disabled={!!playing || !!opening || !libraryLoaded}
                 onPlay={() => void play(row.key)}
               />
             ))}

@@ -212,6 +212,9 @@ vi.mock('@/services/tts', () => ({
       isViewAttached: true,
       narrationActive: narrationState.active,
       state: 'idle',
+      // useFinishedCleanup listens on the same events; no library voice is playing here.
+      activeLibraryVoice: null,
+      libraryPlayedShare: vi.fn().mockReturnValue(null),
       addEventListener: vi.fn(),
       removeEventListener: vi.fn(),
       dispatchEvent: vi.fn(),
@@ -912,9 +915,11 @@ describe('useTTSControl handleHighlightMark cross-section navigation', () => {
       addEventListener: { mock: { calls: [string, (e: Event) => void][] } };
     };
     const calls = controller.addEventListener.mock.calls;
-    const entry = calls.find(([name]) => name === eventName);
-    if (!entry) throw new Error(`${eventName} listener was not registered`);
-    return entry[1];
+    const handlers = calls.filter(([name]) => name === eventName).map(([, handler]) => handler);
+    if (handlers.length === 0) throw new Error(`${eventName} listener was not registered`);
+    // A real controller delivers an event to every listener (the reader's highlight handler and
+    // the delete-when-finished hook both listen), so the test does the same.
+    return (event: Event) => handlers.forEach((handler) => handler(event));
   };
 
   it('navigates to the cfi via view.goTo when TTS crosses into a new section', async () => {
