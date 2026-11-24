@@ -25,6 +25,7 @@ import {
   getContentLanguage,
 } from '@/services/gutenbergLibrary';
 import { playListenOption } from '@/services/listen/playOption';
+import { resolvePlayTarget } from '@/services/listen/playTarget';
 import { stopSample } from '@/services/listen/samplePlayer';
 import { eventDispatcher } from '@/utils/event';
 import { getHorizontalInsetStyle } from '@/utils/insets';
@@ -88,7 +89,20 @@ const BookRoute = () => {
     stopSample();
     setPlaying(key);
     try {
-      await playListenOption({ appService, router, workId, lang, text: options.text }, { key });
+      // A recording is played against the ebook it was built on, which can be another version of
+      // this book (a work group), not the one the page was opened for.
+      const target = resolvePlayTarget(options, key);
+      await playListenOption(
+        {
+          appService,
+          router,
+          workId: target.workId,
+          lang,
+          text: target.text,
+          openText: target.openText,
+        },
+        { key },
+      );
     } catch (error) {
       console.warn('Book page: could not play', workId, error);
       eventDispatcher.dispatch('toast', {
