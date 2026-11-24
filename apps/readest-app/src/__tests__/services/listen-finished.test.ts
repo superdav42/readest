@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   cleanUpFinished,
   isFinished,
+  isSavedProgressFinished,
   isVoiceKept,
   playedShare,
   setVoiceKept,
@@ -25,6 +26,13 @@ describe('finished detection', () => {
     expect(isFinished({ endedAtLastSection: false, share: 0.98 })).toBe(true);
     expect(isFinished({ endedAtLastSection: false, share: 0.97 })).toBe(false);
     expect(isFinished({ endedAtLastSection: false, share: null })).toBe(false);
+  });
+
+  it('recognizes finished saved reading progress without restarting mid-book', () => {
+    expect(isSavedProgressFinished([14, 14])).toBe(true);
+    expect(isSavedProgressFinished([98, 100])).toBe(true);
+    expect(isSavedProgressFinished([50, 100])).toBe(false);
+    expect(isSavedProgressFinished(undefined)).toBe(false);
   });
 
   it('removes only a finished book with the setting on and Keep off', () => {
