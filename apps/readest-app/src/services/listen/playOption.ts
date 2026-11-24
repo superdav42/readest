@@ -23,6 +23,8 @@ export interface PlayContext {
   lang: string;
   /** The voices text edition; null when no voice is built yet. */
   text: ListenOptions['text'];
+  /** The ebook's own edition, opened when no voice is built yet (a member of a work group). */
+  openText?: ListenOptions['text'];
   onProgress?: (fraction: number) => void;
 }
 
@@ -32,10 +34,12 @@ export interface PlayOption {
 }
 
 export const playListenOption = async (ctx: PlayContext, option: PlayOption): Promise<void> => {
-  const { appService, router, workId, lang, text, onProgress } = ctx;
+  const { appService, router, workId, lang, text, openText, onProgress } = ctx;
   let edition: Parameters<typeof openCatalogBook>[1];
   if (text) {
     edition = { work_id: workId, lang, url: text.url, hash: text.hash, kind: 'readalong' };
+  } else if (openText) {
+    edition = { work_id: workId, lang, url: openText.url, hash: openText.hash, kind: 'original' };
   } else {
     // Nothing built yet: the normal best edition, as Discover opens it. The cold-start flows
     // (VoiceBanner, NarrationBanner) take over when Speak runs.

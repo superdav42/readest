@@ -192,6 +192,12 @@ export interface ListenRecording {
   status: 'ready' | 'unchecked';
   /** 15 s of the cleaned audio; null until made. */
   sample_url: string | null;
+  /** Work groups: the ebook this recording is built against (or read from). */
+  work_id?: number;
+  /** Work groups: what that ebook is called ("Standard text"). */
+  version_label?: string | null;
+  /** Work groups: that ebook's voices text edition when built, else its own edition. */
+  text?: { hash: string; url: string } | null;
 }
 
 export interface ListenOptions {
@@ -208,7 +214,23 @@ export interface ListenOptions {
     key: string;
     label: string;
     sample_url: string | null;
+    /** Work groups: the ebook that has the narration (the default text's, else a member's). */
+    work_id?: number;
+    text?: { hash: string; url: string } | null;
   };
+  /** Work groups: the versions of this book (absent for an ungrouped work). */
+  group?: {
+    primary_id: number;
+    versions: {
+      work_id: number;
+      label: string;
+      title: string;
+      default: boolean;
+      best: { kind: string; lang: string; hash: string; url: string } | null;
+    }[];
+  } | null;
+  /** Work groups: the id the page was asked for (any member of the group). */
+  requested_work_id?: number;
 }
 
 /** The voices saved on this device, as listen options (catalog unreachable). */
