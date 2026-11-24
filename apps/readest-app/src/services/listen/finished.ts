@@ -30,6 +30,12 @@ export const playedShare = (
 export const isFinished = (state: { endedAtLastSection: boolean; share: number | null }) =>
   state.endedAtLastSection || (state.share ?? 0) >= FINISHED_SHARE;
 
+/** Saved reader progress counts as finished at the same threshold as played audio. */
+export const isSavedProgressFinished = (progress: [number, number] | undefined): boolean => {
+  if (!progress || progress[1] <= 0) return false;
+  return progress[0] / progress[1] >= FINISHED_SHARE;
+};
+
 /** Only a finished book, with the setting on and no Keep, is removed. */
 export const shouldCleanUp = (state: {
   finished: boolean;

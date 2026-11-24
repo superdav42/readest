@@ -9,6 +9,9 @@ import { fetchWork, fetchWorkVoices, type ListenOptions } from '@/services/guten
 import { openCatalogBook, preferTextEdition } from '@/services/openCatalogBook';
 import { setChosenLibraryVoice } from '@/services/tts/libraryVoice';
 import { startVoiceDownload, voiceOfflineSupported } from '@/services/tts/voiceOffline';
+import { useLibraryStore } from '@/store/libraryStore';
+import { useSettingsStore } from '@/store/settingsStore';
+import { isSavedProgressFinished } from './finished';
 import { connectionKind } from './connection';
 import { navigateToReader } from '@/utils/nav';
 import { setPendingTTSAutoplay } from '@/utils/ttsAutoplay';
@@ -47,6 +50,19 @@ export const playListenOption = async (ctx: PlayContext, option: PlayOption): Pr
     });
   }
   const book = await openCatalogBook(appService, edition, onProgress);
+  const settings = useSettingsStore.getState().settings;
+  const config = await appService.loadBookConfig(book, settings);
+  if (isSavedProgressFinished(config.progress)) {
+    const progress: [number, number] = [1, config.progress![1]];
+    await appService.saveBookConfig(
+      book,
+      { ...config, location: undefined, progress, updatedAt: Date.now() },
+      settings,
+    );
+    const library = useLibraryStore.getState();
+    library.updateBookProgress(book.hash, progress, book.readingStatus);
+    await appService.saveLibraryBooks(useLibraryStore.getState().library);
+  }
   if (text) setChosenLibraryVoice(workId, lang, option.key);
   setPendingTTSAutoplay(book.hash);
   navigateToReader(router, [book.hash]);
