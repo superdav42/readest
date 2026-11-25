@@ -126,7 +126,13 @@ const BookRoute = () => {
     const best = work?.best;
     void openEdition(
       best
-        ? { work_id: workId, lang: best.lang, url: best.url, hash: best.hash, kind: best.kind }
+        ? {
+            work_id: work?.work_id || workId,
+            lang: best.lang,
+            url: best.url,
+            hash: best.hash,
+            kind: best.kind,
+          }
         : { work_id: workId, lang, url: options?.text?.url ?? '' },
       { title, cover: '' },
     );
