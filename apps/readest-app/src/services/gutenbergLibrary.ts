@@ -61,6 +61,10 @@ export interface LibraryWork {
   } | null;
   narration_available: boolean;
   jobs: LibraryJob[];
+  /** The title in the language of the source, when it differs from `title` (a translated title). */
+  original_title?: string | null;
+  /** Work groups: the ebook whose text the book has in this language (a human translation). */
+  text_work_id?: number;
 }
 
 /** Base URL of the catalog (featured catalog URL without its `/opds…` path). */
@@ -124,6 +128,7 @@ const api = async <T>(path: string, init?: RequestInit): Promise<T> => {
   if (!base) throw new Error('library_not_configured');
   const res = await fetch(`${base}${isRpcCatalog(base) ? '' : '/api'}${path}`, init);
   if (!res.ok) throw new Error(`library_api_${res.status}`);
+  if (res.status === 204) return undefined as T; // a function that returns nothing
   return (await res.json()) as T;
 };
 
@@ -354,6 +359,23 @@ export const requestVoice = async (
   }
 };
 
+/**
+ * The reader chose a language: the catalog fills the titles and author names of that language
+ * before the others (migration 0480). Best effort: switching language never waits for it or fails.
+ */
+export const requestLanguageTitles = async (lang: string): Promise<void> => {
+  if (!rpcBase() || isOffline()) return;
+  try {
+    await api<void>('/request_titles', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ p_lang: lang }),
+    });
+  } catch {
+    // The titles are filled in menu order anyway.
+  }
+};
+
 /** Catalog metadata of one published edition file. */
 export interface CatalogEdition {
   hash: string;
@@ -542,8 +564,10 @@ export const getLibrarySearchPath = (query: string, lang = getContentLanguage())
 };
 
 /** Announce a language change to pages that show library content. */
-export const announceContentLanguage = (lang: string) =>
-  eventDispatcher.dispatch(CONTENT_LANGUAGE_EVENT, { lang });
+export const announceContentLanguage = (lang: string) => {
+  void requestLanguageTitles(lang);
+  return eventDispatcher.dispatch(CONTENT_LANGUAGE_EVENT, { lang });
+};
 
 /** Work id of a library book imported from our catalog, else null. */
 export const getBookWorkId = (book: Pick<Book, 'metadata'>): number | null =>
@@ -634,6 +658,8 @@ export const pickEditionsForLanguage = (books: Book[], lang: string): Book[] => 
 export interface DiscoverCard {
   work_id: number;
   title: string;
+  /** The title in the language of the source, when the title shown is a translation of it. */
+  original_title?: string | null;
   author?: string | null;
   kind: 'original' | 'translation' | 'readalong';
   lang: string;
