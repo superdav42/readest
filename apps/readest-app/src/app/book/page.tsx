@@ -26,6 +26,11 @@ import {
 } from '@/services/gutenbergLibrary';
 import { playListenOption } from '@/services/listen/playOption';
 import { resolvePlayTarget } from '@/services/listen/playTarget';
+import {
+  getRecordingVersionDetail,
+  getVisibleVersions,
+  type VisibleVersion,
+} from '@/services/listen/optionsDisplay';
 import { stopSample } from '@/services/listen/samplePlayer';
 import { eventDispatcher } from '@/utils/event';
 import { getHorizontalInsetStyle } from '@/utils/insets';
@@ -35,6 +40,7 @@ import { Toast } from '@/components/Toast';
 import Spinner from '@/components/Spinner';
 import PlayerHeader from '@/app/player/components/PlayerHeader';
 import ListenRow from './components/ListenRow';
+import VersionsList from './components/VersionsList';
 
 const BookRoute = () => {
   const _ = useTranslation();
@@ -120,9 +126,29 @@ const BookRoute = () => {
     const best = work?.best;
     void openEdition(
       best
-        ? { work_id: workId, lang: best.lang, url: best.url, hash: best.hash, kind: best.kind }
+        ? {
+            work_id: work?.work_id || workId,
+            lang: best.lang,
+            url: best.url,
+            hash: best.hash,
+            kind: best.kind,
+          }
         : { work_id: workId, lang, url: options?.text?.url ?? '' },
       { title, cover: '' },
+    );
+  };
+
+  const openVersion = (version: VisibleVersion) => {
+    stopSample();
+    void openEdition(
+      {
+        work_id: version.work_id,
+        lang: version.best.lang,
+        url: version.best.url,
+        hash: version.best.hash,
+        kind: version.best.kind,
+      },
+      { title: version.title, cover: '' },
     );
   };
 
@@ -141,19 +167,23 @@ const BookRoute = () => {
         details: [readers && readers !== rec.label ? readers : '', ...meta]
           .filter(Boolean)
           .join(' · '),
+        versionDetail: getRecordingVersionDetail(options, rec, _),
         sampleUrl: rec.sample_url,
       };
     });
     if (options.ai.available) {
       recordings.push({
         key: options.ai.key,
-        label: options.ai.label || _('AI narration'),
+        label: _('AI narration'),
         details: _('synthetic voice, every book'),
+        versionDetail: '',
         sampleUrl: options.ai.sample_url,
       });
     }
     return recordings;
   }, [options, _]);
+
+  const versions = useMemo(() => (options ? getVisibleVersions(options) : []), [options]);
 
   if (!validWork) return <Spinner loading />;
 
@@ -185,6 +215,7 @@ const BookRoute = () => {
                 key={row.key}
                 label={row.label}
                 details={row.details}
+                versionDetail={row.versionDetail}
                 sampleUrl={row.sampleUrl}
                 busy={playing === row.key}
                 disabled={!!playing || !!opening || !libraryLoaded}
@@ -193,6 +224,11 @@ const BookRoute = () => {
             ))}
           </ul>
         )}
+        <VersionsList
+          versions={versions}
+          disabled={!!opening || !libraryLoaded}
+          onOpen={openVersion}
+        />
         {opening && (
           <p className='text-base-content/70 text-sm' role='status'>
             {_('Opening book…')}

@@ -9,13 +9,22 @@ import { getPlayingSample, subscribeSample, toggleSample } from '@/services/list
 interface ListenRowProps {
   label: string;
   details: string;
+  versionDetail?: string;
   sampleUrl: string | null;
   busy: boolean;
   disabled: boolean;
   onPlay: () => void;
 }
 
-const ListenRow = ({ label, details, sampleUrl, busy, disabled, onPlay }: ListenRowProps) => {
+const ListenRow = ({
+  label,
+  details,
+  versionDetail,
+  sampleUrl,
+  busy,
+  disabled,
+  onPlay,
+}: ListenRowProps) => {
   const _ = useTranslation();
   const playingUrl = useSyncExternalStore(subscribeSample, getPlayingSample, () => null);
   const samplePlaying = !!sampleUrl && playingUrl === sampleUrl;
@@ -30,6 +39,9 @@ const ListenRow = ({ label, details, sampleUrl, busy, disabled, onPlay }: Listen
       <div className='min-w-0 flex-1 basis-48'>
         <div className='line-clamp-2 text-sm font-semibold'>{label}</div>
         {details && <div className='text-base-content/70 line-clamp-2 text-xs'>{details}</div>}
+        {versionDetail && (
+          <div className='text-base-content/70 line-clamp-2 text-xs'>{versionDetail}</div>
+        )}
       </div>
       <button
         type='button'
