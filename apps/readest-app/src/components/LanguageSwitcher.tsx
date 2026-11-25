@@ -15,6 +15,7 @@ import {
   fetchLibraryLanguages,
   getCatalogBase,
   getContentLanguage,
+  languageLabel,
   type LibraryLanguage,
 } from '@/services/gutenbergLibrary';
 import { getDirFromLanguage } from '@/utils/rtl';
@@ -77,7 +78,9 @@ export default function LanguageSwitcher({
         className='btn btn-ghost h-8 min-h-8 gap-1 rounded-full px-2 text-sm font-normal'
       >
         <PiGlobe className='h-5 w-5' />
-        <span className='uppercase'>{current}</span>
+        <span lang={current} className='max-w-[8rem] truncate'>
+          {languageLabel(current, languages)}
+        </span>
       </button>
       {/* mt-1 overlaps the reader's 44px header: a gap would let the pointer leave
           the header on its way to the menu, hiding the header in focus mode. */}
