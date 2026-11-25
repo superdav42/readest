@@ -3,7 +3,7 @@
 //
 // A book page can list the recordings of several ebooks of one book (a work group). Each recording
 // is built against one of them, so Play must use that ebook's id and text, not the page's.
-import type { ListenOptions } from '@/services/gutenbergLibrary';
+import type { LibraryWork, ListenOptions } from '@/services/gutenbergLibrary';
 
 export interface PlayTarget {
   /** The ebook the voice belongs to. */
@@ -27,5 +27,36 @@ export const resolvePlayTarget = (options: ListenOptions, key: string): PlayTarg
     workId: recording.work_id,
     text: built ? (recording.text ?? null) : null,
     openText: built ? null : (recording.text ?? null),
+  };
+};
+
+/** The edition "Read now" opens, in the shape `openEdition` takes. */
+export interface ReadNowEdition {
+  work_id: number;
+  lang: string;
+  url: string;
+  hash?: string;
+  kind?: 'original' | 'translation' | 'readalong';
+}
+
+/**
+ * Read now opens the text the book has in the page's language: the ebook that holds it (a human
+ * translation of a work group, `text_work_id`), else the group's primary, else the work the page was
+ * opened for. Offline the catalog edition is unknown and the copy on the device (`textUrl`) is reused.
+ */
+export const resolveReadNow = (
+  work: LibraryWork | null,
+  pageWorkId: number,
+  lang: string,
+  textUrl: string,
+): ReadNowEdition => {
+  const best = work?.best;
+  if (!best) return { work_id: pageWorkId, lang, url: textUrl };
+  return {
+    work_id: work.text_work_id ?? work.work_id ?? pageWorkId,
+    lang: best.lang,
+    url: best.url,
+    hash: best.hash,
+    kind: best.kind,
   };
 };

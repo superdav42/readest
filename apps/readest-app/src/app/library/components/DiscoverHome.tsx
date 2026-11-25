@@ -250,6 +250,9 @@ const Card: React.FC<{
       <p className='text-base-content line-clamp-2 text-sm font-medium leading-tight'>
         {card.title}
       </p>
+      {card.original_title && (
+        <p className='text-base-content/75 line-clamp-1 text-xs italic'>{card.original_title}</p>
+      )}
       {card.author && <p className='text-base-content/75 truncate text-xs'>{card.author}</p>}
     </button>
   );

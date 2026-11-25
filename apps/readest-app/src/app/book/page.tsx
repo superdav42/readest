@@ -25,7 +25,7 @@ import {
   getContentLanguage,
 } from '@/services/gutenbergLibrary';
 import { playListenOption } from '@/services/listen/playOption';
-import { resolvePlayTarget } from '@/services/listen/playTarget';
+import { resolvePlayTarget, resolveReadNow } from '@/services/listen/playTarget';
 import {
   getRecordingVersionDetail,
   getVisibleVersions,
@@ -122,20 +122,10 @@ const BookRoute = () => {
 
   const readNow = () => {
     stopSample();
-    // Offline, the catalog edition is unknown: the copy already on the device is reused.
-    const best = work?.best;
-    void openEdition(
-      best
-        ? {
-            work_id: work?.work_id || workId,
-            lang: best.lang,
-            url: best.url,
-            hash: best.hash,
-            kind: best.kind,
-          }
-        : { work_id: workId, lang, url: options?.text?.url ?? '' },
-      { title, cover: '' },
-    );
+    void openEdition(resolveReadNow(work, workId, lang, options?.text?.url ?? ''), {
+      title,
+      cover: '',
+    });
   };
 
   const openVersion = (version: VisibleVersion) => {
@@ -198,6 +188,11 @@ const BookRoute = () => {
     >
       <PlayerHeader title={title} subtitle={_('Listen')} onGoBack={handleGoBack} />
       <div className='mx-auto flex w-full max-w-2xl flex-1 flex-col gap-4 overflow-y-auto px-4 pb-6 pt-2'>
+        {work?.original_title && (
+          <p className='text-base-content/75 text-sm' data-testid='original-title'>
+            {_('Original title: {{title}}', { title: work.original_title })}
+          </p>
+        )}
         <button
           type='button'
           className='btn btn-contrast self-start'
