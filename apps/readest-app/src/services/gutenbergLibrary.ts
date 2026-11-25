@@ -237,7 +237,12 @@ export interface ListenOptions {
       label: string;
       title: string;
       default: boolean;
-      best: { kind: string; lang: string; hash: string; url: string } | null;
+      best: {
+        kind: 'original' | 'translation' | 'readalong';
+        lang: string;
+        hash: string;
+        url: string;
+      } | null;
     }[];
   } | null;
   /** Work groups: the id the page was asked for (any member of the group). */
