@@ -82,6 +82,17 @@ export const toContentLanguage = (uiLanguage?: string): string =>
 
 export const getContentLanguage = (): string => toContentLanguage(i18n.language);
 
+/** Name of a content language: the catalog's own name, else the browser's, else the code. */
+export const languageLabel = (code: string, languages: LibraryLanguage[]): string => {
+  const listed = languages.find((l) => l.code === code)?.name;
+  if (listed) return listed;
+  try {
+    return new Intl.DisplayNames([code], { type: 'language' }).of(code) ?? code;
+  } catch {
+    return code;
+  }
+};
+
 /** Point a catalog URL at the current content language (other URLs pass through). */
 export const withContentLanguage = (url: string, lang = getContentLanguage()): string => {
   if (!isLibraryUrl(url)) return url;
