@@ -25,6 +25,7 @@ import {
   getContentLanguage,
 } from '@/services/gutenbergLibrary';
 import { playListenOption } from '@/services/listen/playOption';
+import { getUiDirAttr } from '@/utils/rtl';
 import { resolvePlayTarget, resolveReadNow } from '@/services/listen/playTarget';
 import {
   getRecordingVersionDetail,
@@ -179,6 +180,7 @@ const BookRoute = () => {
 
   return (
     <div
+      dir={getUiDirAttr()}
       className='bg-base-100 full-height relative flex select-none flex-col overflow-hidden'
       style={{
         paddingTop: `${safeAreaInsets?.top || 0}px`,
