@@ -13,6 +13,7 @@
 // narration once the text is open.
 'use client';
 
+import { getUiDirAttr } from '@/utils/rtl';
 import clsx from 'clsx';
 import {
   createContext,
@@ -696,7 +697,7 @@ const DiscoverHome: React.FC<DiscoverHomeProps> = ({ libraryBooks }) => {
     kind === 'popular' ? _('Popular') : kind === 'readalong' ? _('Read-along') : (title ?? '');
 
   return (
-    <div className='flex min-h-0 grow flex-col overflow-y-auto pb-8'>
+    <div dir={getUiDirAttr()} className='flex min-h-0 grow flex-col overflow-y-auto pb-8'>
       <div className='flex flex-col gap-6 pt-2'>
         {continueReading.length > 0 && (
           <Row title={_('Continue reading')}>

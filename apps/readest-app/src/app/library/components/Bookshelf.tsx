@@ -1,4 +1,5 @@
 // Modified 2026-10-25 for the Gutenberg AI fork of Readest (AGPL-3.0); see MODIFICATIONS.md.
+import CatalogSearchHint from './CatalogSearchHint';
 import LibraryEmptyState from './LibraryEmptyState';
 import LibraryImportButton from './LibraryImportButton';
 import BrowseLibraryButton from '@/components/BrowseLibraryButton';
@@ -1064,6 +1065,9 @@ const Bookshelf: React.FC<BookshelfProps> = ({
             <MdManageSearch aria-hidden='true' className='h-5 w-5' />
             {_('Search in book contents')}
           </button>
+          {getLibrarySearchPath(queryTerm) && (
+            <CatalogSearchHint localMatches={filteredBooks.length} />
+          )}
         </div>
       )}
       {!visibleBooks.length ? (
